@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """
 
@@ -19,122 +20,12 @@
     Free Software Foundation, Inc.,
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  """
-from __future__ import with_statement
-from networking.Server import *
-from networking.Filter import *
-from config import getUserInfo
-
-import traceback
-
-import lexpr.sexpr as sexpr
-import lexpr.Statements as Statements
-import lexpr.ServerStatements as ServerStatements
-import threading
+from networking.Server import TCPServer
+from networking.Filter import PacketizerFilter, CompressionFilter
 import sys
-import time
-import getopt
-import threading
-import itertools
 from optparse import OptionParser
+from filters.RedirectFilter import RedirectFilter
 
-
-LOGIN_CONFIG = 'config/login.cfg'
-
-class LogicFilter(Filter):
-    ID = 0
-    def _init(self, *args):
-        self.user = None
-        self.screenName = None
-        self.password = None
-        self.hash = None
-        self.game = None
-        self.type = None
-        self.hasMap = None
-        self.ID = str(LogicFilter.ID)
-        LogicFilter.ID += 1
-        self.run = True
-
-    def writeSExpr(self, l):
-        self.writeOut(sexpr.sexpr2str(l))
-
-    def _readOut(self, data):
-        try:
-            self.readSExpr(sexpr.str2sexpr(data))
-        except ValueError:
-            self.writeSExpr(['malformed-message', data])
-
-    def disconnect(self):
-        self.run = False
-        if self.game:
-            pass
-            #self.readSExpr("(leave-game)")
-
-    def readSExpr(self, expression):
-        for i in expression:
-            self.evalStatement(i)
-
-    def evalStatement(self, expression):
-        if type(expression) != list:
-            self.writeSExpr(['invalid-expression', expression])
-            return False
-        try:
-            self.statements[expression[0]](self, expression)
-        except Exception, e:
-            print e
-            self.writeSExpr(['malformed-statement', expression])
-
-    def login(self, user, password):
-        registered = False
-        output = ""
-        userInfo = getUserInfo(user, LOGIN_CONFIG)
-
-        if not (userInfo is None):
-            if userInfo['password'] == password:
-                registered = True
-                self.user = user
-                self.password = password
-                self.screenName = userInfo['screenName']
-
-        if not registered:
-            output = "user    :" + user + '\n'
-            output += "password:" + password + '\n\n'
-            outFile = open("badLogin.dat", "a")
-            outFile.write(output)
-            outFile.close()
-
-        return registered
-
-    def logout(self):
-        self.user = None
-        self.password = None
-        self.hash = None
-        return True
-
-class RedirectFilter(LogicFilter):
-    Servers = {}
-
-    def _init(self):
-        LogicFilter._init(self)
-        self.statements = ServerStatements.statements
-        self.count = 0
-
-    def disconnect(self):
-        if self.ID:
-            try:
-                del MasterFilter.Servers[self.ID]
-            except Exception:
-                pass
-            self.ID = None
-        LogicFilter.disconnect(self)
-
-    def registerAsServer(self):
-        RedirectFilter.Servers[self.ID] = self
-
-    def getServers(self):
-        return [[i, j.address] for i,j in RedirectFilter.Servers.iteritems()]
-
-    def chooseServer(self):
-        return [[i,j.address] for i, j in sorted(RedirectFilter.Servers.iteritems(), key=(lambda x: x[1].count))][0]
 
 def runRedirect(telnet_disabled):
     try:

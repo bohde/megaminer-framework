@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import unittest
 import game.test
 import networking.Filter as Filter

@@ -1,4 +1,5 @@
-from Client import Client
+#!/usr/bin/python
+from networking.Client import Client
 import sys
 
 class Telnet(Client):

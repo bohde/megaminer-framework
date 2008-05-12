@@ -139,7 +139,6 @@ class CompressionFilter(Filter):
     def _begin(self):
         if self.server:
             self.writeOut(''.join(self.algorithms.keys()))
-        Filter._begin(self)
 
     def _readOut(self, data):
         if not self.initialized.isSet():
