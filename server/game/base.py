@@ -1,14 +1,13 @@
 import json
 import itertools
 import collections
+import functools
 
 class RectangularArea(collections.defaultdict):
-
     def __init__(self, max_x, max_y):
         collections.defaultdict.__init__(self, list)
         self.max_x = max_x
         self.max_y = max_y
-
 
     def __missing__(self, key):
         if not(isinstance(key, collections.Sequence)):
@@ -25,21 +24,26 @@ class TimePeriod(object):
     def __init__(self, factory):
         self.area = factory()
 
-def rectangularAreas(x, y):
+
+def basicMapGeneration(far_past, past, present):
+    return far_past, past, present
+
+
+def rectangularAreasBuilder(x, y, f):
     def generator():
         fact = lambda: RectangularArea(x, y)
         far_past, past, present = (TimePeriod(fact) for n in xrange(3))
-
-        """
-        put map building logic here
-        """
-
-        return far_past, past, present
+        return f(far_past, past, present)
     return generator
+
+
+rectangularAreas = functools.partial(rectangularAreasBuilder, f=basicMapGeneration)
+
 
 class GameWorld(object):
     def __init__(self, generator):
         self.far_past, self.past, self.present = generator()
+
 
 class RectangularGameWorld(GameWorld):
     def __init__(self, x, y):
