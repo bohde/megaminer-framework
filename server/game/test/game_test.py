@@ -26,6 +26,10 @@ class TestBaseObjects(unittest.TestCase):
             except Exception as e:
                 self.assertTrue(isinstance(e, TypeError))
             try:
+                k.area[('a',1)]
+            except Exception as e:
+                self.assertTrue(isinstance(e, TypeError))
+            try:
                 k.area[(11,10)]
             except Exception as e:
                 self.assertTrue(isinstance(e, IndexError))

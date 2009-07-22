@@ -14,6 +14,8 @@ class RectangularArea(collections.defaultdict):
                 raise TypeError('%s is not a subclass of Sequence.' % key.__class__)
         if len(key) != 2:
             raise TypeError('A coordinate does not have a length of %u!' % len(key))
+        if not(all([isinstance(n, int) for n in key])):
+            raise TypeError('Coordinates need to be integers!')
         x, y = key
         if abs(x) > self.max_x or abs(y) > self.max_y:
             raise IndexError('(%u, %u) is not within (-+%u, -+%u)' % (x, y, self.max_x, self.max_y))
