@@ -1,7 +1,9 @@
-import server.game.base as base
+import game.base as base
 import unittest
 import collections
 
+def string_exception(e):
+    return ', '.join(str(n) for n in [e.__class__, e])
 
 class TestBaseObjects(unittest.TestCase):
 
@@ -19,24 +21,24 @@ class TestBaseObjects(unittest.TestCase):
             self.assertTrue(isinstance(k.area, collections.defaultdict))
             try:
                 k.area[1]
-            except Exception as e:
-                self.assertTrue(isinstance(e, TypeError))
+            except Exception, e:
+                self.assertTrue(isinstance(e, TypeError), string_exception(e))
             try:
                 k.area[(1,2,3)]
-            except Exception as e:
-                self.assertTrue(isinstance(e, TypeError))
+            except Exception, e:
+                self.assertTrue(isinstance(e, TypeError), string_exception(e))
             try:
                 k.area[('a',1)]
-            except Exception as e:
-                self.assertTrue(isinstance(e, TypeError))
+            except Exception, e:
+                self.assertTrue(isinstance(e, TypeError), string_exception(e))
             try:
                 k.area[(11,10)]
-            except Exception as e:
-                self.assertTrue(isinstance(e, IndexError))
+            except Exception, e:
+                self.assertTrue(isinstance(e, IndexError), string_exception(e))
             e = 10
             try:
                 k.area[(0,0)].append(e)
                 self.assertTrue(e in k.area[(0,0)])
-            except Exception as e:
+            except Exception, e:
                 self.fail()
 
