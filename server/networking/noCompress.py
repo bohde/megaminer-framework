@@ -18,7 +18,9 @@
     Free Software Foundation, Inc.,
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  """
-__all__ = ["Filter", "noCompress", "Server"]
 
-import Filter
-import Server
+def compress(data, *level):
+    return data
+
+def decompress(data, *level):
+    return data
