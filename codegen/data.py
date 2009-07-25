@@ -1,8 +1,20 @@
-from structures import Model, Message, Function
+import structures
 
 client = 0
 server = 1
 
+UnitType = structures.Model('UnitType', key='id',
+  data = { 'id':int,
+    'cost':[int],
+    'hp':[int],
+    'moves':int,
+    'actions':int,
+    'range':[int],
+    'damage':[int],
+    'buildSpeed':int,
+    'paintSpeed':int})
+
+"""
 UnitType(Model):
   _name = 'UnitType'
   _key = 'id'
@@ -56,7 +68,7 @@ class PlayerStatus(Model):
   s
 
 class Status(Message):
-  """format: (score0 score1 (units))"""
   _head = 'Status'
   _source = server
   _format = [int, int, [Unit]]
+"""

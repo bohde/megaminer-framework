@@ -1,18 +1,15 @@
-import types
+from mako.template import Template
+import glob
 
-from util import *
+def write(data):
+  for file in glob.glob('templates/c/files/*.txt'):
+    writeFile(file[18:-4], data) #file[18:-4] should strip the templates/c/files/ and .txt
 
-def writeClass(c, out):
-  out.write("struct %s\n{\n" % (c._name,))
-  for i in dir(c):
-    if i[0] == '_':
-      continue
-    j = getattr(c, i)
-    if j is int:
-      out.write("  int %s;\n" % (i,))
-  out.write("}\n\n")
+def writeFile(name, data):
+  template = Template(filename='templates/c/files/%s.txt' % name)
+  output = file('output/c/%s' % name, 'w')
+  output.write(template.render(**data))
+  output.close()
 
-def write(classes):
-  out = file('code/models.h', 'w')
-  for i in classes:
-    writeClass(i, out)
+if __name__ == '__main__':
+  write({})
