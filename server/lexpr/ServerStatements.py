@@ -20,6 +20,7 @@
  """
 
 from Statements import require_length, dict_wrapper
+from StatementUtils import require_login
 statements = {}
 mapper = dict_wrapper(statements)
 
@@ -27,11 +28,6 @@ mapper = dict_wrapper(statements)
 @require_length(1)
 def ping(self, expression):
     self.writeSExpr(['pong'])
-    return True
-
-@mapper("pong")
-@require_length(1)
-def pong(self, expression):
     return True
 
 @mapper("login")
@@ -58,7 +54,7 @@ def logout(self, expression):
 @mapper("whoami")
 @require_length(1)
 def whoAmI(self, expression):
-    self.writeSExpr(['who-you-are', self.user, self.ID])
+    self.writeSExpr(['who-you-are', ['id', self.ID], ['address', self.address]])
     return True
 
 @mapper("login-accepted")
@@ -69,3 +65,12 @@ def loginAccepted(self, expression):
 @mapper("malformed-statement")
 def malformedStatement(self, expression):
     print expression
+
+@mapper('register-server')
+@require_length(1)
+@require_login
+def registerServer(self, expression):
+    self.registerAsServer()
+    self.writeSExpr(['registered-status', 'successful'])
+    return True
+

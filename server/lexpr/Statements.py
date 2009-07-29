@@ -21,10 +21,10 @@
 import sexpr
 import random
 import math
-import Game
+#import Game
 from StatementUtils import dict_wrapper, require_length, require_game
-from db import Database
-from db import Game as game_log
+#from db import Database
+#from db import Game as game_log
 
 games = {}
 id = 0
@@ -493,4 +493,5 @@ def endTurn(self, expression):
         return False
     games[self.game].nextTurn()
     return True
+
 

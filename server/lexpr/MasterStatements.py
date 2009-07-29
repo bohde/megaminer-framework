@@ -35,6 +35,10 @@ def serverLogin(self, expression):
         else:
             self.writeSExpr(['login-denied', 'invalid username or password'])
 
+@wrapper("get-servers")
+@require_length(1)
+def getServer(self, expression):
+    
 #@wrapper("finish-game")
 #@require_length(2)
 #def finishGame(self, expression):

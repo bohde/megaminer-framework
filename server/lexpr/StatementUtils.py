@@ -24,6 +24,15 @@ def require_length(*n):
         return wrapper
     return dec
 
+def require_login(f):
+    @wraps(f)
+    def wrapper(self, expression):
+        if not self.user:
+            self.writeSExpr([expression[0]+'-denied', 'not logged in'])
+            return False
+        return f(self, expression)
+    return wrapper
+
 def require_game(f):
     @wraps(f)
     def wrapper(self, expression):

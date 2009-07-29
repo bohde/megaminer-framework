@@ -1,5 +1,4 @@
 """
-
    Copyright (C) 2008 by Steven Wallace
    snwallace@gmail.com
 
@@ -17,10 +16,13 @@
     along with this program; if not, write to the
     Free Software Foundation, Inc.,
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- """
+
+"""
+from __future__ import with_statement
 import socket
 import select
 import threading
+import functools
 
 import Filter
 
@@ -48,7 +50,6 @@ class TCPServer(Server):
         self.serverSocket = None
         self.sockets = []
         self.localaddr = ""
-        self.setLocalAddr()
         if port:
             self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -58,39 +59,25 @@ class TCPServer(Server):
             self.sockets = [self.serverSocket]
         self.connections = {}
 
-    def setLocalAddr(self):
-        """
-        Sets the external IP address, in case a socket returns 'localhost'
-        """
-        pass
-        #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #s.connect(("google.com", 0))
-        #self.localaddr = s.getsockname()[0]
-
     def poll(self):
-        self.lock.acquire()
-        try:
-            inputReady = select.select(self.sockets, [], [])[0]
-        
+        with self.lock:
+            try:
+                inputReady = select.select(self.sockets, [], [])[0]
 
-            for s in inputReady:
-                if s == self.serverSocket:
-                    ssocket, address = s.accept()
-                    address = address[0]
-                    if address == '127.0.0.1':
-                        address = self.localaddr
-                    print address
-                    self.openSocket(ssocket, address, True)
-    
-                else:
-                    try:
-                        self.connections[s].poll()
-                    except Exception, e:
-                        raise
-        except Exception, e:
-            raise
-        self.lock.release()
 
+                for s in inputReady:
+                    if s == self.serverSocket:
+                        ssocket, address = s.accept()
+                        address = address[0]
+                        self.openSocket(ssocket, address, True)
+
+                    else:
+                        try:
+                            self.connections[s].poll()
+                        except Exception, e:
+                            raise
+            except Exception, e:
+                raise
 
     def openConnection(self, host, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -100,11 +87,11 @@ class TCPServer(Server):
     def openSocket(self, socket, address, server=False):
         self.sockets.append(socket)
         filters = [Filter.TCPFilter(socket)] + [i() for i in self.filters]
-        for i, j in enumerate(filters[:-1]):
-            j.setIn(filters[i + 1])
-            j.server = server
-            j.address = address
-            j.master = self
+        reduce(Filter.cascadeSetIn, filters)
+        for i in filters:
+            i.server = server
+            i.address = address
+            i.master = self
         self.connections[socket] = filters[0]
         t = threading.Thread(None, filters[0].begin)
         t.start()
@@ -116,9 +103,3 @@ class TCPServer(Server):
             self.sockets.remove(key)
             return True
         return False
-
-
-class SlaveTCPServer(TCPServer):
-    def __init__(self, master, port, *filters):
-        TCPServer.__init__(self, port, *filters)
-        self.master = self.openConnection(*master)

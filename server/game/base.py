@@ -65,3 +65,5 @@ class RectangularGameWorld(GameWorld):
     def __init__(self, x, y):
         rectangularAreas = functools.partial(rectangularAreasBuilder, f=basicMapGeneration)
         GameWorld.__init__(self, rectangularAreas(x, y))
+
+DefaultGameWorld = RectangularGameWorld

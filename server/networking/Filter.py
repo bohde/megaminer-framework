@@ -23,6 +23,10 @@ import struct
 import threading
 import sys, traceback, time
 
+def cascadeSetIn(a, b):
+    a.setIn(b)
+    return b
+
 class NetworkException(Exception):
     pass
 
@@ -73,7 +77,7 @@ class Filter:
         self.writeOut(data)
 
     def readOut(self, data):
-        #print self.__class__, " reading out: ", data
+        print self.__class__, " reading out: ", data
         with self.rlock:
             self._readOut(data)
 
@@ -85,7 +89,7 @@ class Filter:
             self.input.readOut(data)
 
     def writeOut(self, data):
-        #print self.__class__, " writing out ", data
+        print self.__class__, " writing out ", data
         with self.wlock:
             self._writeOut(data)
 
@@ -177,6 +181,7 @@ class TCPFilter(Filter):
         self.connection = connection
 
     def _writeOut(self, data):
+        print data
         if self.connection:
             try:
                 self.connection.send(data)
