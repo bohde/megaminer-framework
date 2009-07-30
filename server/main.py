@@ -110,7 +110,7 @@ class LogicFilter(Filter):
         self.hash = None
         return True
 
-class MasterFilter(LogicFilter):
+class RedirectFilter(LogicFilter):
     Servers = {}
 
     def _init(self):
@@ -128,55 +128,37 @@ class MasterFilter(LogicFilter):
         LogicFilter.disconnect(self)
 
     def registerAsServer(self):
-        MasterFilter.Servers[self.ID] = self
+        RedirectFilter.Servers[self.ID] = self
 
     def getServers(self):
-        return [[i, j.address] for i,j in MasterFilter.Servers.iteritems()]
+        return [[i, j.address] for i,j in RedirectFilter.Servers.iteritems()]
 
     def chooseServer(self):
-        return [[i,j.address] for i, j in itertools.islice(MasterFilter.Servers.iteritems(), 1)]
+        return [[i,j.address] for i, j in itertools.islice(RedirectFilter.Servers.iteritems(), 1)]
 
-class SlaveFilter(LogicFilter):
-    def _init(self):
-        self.logged_in = False
-        LogicFilter._init(self)
-
-    def logic(self):
-        self.writeSExpr(['login', 'slave', '12345'])
-        while self.run:
-            self.writeSExpr(['ping'])
-            time.sleep(1)
-
-def runMaster(telnet):
+def runRedirect(telnet_disabled):
     try:
-        print "Running master."
-        filters = ([PacketizerFilter, CompressionFilter] if telnet else []) + [MasterFilter]
+        print "Running Redirect Server.", 
+        filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [RedirectFilter]
         master = TCPServer(19000,  *filters)
+        print "Listening on port 19000."
         master.run()
     except Exception, exception:
-        print "runMaster - Unexpected error:", exception
+        print "runRedirect - Unexpected error:", exception
         sys.exit(1)
     sys.exit(0)
 
-def runSlave(master = ("127.0.0.1", 19000)):
-    try:
-        print "Running slave."
-        slave = SlaveTCPServer(master, 19001,  PacketizerFilter, CompressionFilter, SlaveFilter)
-        slave.run()
-    except Exception, exception:
-        print "runSlave - Unexpected error:", exception
-        sys.exit(1)
+def runGameServer(telnet_disabled):
+    raise NotImplementedError("Game server is not yet implemented.")
 
 def main():
     parser = OptionParser()
-    parser.add_option("-r", "--redirect", action="store_true", dest="redirect")
-    parser.add_option("-t", "--telnet-mode", action="store_false", dest="telnet", default=True)
+    parser.add_option("-r", "--redirect", action="store_true", dest="redirect", default=False)
+    parser.add_option("-t", "--telnet-mode", action="store_false", dest="telnet_disabled", default=True)
 
     (options, args) = parser.parse_args()
 
-    if options.redirect:
-        runMaster(options.telnet)
-
+    (runGameServer, runRedirect)[options.redirect](options.telnet_disabled)
 
 if __name__ == "__main__":
     main()
