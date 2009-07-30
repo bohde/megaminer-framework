@@ -34,6 +34,9 @@ import sys
 import time
 import getopt
 import threading
+import itertools
+from optparse import OptionParser
+
 
 LOGIN_CONFIG = 'config/login.cfg'
 
@@ -113,7 +116,7 @@ class MasterFilter(LogicFilter):
     def _init(self):
         LogicFilter._init(self)
         self.statements = ServerStatements.statements
-        print self.ID
+        self.count = 0
 
     def disconnect(self):
         if self.ID:
@@ -127,6 +130,12 @@ class MasterFilter(LogicFilter):
     def registerAsServer(self):
         MasterFilter.Servers[self.ID] = self
 
+    def getServers(self):
+        return [[i, j.address] for i,j in MasterFilter.Servers.iteritems()]
+
+    def chooseServer(self):
+        return [[i,j.address] for i, j in itertools.islice(MasterFilter.Servers.iteritems(), 1)]
+
 class SlaveFilter(LogicFilter):
     def _init(self):
         self.logged_in = False
@@ -138,10 +147,11 @@ class SlaveFilter(LogicFilter):
             self.writeSExpr(['ping'])
             time.sleep(1)
 
-def runMaster():
+def runMaster(telnet):
     try:
         print "Running master."
-        master = TCPServer(19000,  PacketizerFilter, CompressionFilter, MasterFilter)
+        filters = ([PacketizerFilter, CompressionFilter] if telnet else []) + [MasterFilter]
+        master = TCPServer(19000,  *filters)
         master.run()
     except Exception, exception:
         print "runMaster - Unexpected error:", exception
@@ -158,18 +168,15 @@ def runSlave(master = ("127.0.0.1", 19000)):
         sys.exit(1)
 
 def main():
-    opts = None
-    #Todo: Implement a config file.
-    try:
-        opts = getopt.getopt(sys.argv[1:], "m")[0]
-    except getopt.GetoptError, err:
-        print str(err)
-        sys.exit(2)
-    try:
-        runMaster() if opts else runSlave()
-    except KeyboardInterrupt, e:
-        print ""
-        sys.exit()
+    parser = OptionParser()
+    parser.add_option("-r", "--redirect", action="store_true", dest="redirect")
+    parser.add_option("-t", "--telnet-mode", action="store_false", dest="telnet", default=True)
+
+    (options, args) = parser.parse_args()
+
+    if options.redirect:
+        runMaster(options.telnet)
+
 
 if __name__ == "__main__":
     main()

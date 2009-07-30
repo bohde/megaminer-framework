@@ -31,6 +31,7 @@ class Server:
         self.__stop = False
         self.server = False
         self.lock = threading.Lock()
+        self.ready = threading.Event()
         
     def run(self):
         self.__stop = False
@@ -64,7 +65,6 @@ class TCPServer(Server):
             try:
                 inputReady = select.select(self.sockets, [], [])[0]
 
-
                 for s in inputReady:
                     if s == self.serverSocket:
                         ssocket, address = s.accept()
@@ -92,9 +92,9 @@ class TCPServer(Server):
             i.server = server
             i.address = address
             i.master = self
-        self.connections[socket] = filters[0]
         t = threading.Thread(None, filters[0].begin)
         t.start()
+        self.connections[socket] = filters[0]
         return filters[-1]
 
     def remove(self, key):

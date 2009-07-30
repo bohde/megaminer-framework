@@ -57,14 +57,14 @@ def whoAmI(self, expression):
     self.writeSExpr(['who-you-are', ['id', self.ID], ['address', self.address]])
     return True
 
-@mapper("login-accepted")
-@require_length(2)
-def loginAccepted(self, expression):
-    print expression[1]
+#@mapper("login-accepted")
+#@require_length(2)
+#def loginAccepted(self, expression):
+    #print expression[1]
 
-@mapper("malformed-statement")
-def malformedStatement(self, expression):
-    print expression
+#@mapper("malformed-statement")
+#def malformedStatement(self, expression):
+    #print expression
 
 @mapper('register-server')
 @require_length(1)
@@ -72,5 +72,12 @@ def malformedStatement(self, expression):
 def registerServer(self, expression):
     self.registerAsServer()
     self.writeSExpr(['registered-status', 'successful'])
+    return True
+
+@mapper('list-servers')
+@require_length(1)
+@require_login
+def listServers(self, expression):
+    self.writeSExpr(['servers', self.getServers()])
     return True
 

@@ -33,6 +33,7 @@
 
 from Server import *
 from Filter import *
+import thread
 
 class Client:
     def __init__(self):
@@ -72,13 +73,10 @@ class WrapperFilter(Filter):
 
 class ConnectionWrapper:
     def __init__(self, telnet):
-        import thread
-
         self.telnet = telnet
         WrapperFilter._wrapper = self
         self.server = TCPServer(None,  PacketizerFilter, CompressionFilter, WrapperFilter)
         self.connection = None
-        thread.start_new_thread(self.run_server, ())
 
     def connect(self, server, port, filters = []):
         if self.connection:
@@ -86,6 +84,7 @@ class ConnectionWrapper:
         if filters:
             self.server.filters = filters
         self.connection = self.server.openConnection(server, port)
+        thread.start_new_thread(self.run_server, ())
 
     def disconnect(self):
         if not self.connection:
@@ -105,26 +104,3 @@ class ConnectionWrapper:
             self.server.run()
         except Exception, e:
             print e
-
-import sys
-
-class Telnet(Client):
-    def readConsole(self):
-        try:
-            while 1:
-                message = raw_input()
-                self.send(message)
-        except:
-            self.exit()
-
-    def mainloop(self, server='127.0.0.1', port=19000):
-        self.connect(server, port)
-        self.readConsole()
-
-
-if __name__ == "__main__":
-    telnet = Telnet()
-    if len(sys.argv) == 3:
-        telnet.mainloop(sys.argv[1], sys.argv[2])
-    else:
-        telnet.mainloop()

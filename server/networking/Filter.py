@@ -77,7 +77,6 @@ class Filter:
         self.writeOut(data)
 
     def readOut(self, data):
-        print self.__class__, " reading out: ", data
         with self.rlock:
             self._readOut(data)
 
@@ -89,7 +88,6 @@ class Filter:
             self.input.readOut(data)
 
     def writeOut(self, data):
-        print self.__class__, " writing out ", data
         with self.wlock:
             self._writeOut(data)
 
@@ -141,6 +139,7 @@ class CompressionFilter(Filter):
     def _begin(self):
         if self.server:
             self.writeOut(''.join(self.algorithms.keys()))
+        Filter._begin(self)
 
     def _readOut(self, data):
         if not self.initialized.isSet():
@@ -181,7 +180,6 @@ class TCPFilter(Filter):
         self.connection = connection
 
     def _writeOut(self, data):
-        print data
         if self.connection:
             try:
                 self.connection.send(data)
