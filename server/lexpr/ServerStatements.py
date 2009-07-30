@@ -81,3 +81,23 @@ def listServers(self, expression):
     self.writeSExpr(['servers', self.getServers()])
     return True
 
+@mapper('my-count')
+@require_length(1,2)
+@require_login
+def myCount(self, expression):
+    if len(expression) == 2:
+        if(expression[1] == 'add'):
+            self.count += 1
+        elif(expression[1] == 'sub' and self.count > 0):
+            self.count -= 1
+        else:
+            raise Exception
+    self.writeSExpr(['your-count', self.count])
+    return True
+
+@mapper('get-server')
+@require_length(1)
+@require_login
+def getServer(self, expression):
+    self.writeSExpr(["server"] + self.chooseServer())
+    return True

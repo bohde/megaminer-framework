@@ -50,9 +50,7 @@ class TestProtocolLogic(unittest.TestCase):
         return wrapper
 
     assertResponseContains = assertResponseClosure(assertContains)
-
-    def assertResponseIs(self, request, response, text=None):
-        self.assertEquals(self.conn.request(request), response, text)
+    assertResponseIs = assertResponseClosure(unittest.TestCase.assertEquals)
 
     def requireLogin(self, request, response, msg=None):
         try:
@@ -70,7 +68,17 @@ class TestProtocolLogic(unittest.TestCase):
 
     def testRegisterServer(self):
         self.requireLogin('(register-server)', '("registered-status" "successful")')
+        self.assertResponseIs('(list-servers)', '("servers" ((0 "127.0.0.1")))')
 
+    def testManipulateCount(self):
+        self.testRegisterServer()
+        self.assertResponseIs('(my-count)', '("your-count" 0)')
+        self.assertResponseIs('(my-count add)', '("your-count" 1)')
+        self.assertResponseIs('(my-count sub)', '("your-count" 0)')
+
+    def testGetServer(self):
+        self.testRegisterServer()
+        self.assertResponseIs('(get-server)', '("server" 0 "127.0.0.1")')
 
 if __name__ == '__main__':
     unittest.main()

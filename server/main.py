@@ -134,7 +134,7 @@ class RedirectFilter(LogicFilter):
         return [[i, j.address] for i,j in RedirectFilter.Servers.iteritems()]
 
     def chooseServer(self):
-        return [[i,j.address] for i, j in itertools.islice(RedirectFilter.Servers.iteritems(), 1)]
+        return [[i,j.address] for i, j in sorted(RedirectFilter.Servers.iteritems(), key=(lambda x: x[1].count))][0]
 
 def runRedirect(telnet_disabled):
     try:
