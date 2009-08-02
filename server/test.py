@@ -13,11 +13,10 @@ class LoginException(Exception):
 
 class MockConnection(Filter.Filter):
     def __init__(self, filters):
+        Filter.Filter.__init__(self)
         self.filters = [a() for a in filters]
         reduce(Filter.cascadeSetIn, [self] + self.filters)
-        self.done = threading.Event()
         self.response = ""
-        Filter.Filter.__init__(self)
 
     def write(self, s):
         self.response = ""
@@ -33,6 +32,7 @@ class MockConnection(Filter.Filter):
 class TestProtocolLogic(unittest.TestCase):
     def setUp(self):
         self.conn = MockConnection([main.RedirectFilter])
+        self.conn.begin()
         master = self.conn.filters[0]
         master.address ='127.0.0.1'
         master.ID = 0

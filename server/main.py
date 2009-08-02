@@ -23,8 +23,10 @@
 from networking.Server import TCPServer
 from networking.Filter import PacketizerFilter, CompressionFilter
 import sys
+import signal
 from optparse import OptionParser
 from filters.RedirectFilter import RedirectFilter
+from filters.GameServer import GameServer
 
 
 def runRedirect(telnet_disabled):
@@ -34,13 +36,25 @@ def runRedirect(telnet_disabled):
         master = TCPServer(19000,  *filters)
         print "Listening on port 19000."
         master.run()
+    except KeyboardInterrupt:
+        print ""
+        sys.exit(0)
     except Exception, exception:
         print "runRedirect - Unexpected error:", exception
         sys.exit(1)
     sys.exit(0)
 
 def runGameServer(telnet_disabled):
-    raise NotImplementedError("Game server is not yet implemented.")
+    server = GameServer("slave", "12345")
+    try:
+        server.run(telnet_disabled)
+    except KeyboardInterrupt:
+        print ""
+        sys.exit(0)
+    except Exception, e:
+        print "runGameServer - Unexpected error:", repr(e)
+        sys.exit(1)
+    #raise NotImplementedError("Game server is not yet implemented.")
 
 def main():
     parser = OptionParser()

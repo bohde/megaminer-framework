@@ -25,4 +25,5 @@ class RedirectFilter(LogicFilter):
         return [[i, j.address] for i,j in RedirectFilter.Servers.iteritems()]
 
     def chooseServer(self):
-        return [[i,j.address] for i, j in sorted(RedirectFilter.Servers.iteritems(), key=(lambda x: x[1].count))][0]
+        ret = [[i,j.address] for i, j in sorted(RedirectFilter.Servers.iteritems(), key=(lambda x: x[1].count))]
+        return [[], ret[0]][len(ret)>0]

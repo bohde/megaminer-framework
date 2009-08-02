@@ -88,6 +88,7 @@ class Filter:
             self.input.readOut(data)
 
     def writeOut(self, data):
+        self.initialized.wait()
         with self.wlock:
             self._writeOut(data)
 
@@ -138,7 +139,7 @@ class CompressionFilter(Filter):
         
     def _begin(self):
         if self.server:
-            self.writeOut(''.join(self.algorithms.keys()))
+            self._writeOut(''.join(self.algorithms.keys()))
 
     def _readOut(self, data):
         if not self.initialized.isSet():
@@ -148,7 +149,7 @@ class CompressionFilter(Filter):
                 self.begin()
             else:
                 self.otherAlgorithms = [i for i in data]
-                self.writeOut(''.join(self.algorithms.keys()))
+                self._writeOut(''.join(self.algorithms.keys()))
                 self.initialized.set()
                 self.begin()
         else:
@@ -156,7 +157,7 @@ class CompressionFilter(Filter):
             if algorithm not in self.algorithms:
                 self.error("UNKNOWN COMPRESSION ALGORITHM " + data)
             self.writeIn(self.algorithms[algorithm].decompress(data[1:]))
-            
+
     def _writeOut(self, data):
         if not self.initialized:
             Filter._writeOut(self, data)

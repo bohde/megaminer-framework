@@ -35,7 +35,7 @@ from Server import *
 from Filter import *
 import thread
 
-class Client:
+class Client(object):
     def __init__(self):
         self.connection = ConnectionWrapper(self)
 
@@ -52,11 +52,29 @@ class Client:
     def send(self, message):
         self.connection.send(message)
 
-    def  display(self, text, type='default'):
+    def display(self, text, type='default'):
         print text
 
     def mainloop(self, server='127.0.0.1', port=19000):
         self.connect(server, port)
+
+class AsyncClient(Client):
+    def __init__(self):
+        self.receivedData = ""
+        self.received = threading.Event()
+        Client.__init__(self)
+
+    def send(self, message):
+        self.received.clear()
+        Client.send(self, message)
+
+    def display(self, text, type='default'):
+        self.receivedData = text
+        self.received.set()
+
+    def getText(self):
+        self.received.wait()
+        return self.receivedData
 
 
 class WrapperFilter(Filter):
@@ -71,7 +89,7 @@ class WrapperFilter(Filter):
         self.wrapper.connection = None
         self.wrapper.receive("Disconnected", "status")
 
-class ConnectionWrapper:
+class ConnectionWrapper(object):
     def __init__(self, telnet):
         self.telnet = telnet
         WrapperFilter._wrapper = self
