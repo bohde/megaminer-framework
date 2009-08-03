@@ -12,7 +12,7 @@ from networking.Server import TCPServer
 def runFunctionBeforeMethod(f, m):
     @wraps(m)
     def wrapper(self, *args, **kwargs):
-        f(self.__class__.controller)
+        f(self)
         return m(self, *args, **kwargs)
     return wrapper
 
@@ -25,11 +25,18 @@ class GameFilter(LogicFilter):
 class CustomizeGameFilter(type):
     def __new__(cls, name, bases, dct):
         custom = type("custom", (GameFilter, object), dict( GameFilter.__dict__,))
-        custom.__init__ = runFunctionBeforeMethod(dct["message"], GameFilter.__init__)
+
+        def customInit(self, controller):
+            self.controller = controller
+            return runFunctionBeforeMethod(dct["message"], GameFilter.__init__)(self)
+
+        custom.__init__ = customInit
+
         def setSelfToGameClass(self):
-            gf = type('gf', (custom, object), dict( custom.__dict__, controller=self))
+            gf = custom(self)
             return gf
-        dct['CustomGameFilter'] = property(setSelfToGameClass)
+
+        dct['CustomGameFilter'] = setSelfToGameClass
         return type.__new__(cls, name, bases, dct)
 
     def __init__(cls, name, bases, dct):

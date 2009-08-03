@@ -6,6 +6,7 @@ import main
 import threading
 from game.test import *
 import functools
+from filters.GameServer import GameServer, GameFilter
 
 class LoginException(Exception):
     pass
@@ -80,6 +81,13 @@ class TestProtocolLogic(unittest.TestCase):
     def testGetServer(self):
         self.testRegisterServer()
         self.assertResponseIs('(get-server)', '("server" 0 "127.0.0.1")')
+
+class TestGameServer(unittest.TestCase):
+    def setUp(self):
+        self.server = GameServer('localhost', '19001')
+
+    def testFilterIsSubclassOfGameFilter(self):
+        self.assertTrue(isinstance(self.server.CustomGameFilter(), GameFilter))
 
 if __name__ == '__main__':
     unittest.main()
