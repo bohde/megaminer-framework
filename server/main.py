@@ -54,7 +54,6 @@ def runGameServer(telnet_disabled):
     except Exception, e:
         print "runGameServer - Unexpected error:", repr(e)
         sys.exit(1)
-    #raise NotImplementedError("Game server is not yet implemented.")
 
 def main():
     parser = OptionParser()
