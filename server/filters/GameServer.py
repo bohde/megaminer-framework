@@ -7,8 +7,6 @@ from GameFilter import GameFilter
 from networking.Filter import PacketizerFilter, CompressionFilter
 from networking.Server import TCPServer
 
-
-
 class ServerException(Exception):
     pass
 
