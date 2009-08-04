@@ -3,57 +3,59 @@ import sexpr.sexpr as sexpr
 
 from functools import wraps
 from networking.Client import AsyncClient
-from filters.LogicFilter import LogicFilter
+from GameFilter import GameFilter
 from networking.Filter import PacketizerFilter, CompressionFilter
 from networking.Server import TCPServer
 
 
 
-def runFunctionBeforeMethod(f, m):
-    @wraps(m)
-    def wrapper(self, *args, **kwargs):
-        f(self)
-        return m(self, *args, **kwargs)
-    return wrapper
-
 class ServerException(Exception):
     pass
-
-class GameFilter(LogicFilter):
-    pass
-
-class CustomizeGameFilter(type):
-    def __new__(cls, name, bases, dct):
-        custom = type("custom", (GameFilter, object), dict( GameFilter.__dict__,))
-
-        def customInit(self, controller):
-            self.controller = controller
-            return runFunctionBeforeMethod(dct["message"], GameFilter.__init__)(self)
-
-        custom.__init__ = customInit
-
-        def setSelfToGameClass(self):
-            gf = custom(self)
-            return gf
-
-        dct['CustomGameFilter'] = setSelfToGameClass
-        return type.__new__(cls, name, bases, dct)
-
-    def __init__(cls, name, bases, dct):
-        super(CustomizeGameFilter, cls).__init__(name, bases, dct)
-
 
 class GameServer(object):
     """
     Contacts redirect server.
     Accepts clients
     """
-    __metaclass__ = CustomizeGameFilter
+
+    class CustomGameFilter(GameFilter):
+        """
+        Inner class that is used to make hooks from methods in GameFilter to methods in GameServer
+        Note: __init__ must have "self.controller = controller" as it's first line.
+        """
+        @staticmethod
+        def runFunctionBeforeMethod(f):
+            def decoratorMethod(m):
+                @wraps(m)
+                def wrapper(self, *args, **kwargs):
+                    f(self.controller)
+                    return m(self, *args, **kwargs)
+                return wrapper
+            return decoratorMethod
+
+        @staticmethod
+        def runFunctionAfterMethod(f):
+            def decoratorMethod(m):
+                @wraps(m)
+                def wrapper(self, *args, **kwargs):
+                    ret = m(self, *args, **kwargs)
+                    f(self.controller)
+                    return ret
+                return wrapper
+            return decoratorMethod
+
+        def __init__(self, controller):
+            self.controller = controller
+            GameFilter.__init__(self)
+
 
     def __init__(self, user, password):
         self.client = AsyncClient()
         self.user = user
         self.password = password
+
+    def GameFilter(self):
+            return GameServer.CustomGameFilter(self)
 
     def sendToRedirect(self, l):
         self.client.send(sexpr.sexpr2str(l))
@@ -72,7 +74,7 @@ class GameServer(object):
         #self.sendToRedirect([
 
     def runServer(self, telnet_disabled):
-        filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [self.CustomGameFilter]
+        filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [self.GameFilter]
         self.server = TCPServer(19001,  *filters)
         server_thread = threading.Thread(None, self.server.run)
         server_thread.run()
@@ -82,6 +84,3 @@ class GameServer(object):
         self.login()
         self.registerAsServer()
         self.runServer(telnet_disabled)
-
-    def message(self):
-        print "Injected message before the function, called with arg", self

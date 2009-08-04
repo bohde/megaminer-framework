@@ -11,7 +11,6 @@ from filters.GameServer import GameServer, GameFilter
 class LoginException(Exception):
     pass
 
-
 class MockConnection(Filter.Filter):
     def __init__(self, filters):
         Filter.Filter.__init__(self)
@@ -87,7 +86,20 @@ class TestGameServer(unittest.TestCase):
         self.server = GameServer('localhost', '19001')
 
     def testFilterIsSubclassOfGameFilter(self):
-        self.assertTrue(isinstance(self.server.CustomGameFilter(), GameFilter))
+        self.assertTrue(isinstance(self.server.GameFilter(), GameFilter))
+
+    def testInjection(self):
+        def message(self):
+            self.message = "Injected message before the function, called with arg", self
+        GameServer.CustomGameFilter.__init__ = GameServer.CustomGameFilter.runFunctionAfterMethod(message)(GameServer.CustomGameFilter.__init__)
+        try:
+            self.server.message
+            self.fail()
+        except AttributeError:
+            pass
+        self.server.GameFilter()
+        self.assertTrue("Injected message before the function, called with arg" in self.server.message)
+
 
 if __name__ == '__main__':
     unittest.main()
