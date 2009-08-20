@@ -55,6 +55,7 @@ class GameWorld(object):
     """
     def __init__(self, generator):
         self.far_past, self.past, self.present = generator()
+        self.periods = [self.far_past, self.past, self.present]
 
 
 class RectangularGameWorld(GameWorld):
