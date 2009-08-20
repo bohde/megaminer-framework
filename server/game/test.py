@@ -1,6 +1,7 @@
 import game.base as base
 import unittest
 import collections
+from match import *
 
 def string_exception(e):
     return ', '.join(str(n) for n in [e.__class__, e])
@@ -76,7 +77,6 @@ class TestMatchBasics(unittest.TestCase):
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.assertTrue(self.game.start())
-        prin
 
     def test_add_unit(self):
         pass
