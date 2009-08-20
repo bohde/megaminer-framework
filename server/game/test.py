@@ -77,7 +77,20 @@ class TestMatchBasics(unittest.TestCase):
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.assertTrue(self.game.start())
+        self.assertEqual(self.game.turn, self.players[0])
+        
 
     def test_add_unit(self):
-        pass
+        self.game.addPlayer(self.players[0])
+        self.game.addPlayer(self.players[1])
+        previd = self.game.nextid
+        self.unitType = UnitType(self.game)
+        self.unit = Unit(self.game, 3, 7, self.players[0], self.unitType)
+        self.assertEqual(previd + 2, self.game.nextid)
+        self.game.addObject(self.unitType)
+        self.game.addObject(self.unit)
+        self.assertEqual(self.game.objects.get(self.unit.id), self.unit)
+        self.assertEqual(self.game.objects.get(self.unitType.id), \
+                          self.unitType)
 
+ 

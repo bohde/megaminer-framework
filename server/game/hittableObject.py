@@ -7,18 +7,17 @@ class HittableObject(MappableObject):
     are solely related to health, damage, or healing.
     """
     myType = "HittableObject"
-    def __init__(self, game, x, y, maxHP, overheal):
+    def __init__(self, game, x, y, type):
         MappableObject.__init__(self, game, x, y)
-        self.maxHP = maxHP
-        self.hp = maxHP
-        self.overheal = overheal
+        #TODO: Fix
 
     def nextTurn(self):
         MappableObject.nextTurn(self)
 
     def toList(self):
         list = MappableObject.toList(self)
-        list.extend([self.hp, int(self.maxHP*self.overheal)])
+        #TODO: Fix
+        #list.extend([self.hp])
         return list
 
     def isDestroyed(self):

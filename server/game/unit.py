@@ -6,9 +6,8 @@ class Unit(HittableObject):
     This class handles functions related to attacking and moving.
     """
     def __init__(self, game, x, y, owner, type):
-        HittableObject.__init__(self, game, x, y)
-        self.maxMoves = maxMoves
-        self.moves = 0
+        HittableObject.__init__(self, game, x, y, type)
+        #TODO: fix
         self.owner = owner
 
     def toList(self):
