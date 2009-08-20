@@ -71,12 +71,6 @@ class TestProtocolLogic(unittest.TestCase):
         self.requireLogin('(register-server)', '("registered-status" "successful")')
         self.assertResponseIs('(list-servers)', '("servers" ((0 "127.0.0.1")))')
 
-    def testManipulateCount(self):
-        self.testRegisterServer()
-        self.assertResponseIs('(my-count)', '("your-count" 0)')
-        self.assertResponseIs('(my-count add)', '("your-count" 1)')
-        self.assertResponseIs('(my-count sub)', '("your-count" 0)')
-
     def testGetServer(self):
         self.testRegisterServer()
         self.assertResponseIs('(get-server)', '("server" 0 "127.0.0.1")')

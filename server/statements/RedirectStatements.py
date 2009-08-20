@@ -57,15 +57,6 @@ def whoAmI(self, expression):
     self.writeSExpr(['who-you-are', ['id', self.ID], ['address', self.address]])
     return True
 
-#@mapper("login-accepted")
-#@require_length(2)
-#def loginAccepted(self, expression):
-    #print expression[1]
-
-#@mapper("malformed-statement")
-#def malformedStatement(self, expression):
-    #print expression
-
 @mapper('register-server')
 @require_length(1)
 @require_login
@@ -79,20 +70,6 @@ def registerServer(self, expression):
 @require_login
 def listServers(self, expression):
     self.writeSExpr(['servers', self.getServers()])
-    return True
-
-@mapper('my-count')
-@require_length(1,2)
-@require_login
-def myCount(self, expression):
-    if len(expression) == 2:
-        if(expression[1] == 'add'):
-            self.count += 1
-        elif(expression[1] == 'sub' and self.count > 0):
-            self.count -= 1
-        else:
-            raise Exception
-    self.writeSExpr(['your-count', self.count])
     return True
 
 @mapper('get-server')
@@ -119,13 +96,16 @@ def joinGame(self, expression):
     except:
         self.writeSExpr(['join-game-denied', ['invalid-number', expression[1]]])
     
-
 @mapper('end-game')
 @require_length(2)
 @require_login
 def endGame(self, expression):
     try:
-        self.deleteGame(int(expression[1]))
-        self.writeSExpr(['game-ended', int(expression[1])])
+        if self.deleteGame(int(expression[1])):
+            self.writeSExpr(['game-ended', int(expression[1])])
+            return
     except:
-        self.writeSExpr(['end-game-denied', ['invalid-number', expression[1]]])
+        pass
+    self.writeSExpr(['end-game-denied', ['invalid-number', expression[1]]])
+
+

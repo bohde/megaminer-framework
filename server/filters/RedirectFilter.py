@@ -5,14 +5,16 @@ import threading
 
 class RedirectFilter(LogicFilter):
     Servers = {}
+    GameNumber = 0
+    Games = dict()
+    GameLock = threading.Lock()
+
+
 
     def _init(self):
         LogicFilter._init(self)
         self.statements = RedirectStatements.statements
         self.count = 0
-        self.game_number = 0
-        self.games = dict()
-        self.game_lock = threading.Lock()
 
     def disconnect(self):
         if self.ID:
@@ -34,17 +36,22 @@ class RedirectFilter(LogicFilter):
         return [[], ret[0]][len(ret)>0]
 
     def createGame(self):
-        ret = ['game-number', self.game_number, ['server'] + self.chooseServer()]
-        with self.game_lock:
-            self.games[self.game_number] = ret[2]
-        self.game_number += 1
+        ret = ['game-number', RedirectFilter.GameNumber, ['server'] + self.chooseServer()]
+        with RedirectFilter.GameLock:
+            RedirectFilter.Games[RedirectFilter.GameNumber] = ret[2]
+        RedirectFilter.GameNumber += 1
+        RedirectFilter.Servers[ret[2][1]].count += 1
         return ret
 
     def lookupGame(self, number):
-        with self.game_lock:
-            return self.games[number]
+        with RedirectFilter.GameLock:
+            return RedirectFilter.Games[number]
 
     def deleteGame(self, number):
-        with self.game_lock:
-            del self.games[number]
+        with RedirectFilter.GameLock:
+            if RedirectFilter.Servers[RedirectFilter.Games[number][1]] == self:
+                del RedirectFilter.Games[number]
+                self.count -= 1
+                return True
+            return False
 
