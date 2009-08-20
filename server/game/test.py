@@ -79,7 +79,6 @@ class TestMatchBasics(unittest.TestCase):
         self.assertTrue(self.game.start())
         self.assertEqual(self.game.turn, self.players[0])
         
-
     def test_add_unit(self):
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
@@ -94,4 +93,28 @@ class TestMatchBasics(unittest.TestCase):
                           self.unitType)
         self.assertEqual(self.game.world.periods[0].area[(3,7)], [self.unit])
 
- 
+    def test_next_turn(self):
+        self.game.addPlayer(self.players[0])
+        self.game.addPlayer(self.players[1])
+        self.game.start()
+        self.game.nextTurn()
+        self.assertEqual(self.game.turn, self.players[1])
+        self.game.nextTurn()
+        self.assertEqual(self.game.turn, self.players[0])
+
+
+class TestUnits(unittest.TestCase):
+    def setUp(self):
+        self.game = Match(1)
+        self.players = [MockPlayer(), MockPlayer()]
+        self.unitType = UnitType(self.game)
+        self.units = []
+        self.units.append(Unit(self.game,3,7,0,self.players[0],self.unitType))
+        self.units.append(Unit(self.game,3,6,0,self.players[1],self.unitType))
+        self.game.addObject(self.unitType)
+        self.game.addObject(self.units[0])
+        self.game.addObject(self.units[1])
+        self.game.start()
+    
+    def test_attack(self):
+        self.game.attack(self.units[0].id, 3, 6)
