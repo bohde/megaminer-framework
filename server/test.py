@@ -81,6 +81,15 @@ class TestProtocolLogic(unittest.TestCase):
         self.testRegisterServer()
         self.assertResponseIs('(get-server)', '("server" 0 "127.0.0.1")')
 
+    def testStartGame(self):
+        self.assertResponseContains('(start-game)', 'not logged in')
+        self.testRegisterServer()
+        self.assertResponseIs('(start-game)', '("game-number" 0 ("server" 0 "127.0.0.1"))')
+        self.assertResponseIs('(join-game 0)', '("server" 0 "127.0.0.1")')
+        self.assertResponseIs('(end-game 0)', '("game-ended" 0)')
+        self.assertResponseIs('(join-game 0)', '("join-game-denied" ("invalid-number" 0))')
+    
+
 class TestGameServer(unittest.TestCase):
     def setUp(self):
         self.server = GameServer('localhost', '19001')
@@ -99,7 +108,7 @@ class TestGameServer(unittest.TestCase):
             pass
         self.server.GameFilter()
         self.assertTrue("Injected message before the function, called with arg " + str(self.server)  in self.server.message)
-
+    
 
 if __name__ == '__main__':
     unittest.main()
