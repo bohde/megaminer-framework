@@ -38,6 +38,7 @@ class Match:
         if len(self.players) < 2:
             return "Game is not full"
         self.sendStatus(self.players)
+        self.turn = self.players[0]
         return True
     
     @requireReferences(Building)
@@ -82,13 +83,13 @@ class Match:
         self.animations += [["add", newObject.id]]
         self.objects[newObject.id] = newObject
 
-    def loadUnitSet():
+    def loadUnitSet(self, cfgfile):
         cfgfile = "unitSet.cfg"
         unitConfig = readConfig(cfgfile)
         for name in unitConfig.keys():
             pass #TODO
 
-    def loadBuildingSet():
+    def loadBuildingSet(self, cfgfile):
         cfgfile = "buildingSet.cfg"
         buildingConfig = readConfig(cfgfile)
         #TODO
