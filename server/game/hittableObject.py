@@ -7,8 +7,8 @@ class HittableObject(MappableObject):
     are solely related to health, damage, or healing.
     """
     myType = "HittableObject"
-    def __init__(self, game, x, y, type):
-        MappableObject.__init__(self, game, x, y)
+    def __init__(self, game, x, y, z, type):
+        MappableObject.__init__(self, game, x, y, z)
         #TODO: Fix
 
     def nextTurn(self):
