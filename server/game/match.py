@@ -60,7 +60,7 @@ class Match:
 
     @requireReferences(Unit)
     def attack(self, unitID, x, y):
-        return self.objects(unitID).attack(x, y)
+        return self.objects[unitID].attack(x, y)
 
     @requireReferences(Unit)
     def move(self, unitID, x, y):
