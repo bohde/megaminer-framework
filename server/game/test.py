@@ -117,4 +117,10 @@ class TestUnits(unittest.TestCase):
         self.game.start()
     
     def test_attack(self):
-        self.game.attack(self.units[0].id, 3, 6)
+        self.assertTrue(self.game.attack(self.units[0].id, 3, 6))
+        try:
+            self.assertFalse(self.game.attack(234, 3, 6))
+            self.fail()
+        except Exception, e:
+            self.assertTrue(isinstance(e, KeyError), string_exception(e))
+            

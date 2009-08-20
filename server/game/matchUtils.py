@@ -8,6 +8,7 @@ def verifyReferences(self, expression, references):
             if not isinstance(self.objects[expression[i]], references[i]):
                 return str(expression[i]) + " does not reference a " \
                     + references.__name__
+    return True
 
 
 def requireReferences(*n):
@@ -15,7 +16,8 @@ def requireReferences(*n):
         @wraps(f)
         def wrapper(self, *expression):
             if not verifyReferences(self, expression, n):
+                print "INVALID ATTACK"
                 return False
-            return f(self, expression)
+            return f(self, *expression)
         return wrapper
     return dec

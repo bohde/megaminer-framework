@@ -22,7 +22,8 @@ class Unit(HittableObject):
     def move(self, targetX, targetY):
         return True
 
-
+    def attack(self, targetX, targetY):
+        return True
 
 
 
