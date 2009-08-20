@@ -12,7 +12,6 @@ from portal import *
 from config.config import *
 
 class Match:
-    world = DefaultGameWorld
 
     def __init__(self, id):
         self.id = int(id)
@@ -27,6 +26,9 @@ class Match:
                               #value: instance of the object
         self.turnNum = 0
         self.animations = []
+        self.world = DefaultGameWorld(10, 10)
+        self.unitcfg = "unitSet.cfg"
+        self.buildingcfg = "buildingSet.cfg"
 
     def addPlayer(self, player):
         if len(self.players) >= 2:
@@ -82,14 +84,14 @@ class Match:
     def addObject(self, newObject):
         self.animations += [["add", newObject.id]]
         self.objects[newObject.id] = newObject
+        if (isinstance(newObject, MappableObject)):
+            newObject.addToMap()
 
     def loadUnitSet(self, cfgfile):
-        cfgfile = "unitSet.cfg"
         unitConfig = readConfig(cfgfile)
         for name in unitConfig.keys():
             pass #TODO
 
     def loadBuildingSet(self, cfgfile):
-        cfgfile = "buildingSet.cfg"
         buildingConfig = readConfig(cfgfile)
         #TODO
