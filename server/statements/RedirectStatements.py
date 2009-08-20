@@ -101,3 +101,31 @@ def myCount(self, expression):
 def getServer(self, expression):
     self.writeSExpr(["server"] + self.chooseServer())
     return True
+
+@mapper('start-game')
+@require_length(1)
+@require_login
+def startGame(self, expression):
+    self.writeSExpr(self.createGame())
+    return True
+
+@mapper('join-game')
+@require_length(2)
+@require_login
+def joinGame(self, expression):
+    try:
+        self.writeSExpr(self.lookupGame(int(expression[1])))
+        return True
+    except:
+        self.writeSExpr(['join-game-denied', ['invalid-number', expression[1]]])
+    
+
+@mapper('end-game')
+@require_length(2)
+@require_login
+def endGame(self, expression):
+    try:
+        self.deleteGame(int(expression[1]))
+        self.writeSExpr(['game-ended', int(expression[1])])
+    except:
+        self.writeSExpr(['end-game-denied', ['invalid-number', expression[1]]])
