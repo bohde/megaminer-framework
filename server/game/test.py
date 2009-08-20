@@ -42,3 +42,42 @@ class TestBaseObjects(unittest.TestCase):
             except Exception, e:
                 self.fail()
 
+class MockPlayer(object):
+    """
+    An object to receive messages as if it were a player.  This class will
+    be used to test the game code without having to rely on all the
+    networking code.
+    """
+    def __init__(self):
+        self.messages = [] #A list of messages this player has received
+
+    def writeSExpr(self, message):
+        self.messages.append(message)
+
+    def last(self):
+        return self.messages[len(self.messages) - 1]
+
+
+class TestMatchBasics(unittest.TestCase):
+    def setUp(self):
+        self.game = Match(1)
+        self.players = [MockPlayer(), MockPlayer()]
+
+    def test_join_game(self):
+        self.assertEqual(self.game.players, [])
+        self.game.addPlayer(self.players[0])
+        self.assertNotEqual(True, self.game.start())
+        self.assertEqual([self.players[0]], self.game.players)
+        self.game.addPlayer(self.players[1])
+        self.assertEqual(self.players, self.game.players)
+        self.assertNotEqual(True, self.game.addPlayer(MockPlayer()))
+
+    def test_start_game(self):
+        self.game.addPlayer(self.players[0])
+        self.game.addPlayer(self.players[1])
+        self.assertTrue(self.game.start())
+        prin
+
+    def test_add_unit(self):
+        pass
+
