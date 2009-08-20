@@ -29,6 +29,8 @@ class Match:
         self.world = DefaultGameWorld(10, 10)
         self.unitcfg = "unitSet.cfg"
         self.buildingcfg = "buildingSet.cfg"
+        self.loadUnitSet(self.unitcfg)
+        self.loadBuildingSet(self.buildingcfg)
 
     def addPlayer(self, player):
         if len(self.players) >= 2:
@@ -42,6 +44,15 @@ class Match:
         self.sendStatus(self.players)
         self.turn = self.players[0]
         return True
+
+    def nextTurn(self):
+        self.turnNum += 1
+        if (self.turn == self.players[0]):
+            self.turn = self.players[1]
+        else:
+            self.turn = self.players[0]
+        for obj in self.objects.values():
+            obj.nextTurn()
     
     @requireReferences(Building)
     def train(self, buildingID, typeID):
