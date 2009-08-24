@@ -27,8 +27,8 @@ class Match:
         self.turnNum = 0
         self.animations = []
         self.world = DefaultGameWorld(10, 10)
-        self.unitcfg = "unitSet.cfg"
-        self.buildingcfg = "buildingSet.cfg"
+        self.unitcfg = "config/unitSet.cfg"
+        self.buildingcfg = "config/buildingSet.cfg"
         self.loadUnitSet(self.unitcfg)
         self.loadBuildingSet(self.buildingcfg)
 
@@ -101,7 +101,11 @@ class Match:
     def loadUnitSet(self, cfgfile):
         unitConfig = readConfig(cfgfile)
         for name in unitConfig.keys():
-            pass #TODO
+            newType = UnitType(self)
+            newType.name = name
+            for attribute in unitConfig[name].keys():
+                setattr(newType, attribute, unitConfig[name][attribute])
+            self.addObject(newType)
 
     def loadBuildingSet(self, cfgfile):
         buildingConfig = readConfig(cfgfile)
