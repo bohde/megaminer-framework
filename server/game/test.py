@@ -104,6 +104,14 @@ class TestObjectCreation(unittest.TestCase):
                           self.unitType)
         self.assertEqual(self.game.world.periods[0].area[(3,7)], [self.unit])
 
+    def test_config_unit_set(self):
+        self.game.loadUnitSet("config/testUnitSet.cfg")
+        wolf = self.game.objects.get(self.game.nextid - 2)
+        panda = self.game.objects.get(self.game.nextid - 1)
+        self.assertEqual(panda.name, "Panda")
+        self.assertTrue(panda.cute and not panda.deadly)
+        self.assertEqual(wolf.name, "Wolf")
+        self.assertTrue(not wolf.cute and wolf.deadly)
 
 class TestUnits(unittest.TestCase):
     def setUp(self):
