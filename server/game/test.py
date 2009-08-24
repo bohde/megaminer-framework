@@ -59,7 +59,7 @@ class MockPlayer(object):
         return self.messages[len(self.messages) - 1]
 
 
-class TestMatchBasics(unittest.TestCase):
+class TestMatchStart(unittest.TestCase):
     def setUp(self):
         self.game = Match(1)
         self.players = [MockPlayer(), MockPlayer()]
@@ -73,15 +73,26 @@ class TestMatchBasics(unittest.TestCase):
         self.assertEqual(self.players, self.game.players)
         self.assertNotEqual(True, self.game.addPlayer(MockPlayer()))
 
-    def test_start_game(self):
+    def test_turn_order(self):
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.assertTrue(self.game.start())
         self.assertEqual(self.game.turn, self.players[0])
-        
-    def test_add_unit(self):
+        self.game.nextTurn()
+        self.assertEqual(self.game.turn, self.players[1])
+        self.game.nextTurn()
+        self.assertEqual(self.game.turn, self.players[0])
+
+
+class TestObjectCreation(unittest.TestCase):
+    def setUp(self):
+        self.game =  Match(1)
+        self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
+        self.game.start()
+
+    def test_add_unit(self):
         previd = self.game.nextid
         self.unitType = UnitType(self.game)
         self.unit = Unit(self.game, 3, 7, 0, self.players[0], self.unitType)
@@ -92,15 +103,6 @@ class TestMatchBasics(unittest.TestCase):
         self.assertEqual(self.game.objects.get(self.unitType.id), \
                           self.unitType)
         self.assertEqual(self.game.world.periods[0].area[(3,7)], [self.unit])
-
-    def test_next_turn(self):
-        self.game.addPlayer(self.players[0])
-        self.game.addPlayer(self.players[1])
-        self.game.start()
-        self.game.nextTurn()
-        self.assertEqual(self.game.turn, self.players[1])
-        self.game.nextTurn()
-        self.assertEqual(self.game.turn, self.players[0])
 
 
 class TestUnits(unittest.TestCase):
