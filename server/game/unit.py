@@ -9,6 +9,7 @@ class Unit(HittableObject):
         HittableObject.__init__(self, game, x, y, z, type)
         self.hp = type.hp
         self.actions = 0
+        self.moves = 0
         self.owner = owner
         self.type = type
 
@@ -21,8 +22,24 @@ class Unit(HittableObject):
     def nextTurn(self):
         HittableObject.nextTurn(self)
         self.actions = self.type.actions
+        self.moves = self.type.moves
 
     def move(self, targetX, targetY):
+        dis = self.game.world.distance(self.x, self.y, targetX, targetY)
+        if (not self.owner == self.game.turn):
+            return str(self.id) + " does not belong to you"
+        if (self.moves < 1):
+            return str(self.id) + " is out of moves"
+        if (dis != 1):
+            return str(self.id) + " can only move to adjacent squares"
+        myPeriod = self.game.world.periods[self.z]
+        if (not myPeriod.area.inBounds(targetX, targetY)):
+            return str(self.id) + " can not move off the map"
+        self.removeFromMap()
+        self.x = targetX
+        self.y = targetY
+        self.moves -= 1
+        self.addToMap()
         return True
 
     def attack(self, targetX, targetY):
@@ -42,5 +59,10 @@ class Unit(HittableObject):
         self.actions -= 1
         return True
 
-
+    def build(self, targetX, targetY, buildingType=None):
+        """
+        Attempts to construct the desired building, or continues the building
+        already at that location if no type is specified.
+        """
+        pass
 
