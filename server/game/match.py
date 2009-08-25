@@ -6,8 +6,8 @@ from unitType import *
 from buildingType import *
 from mappableObject import *
 from hittableObject import *
-from unit import *
 from building import *
+from unit import *
 from portal import *
 from config.config import *
 
@@ -41,8 +41,11 @@ class Match:
     def start(self):
         if len(self.players) < 2:
             return "Game is not full"
+        if (self.winner is not None or self.turn is not None):
+            return "Game has already begun"
         self.sendStatus(self.players)
         self.turn = self.players[0]
+        self.organizeTechTree()
         return True
 
     def nextTurn(self):
@@ -70,9 +73,9 @@ class Match:
     def paint(self, unitID, x, y):
         return self.objects[unitID].paint(x, y)
 
-    @requireReferences(Unit, BuildingType)
-    def build(self, unitID, typeID, x, y):
-        return self.objects[unitID].build(self.objects[typeID],x, y)
+    @requireReferences(Unit, None, None, BuildingType)
+    def build(self, unitID, x, y, typeID):
+        return self.objects[unitID].build(x, y, self.objects[typeID])
 
     def sendMap(self, players):
         pass #TODO
@@ -122,3 +125,17 @@ class Match:
                 setattr(newType, attribute, cfgDict[name][attribute])
             self.addObject(newType)
 
+    def organizeTechTree(self):
+        """
+        Pre: All unit and building types must be loaded.
+        Post: Unit types and building types with their trainedBy or 
+              builtBy attributes set to string names will have these values
+              converted to the corresponding objects.  All others will have
+              these attributes set to None.
+        """
+        pass
+
+    def getBuilding(self, x, y, z):
+        for obj in self.world.periods[z].area[(x,y)]:
+            if isinstance(obj, BuildingType):
+                return obj
