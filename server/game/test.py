@@ -65,6 +65,9 @@ class TestMatchStart(unittest.TestCase):
         self.players = [MockPlayer(), MockPlayer()]
 
     def test_join_game(self):
+        """
+        Tests Match.addPlayer and Match.nextTurn
+        """
         self.assertEqual(self.game.players, [])
         self.game.addPlayer(self.players[0])
         self.assertNotEqual(True, self.game.start())
@@ -72,10 +75,6 @@ class TestMatchStart(unittest.TestCase):
         self.game.addPlayer(self.players[1])
         self.assertEqual(self.players, self.game.players)
         self.assertNotEqual(True, self.game.addPlayer(MockPlayer()))
-
-    def test_turn_order(self):
-        self.game.addPlayer(self.players[0])
-        self.game.addPlayer(self.players[1])
         self.assertTrue(self.game.start())
         self.assertEqual(self.game.turn, self.players[0])
         self.game.nextTurn()
@@ -92,45 +91,48 @@ class TestObjectCreation(unittest.TestCase):
         self.game.addPlayer(self.players[1])
         self.game.start()
 
-    def test_add_unit(self):
+    def test_load_units(self):
+        """
+        Tests Match.loadUnitSet and Match.addObject applied to units and
+        unit types.
+        """
+        self.game.loadUnitSet("config/testUnitSet.cfg")
+        wolfType = self.game.objects.get(self.game.nextid - 2)
+        pandaType = self.game.objects.get(self.game.nextid - 1)
+        self.assertEqual(pandaType.name, "Panda")
+        self.assertTrue(pandaType.cute and not pandaType.deadly)
+        self.assertEqual(wolfType.name, "Wolf")
+        self.assertTrue(not wolfType.cute and wolfType.deadly)
         previd = self.game.nextid
-        self.unitType = UnitType(self.game)
-        self.unit = Unit(self.game, 3, 7, 0, self.players[0], self.unitType)
-        self.assertEqual(previd + 2, self.game.nextid)
-        self.game.addObject(self.unitType)
+        self.unit = Unit(self.game, 3, 7, 0, self.players[0], pandaType)
+        self.assertEqual(previd + 1, self.game.nextid)
         self.game.addObject(self.unit)
         self.assertEqual(self.game.objects.get(self.unit.id), self.unit)
-        self.assertEqual(self.game.objects.get(self.unitType.id), \
-                          self.unitType)
         self.assertEqual(self.game.world.periods[0].area[(3,7)], [self.unit])
 
-    def test_config_unit_set(self):
-        self.game.loadUnitSet("config/testUnitSet.cfg")
-        wolf = self.game.objects.get(self.game.nextid - 2)
-        panda = self.game.objects.get(self.game.nextid - 1)
-        self.assertEqual(panda.name, "Panda")
-        self.assertTrue(panda.cute and not panda.deadly)
-        self.assertEqual(wolf.name, "Wolf")
-        self.assertTrue(not wolf.cute and wolf.deadly)
 
-class TestUnits(unittest.TestCase):
+class TestCombat(unittest.TestCase):
     def setUp(self):
         self.game = Match(1)
         self.players = [MockPlayer(), MockPlayer()]
-        self.unitType = UnitType(self.game)
+        self.game.loadUnitSet("config/testUnitSet.cfg")
+        wolfType = self.game.objects.get(self.game.nextid - 2)
+        pandaType = self.game.objects.get(self.game.nextid - 1)
         self.units = []
-        self.units.append(Unit(self.game,3,7,0,self.players[0],self.unitType))
-        self.units.append(Unit(self.game,3,6,0,self.players[1],self.unitType))
-        self.game.addObject(self.unitType)
+        self.units.append(Unit(self.game,3,7,0,self.players[0],wolfType))
+        self.units.append(Unit(self.game,3,6,0,self.players[1],pandaType))
         self.game.addObject(self.units[0])
         self.game.addObject(self.units[1])
         self.game.start()
     
     def test_attack(self):
         self.assertTrue(self.game.attack(self.units[0].id, 3, 6))
+        self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
+        self.assertTrue(self.game.attack(self.units[0].id, 3, 6))
+        self.assertEqual(None, self.objects.get(self.units[1].id))
         try:
             self.assertFalse(self.game.attack(234, 3, 6))
             self.fail()
         except Exception, e:
             self.assertTrue(isinstance(e, KeyError), string_exception(e))
-            
+        self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
