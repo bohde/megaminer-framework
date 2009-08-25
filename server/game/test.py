@@ -142,8 +142,8 @@ class TestActions(unittest.TestCase):
         self.game.addObject(self.units[0])
         self.game.addObject(self.units[1])
         self.game.loadBuildingSet("config/testBuildingSet.cfg")
-        houseType = self.game.objects.get(self.game.nextid - 1)
-        self.home = Building(self.game, 4, 7, 0, self.players[0], houseType)
+        self.houseType = self.game.objects.get(self.game.nextid - 1)
+        self.home = Building(self.game, 4,7,0, self.players[0],self.houseType)
         self.game.addObject(self.home)
         self.game.start()
     
@@ -174,3 +174,21 @@ class TestActions(unittest.TestCase):
         self.game.nextTurn()
         self.assertEqual(True, self.game.move(self.units[0].id, 3, 10))
         self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 11))
+
+    def test_build(self):
+        x, y = 4, 6
+        builderID = int(self.units[1].id)
+        typeID = int(self.houseType.id)
+        attemptBuild = lambda: self.game.build(builderID, x, y, typeID)
+        self.assertNotEqual(True, attemptBuild())
+        self.game.nextTurn()
+        y = 9
+        self.assertNotEqual(True, attemptBuild())
+        y = 6
+        self.assertEqual(True, attemptBuild())
+        newHouse = self.game.world.periods[0].area[(x,y)][0]
+        self.assertEqual(newHouse.type.name, "House")
+        self.assertNotEqual(True, attemptBuild())
+        self.game.nextTurn()
+        builderID = int(self.units[0].id)
+        self.assertNotEqual(True, attemptBuild())

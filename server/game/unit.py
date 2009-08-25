@@ -1,4 +1,5 @@
 from hittableObject import *
+from building import *
 
 class Unit(HittableObject):
     """
@@ -64,5 +65,24 @@ class Unit(HittableObject):
         Attempts to construct the desired building, or continues the building
         already at that location if no type is specified.
         """
-        pass
+        if (not self.owner == self.game.turn):
+            return str(self.id) + " does not belong to you"
+        if (self.actions < 1):
+            return str(self.id) + " is out of actions"
+        dis = self.game.world.distance(self.x, self.y, targetX, targetY)
+        if (dis > 1):
+            return str(self.id) + " must be adjacent to build"
+        existingBuilding = self.game.getBuilding(targetX, targetY, self.z)
+        if (buildingType is None):
+            if (existingBuilding is None):
+                return str(self.id) + " tried to build nothing"
+            existingBuilding.beBuilt()
+        else:
+            if (existingBuilding is not None):
+                return str(self.id) + " tried to build on top of a building"
+            newBuilding = Building(self.game, targetX, targetY, self.z, \
+                                   self.owner, buildingType)
+            self.game.addObject(newBuilding)
+        self.actions -= 1
+        return True
 

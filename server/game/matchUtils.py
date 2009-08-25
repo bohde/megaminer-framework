@@ -7,7 +7,7 @@ def verifyReferences(self, expression, references):
                 return str(expression[i]) + " does not exist"
             if not isinstance(self.objects[expression[i]], references[i]):
                 return str(expression[i]) + " does not reference a " \
-                    + references.__name__
+                    + references[i].__name__
     return True
 
 
