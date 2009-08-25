@@ -15,8 +15,8 @@ def requireReferences(*n):
     def dec(f):
         @wraps(f)
         def wrapper(self, *expression):
-            if not verifyReferences(self, expression, n):
-                print "INVALID ATTACK"
+            errMsg = verifyReferences(self, expression, n)
+            if not (errMsg == True):
                 return False
             return f(self, *expression)
         return wrapper

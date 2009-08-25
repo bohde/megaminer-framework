@@ -98,6 +98,12 @@ class Match:
         if (isinstance(newObject, MappableObject)):
             newObject.addToMap()
 
+    def removeObject(self, oldObject):
+        self.animations += [["remove", oldObject.id]]
+        if isinstance(oldObject, MappableObject):
+            oldObject.removeFromMap()
+        del self.objects[oldObject.id]
+
     def loadUnitSet(self, cfgfile):
         unitConfig = readConfig(cfgfile)
         for name in unitConfig.keys():

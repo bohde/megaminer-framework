@@ -28,6 +28,11 @@ class Unit(HittableObject):
     def attack(self, targetX, targetY):
         if (not self.owner == self.game.turn):
             return str(self.id) + " does not belong to you"
+        if (self.actions < 1):
+            return str(self.id) + " is out of actions"
+        for target in self.game.world.periods[self.z].area[(targetX, targetY)]:
+            target.takeDamage(self.type.damage)
+        self.actions -= 1
         return True
 
 

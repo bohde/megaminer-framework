@@ -9,7 +9,7 @@ class HittableObject(MappableObject):
     myType = "HittableObject"
     def __init__(self, game, x, y, z, type):
         MappableObject.__init__(self, game, x, y, z)
-        #TODO: Fix
+        self.type = type
 
     def nextTurn(self):
         MappableObject.nextTurn(self)
@@ -27,7 +27,8 @@ class HittableObject(MappableObject):
         return destroyed
 
     def takeDamage(self, damage):
-        self.hp -= damage
-        if (self.hp > self.maxHP * self.overheal):
-            self.hp = self.maxHP * self.overheal
+        dmgTaken = max(damage - self.type.armor, 1)
+        self.hp -= dmgTaken
+        if (self.isDestroyed()):
+            self.game.removeObject(self)
 
