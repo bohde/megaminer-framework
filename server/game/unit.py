@@ -30,6 +30,13 @@ class Unit(HittableObject):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
+        dis = self.game.world.distance(self.x, self.y, targetX, targetY)
+        if (dis > self.type.maxRange):
+            return str(self.id) + " is out of range of " + str(targetX) \
+                   + ", " + str(targetY)
+        if (dis < self.type.minRange):
+            return str(self.id) + " is inside the min range of " \
+                   + str(targetX) + ", " + str(targetY)
         for target in self.game.world.periods[self.z].area[(targetX, targetY)]:
             target.takeDamage(self.type.damage)
         self.actions -= 1

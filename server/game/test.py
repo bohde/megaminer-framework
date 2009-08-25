@@ -132,6 +132,8 @@ class TestCombat(unittest.TestCase):
         self.game.nextTurn()
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.game.nextTurn()
+        self.assertNotEqual(True, self.game.attack(self.units[0].id, 4, 9))
+        self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 7))
         self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
         self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
