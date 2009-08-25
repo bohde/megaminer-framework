@@ -75,7 +75,7 @@ class TestMatchStart(unittest.TestCase):
         self.game.addPlayer(self.players[1])
         self.assertEqual(self.players, self.game.players)
         self.assertNotEqual(True, self.game.addPlayer(MockPlayer()))
-        self.assertTrue(self.game.start())
+        self.assertEqual(True, self.game.start())
         self.assertEqual(self.game.turn, self.players[0])
         self.game.nextTurn()
         self.assertEqual(self.game.turn, self.players[1])
@@ -115,6 +115,8 @@ class TestCombat(unittest.TestCase):
     def setUp(self):
         self.game = Match(1)
         self.players = [MockPlayer(), MockPlayer()]
+        self.game.addPlayer(self.players[0])
+        self.game.addPlayer(self.players[1])
         self.game.loadUnitSet("config/testUnitSet.cfg")
         wolfType = self.game.objects.get(self.game.nextid - 2)
         pandaType = self.game.objects.get(self.game.nextid - 1)
@@ -126,13 +128,13 @@ class TestCombat(unittest.TestCase):
         self.game.start()
     
     def test_attack(self):
-        self.assertTrue(self.game.attack(self.units[0].id, 3, 6))
+        self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 6))
+        self.game.nextTurn()
+        self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 6))
+        self.game.nextTurn()
+        self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
-        self.assertTrue(self.game.attack(self.units[0].id, 3, 6))
-        self.assertEqual(None, self.objects.get(self.units[1].id))
-        try:
-            self.assertFalse(self.game.attack(234, 3, 6))
-            self.fail()
-        except Exception, e:
-            self.assertTrue(isinstance(e, KeyError), string_exception(e))
+        self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
+        self.assertEqual(None, self.game.objects.get(self.units[1].id))
+        self.assertNotEqual(True, self.game.attack(234, 3, 6))
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
