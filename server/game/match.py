@@ -64,15 +64,15 @@ class Match:
 
     @requireReferences(Unit)
     def move(self, unitID, x, y):
-        return self.objects(unitID).move(x, y)
+        return self.objects[unitID].move(x, y)
 
     @requireReferences(Unit)
     def paint(self, unitID, x, y):
-        return self.objects(unitID).paint(x, y)
+        return self.objects[unitID].paint(x, y)
 
     @requireReferences(Unit, BuildingType)
     def build(self, unitID, typeID, x, y):
-        return self.objects(unitID).build(self.objects(typeID),x, y)
+        return self.objects[unitID].build(self.objects[typeID],x, y)
 
     def sendMap(self, players):
         pass #TODO
@@ -114,5 +114,11 @@ class Match:
             self.addObject(newType)
 
     def loadBuildingSet(self, cfgfile):
-        buildingConfig = readConfig(cfgfile)
-        #TODO
+        cfgDict = readConfig(cfgfile)
+        for name in cfgDict.keys():
+            newType = BuildingType(self)
+            newType.name = name
+            for attribute in cfgDict[name].keys():
+                setattr(newType, attribute, cfgDict[name][attribute])
+            self.addObject(newType)
+
