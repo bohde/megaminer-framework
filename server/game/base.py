@@ -67,4 +67,7 @@ class RectangularGameWorld(GameWorld):
         rectangularAreas = functools.partial(rectangularAreasBuilder, f=basicMapGeneration)
         GameWorld.__init__(self, rectangularAreas(x, y))
 
+    def distance(self, startX, startY, endX, endY):
+        return abs(startX - endX) + abs(startY - endY)
+
 DefaultGameWorld = RectangularGameWorld
