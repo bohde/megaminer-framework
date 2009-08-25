@@ -110,21 +110,41 @@ class TestObjectCreation(unittest.TestCase):
         self.assertEqual(self.game.objects.get(self.unit.id), self.unit)
         self.assertEqual(self.game.world.periods[0].area[(3,7)], [self.unit])
 
+    def test_load_buildings(self):
+        """
+        Tests Match.loadBuildingSet and Match.addObject applied to buildings
+        """
+        previd = self.game.nextid
+        self.game.loadBuildingSet("config/testBuildingSet.cfg")
+        self.assertEqual(previd + 1, self.game.nextid)
+        houseType = self.game.objects.get(self.game.nextid - 1)
+        self.assertEqual(houseType.name, "House")
+        self.assertTrue(houseType.fancy)
+        self.home = Building(self.game, 4, 7, 0, self.players[0], houseType)
+        self.game.addObject(self.home)
+        self.assertEqual(self.game.objects.get(self.home.id), self.home)
+        self.assertEqual(self.game.world.periods[0].area[(4,7)], [self.home])
+        self.assertEqual(self.home.hp, 44)
 
-class TestCombat(unittest.TestCase):
+
+class TestActions(unittest.TestCase):
     def setUp(self):
         self.game = Match(1)
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.game.loadUnitSet("config/testUnitSet.cfg")
-        wolfType = self.game.objects.get(self.game.nextid - 2)
-        pandaType = self.game.objects.get(self.game.nextid - 1)
+        self.wolfType = self.game.objects.get(self.game.nextid - 2)
+        self.pandaType = self.game.objects.get(self.game.nextid - 1)
         self.units = []
-        self.units.append(Unit(self.game,3,7,0,self.players[0],wolfType))
-        self.units.append(Unit(self.game,3,6,0,self.players[1],pandaType))
+        self.units.append(Unit(self.game,3,7,0,self.players[0],self.wolfType))
+        self.units.append(Unit(self.game,3,6,0,self.players[1],self.pandaType))
         self.game.addObject(self.units[0])
         self.game.addObject(self.units[1])
+        self.game.loadBuildingSet("config/testBuildingSet.cfg")
+        houseType = self.game.objects.get(self.game.nextid - 1)
+        self.home = Building(self.game, 4, 7, 0, self.players[0], houseType)
+        self.game.addObject(self.home)
         self.game.start()
     
     def test_attack(self):
@@ -138,5 +158,19 @@ class TestCombat(unittest.TestCase):
         self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
         self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.assertEqual(None, self.game.objects.get(self.units[1].id))
+        self.assertEqual([], self.game.world.periods[0].area[(3,6)])
         self.assertNotEqual(True, self.game.attack(234, 3, 6))
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
+
+    def test_move(self):
+        self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 8))
+        self.game.nextTurn()
+        self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 8))
+        self.game.nextTurn()
+        self.assertEqual(True, self.game.move(self.units[0].id, 3, 8))
+        self.assertEqual(True, self.game.move(self.units[0].id, 3, 9))
+        self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 10))
+        self.game.nextTurn()
+        self.game.nextTurn()
+        self.assertEqual(True, self.game.move(self.units[0].id, 3, 10))
+        self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 11))
