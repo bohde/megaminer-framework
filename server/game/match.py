@@ -80,6 +80,10 @@ class Match:
     def build(self, unitID, x, y, typeID):
         return self.objects[unitID].build(x, y, self.objects[typeID])
 
+    @requireReferences(Building)
+    def cancel(self, buildingID):
+        return self.objects[buildingID].cancel()
+
     def sendMap(self, players):
         pass #TODO
 

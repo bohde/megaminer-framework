@@ -63,5 +63,14 @@ class Building(HittableObject):
         self.owner.gold -= newUnitType.price
         return True
 
+    def cancel(self):
+        if (not self.game.turn == self.owner):
+            return str(self.id) + " is not your building"
+        if (self.complete):
+            return str(self.id) + " is complete and can not be canceled."
+        self.owner.gold += self.type.price
+        self.game.removeObject(self)
+        return True
+
 from unit import *
 
