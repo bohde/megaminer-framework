@@ -26,8 +26,11 @@ class HittableObject(MappableObject):
             destroyed = True
         return destroyed
 
-    def takeDamage(self, damage):
-        dmgTaken = max(damage - self.type.armor, 1)
+    def takeDamage(self, damage, ignoreArmor=False):
+        if (ignoreArmor):
+            dmgTaken = int(damage)
+        else:
+            dmgTaken = max(damage - self.type.armor, 1)
         self.hp -= dmgTaken
         if (self.isDestroyed()):
             self.game.removeObject(self)
