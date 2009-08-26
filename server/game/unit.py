@@ -76,10 +76,15 @@ class Unit(HittableObject):
         if (buildingType is None):
             if (existingBuilding is None):
                 return str(self.id) + " tried to build nothing"
+            if (existingBuilding.type.builtBy != self.type):
+                return str(self.id) + " can not continue construction on" \
+                                    + " that type"
             existingBuilding.beBuilt()
         else:
             if (existingBuilding is not None):
                 return str(self.id) + " tried to build on top of a building"
+            if (buildingType.builtBy != self.type):
+                return str(self.id) + " can not construct that type"
             newBuilding = Building(self.game, targetX, targetY, self.z, \
                                    self.owner, buildingType)
             self.game.addObject(newBuilding)
