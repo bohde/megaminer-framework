@@ -191,4 +191,6 @@ class TestActions(unittest.TestCase):
         self.assertNotEqual(True, attemptBuild())
         self.game.nextTurn()
         builderID = int(self.units[0].id)
+        x = 3
         self.assertNotEqual(True, attemptBuild())
+
