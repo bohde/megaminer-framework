@@ -175,13 +175,16 @@ class TestActions(unittest.TestCase):
         self.assertEqual(True, self.game.move(self.units[0].id, 3, 10))
         self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 11))
 
-    def test_build(self):
+    def test_build_cancel(self):
+        """
+        Tests both Unit.build and Building.cancel
+        """
         x, y = 4, 6
         builderID = int(self.units[1].id)
         typeID = int(self.houseType.id)
         self.players[1].gold = 180
         attemptBuild = lambda: self.game.build(builderID, x, y, typeID)
-        self.assertNotEqual(True, attemptBuild())
+        self.assertNotEqual(True, attemptBuild()) #not your unit
         self.game.nextTurn()
         y = 9
         self.assertNotEqual(True, attemptBuild()) #not adjacent
@@ -193,7 +196,9 @@ class TestActions(unittest.TestCase):
         self.assertEqual(29, self.players[1].gold)
         newHouse = self.game.world.periods[0].area[(x,y)][0]
         self.assertEqual(newHouse.type.name, "House")
-        self.assertNotEqual(True, attemptBuild())
+        self.assertEqual(True, self.game.cancel(newHouse.id))
+        self.assertEqual(180, self.players[1].gold)
+        self.assertNotEqual(True, self.game.cancel(self.home.id)) #completed
         self.game.nextTurn()
         builderID = int(self.units[0].id)
         x = 3
