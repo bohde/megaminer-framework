@@ -7,18 +7,17 @@ class HittableObject(MappableObject):
     are solely related to health, damage, or healing.
     """
     myType = "HittableObject"
-    def __init__(self, game, x, y, maxHP, overheal):
-        MappableObject.__init__(self, game, x, y)
-        self.maxHP = maxHP
-        self.hp = maxHP
-        self.overheal = overheal
+    def __init__(self, game, x, y, z, type):
+        MappableObject.__init__(self, game, x, y, z)
+        self.type = type
 
     def nextTurn(self):
         MappableObject.nextTurn(self)
 
     def toList(self):
         list = MappableObject.toList(self)
-        list.extend([self.hp, int(self.maxHP*self.overheal)])
+        #TODO: Fix
+        #list.extend([self.hp])
         return list
 
     def isDestroyed(self):
@@ -27,8 +26,12 @@ class HittableObject(MappableObject):
             destroyed = True
         return destroyed
 
-    def takeDamage(self, damage):
-        self.hp -= damage
-        if (self.hp > self.maxHP * self.overheal):
-            self.hp = self.maxHP * self.overheal
+    def takeDamage(self, damage, ignoreArmor=False):
+        if (ignoreArmor):
+            dmgTaken = int(damage)
+        else:
+            dmgTaken = max(damage - self.type.armor, 1)
+        self.hp -= dmgTaken
+        if (self.isDestroyed()):
+            self.game.removeObject(self)
 

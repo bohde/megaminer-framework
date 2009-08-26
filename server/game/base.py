@@ -20,10 +20,12 @@ class RectangularArea(collections.defaultdict):
         if not(all([isinstance(n, int) for n in key])):
             raise TypeError('Coordinates need to be integers!')
         x, y = key
-        if abs(x) > self.max_x or abs(y) > self.max_y:
+        if not self.inBounds(x,y):
             raise IndexError('(%u, %u) is not within (-+%u, -+%u)' % (x, y, self.max_x, self.max_y))
         return collections.defaultdict.__missing__(self, key)
 
+    def inBounds(self, x, y):
+        return (abs(x) <= self.max_x and abs(y) <= self.max_y)
 
 class TimePeriod(object):
     def __init__(self, factory):
@@ -55,6 +57,7 @@ class GameWorld(object):
     """
     def __init__(self, generator):
         self.far_past, self.past, self.present = generator()
+        self.periods = [self.far_past, self.past, self.present]
 
 
 class RectangularGameWorld(GameWorld):
@@ -65,5 +68,8 @@ class RectangularGameWorld(GameWorld):
     def __init__(self, x, y):
         rectangularAreas = functools.partial(rectangularAreasBuilder, f=basicMapGeneration)
         GameWorld.__init__(self, rectangularAreas(x, y))
+
+    def distance(self, startX, startY, endX, endY):
+        return abs(startX - endX) + abs(startY - endY)
 
 DefaultGameWorld = RectangularGameWorld

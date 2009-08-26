@@ -1,21 +1,23 @@
 from functools import wraps
 
-def verifyReferences(self, expression, *references):
+def verifyReferences(self, expression, references):
     for i in range(0, len(references)):
-        if referneces(i) is not None:
+        if references[i] is not None:
             if expression[i] not in self.objects:
                 return str(expression[i]) + " does not exist"
-            if not isinstance(self.objects(expression[i])):
+            if not isinstance(self.objects[expression[i]], references[i]):
                 return str(expression[i]) + " does not reference a " \
-                    + references.__name__
+                    + references[i].__name__
+    return True
 
 
 def requireReferences(*n):
     def dec(f):
         @wraps(f)
-        def wrapper(self, expression):
-            if not verifyReferences(self, expression, *n):
+        def wrapper(self, *expression):
+            errMsg = verifyReferences(self, expression, n)
+            if not (errMsg == True):
                 return False
-            return f(self, expression)
+            return f(self, *expression)
         return wrapper
     return dec
