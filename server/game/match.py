@@ -57,9 +57,9 @@ class Match:
         for obj in self.objects.values():
             obj.nextTurn()
     
-    @requireReferences(Building)
+    @requireReferences(Building, UnitType)
     def train(self, buildingID, typeID):
-        return self.objects(buildingID).train(self.objects(typeID))
+        return self.objects[buildingID].train(self.objects[typeID])
 
     @requireReferences(Unit)
     def attack(self, unitID, x, y):

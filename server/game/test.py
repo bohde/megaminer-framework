@@ -194,3 +194,20 @@ class TestActions(unittest.TestCase):
         x = 3
         self.assertNotEqual(True, attemptBuild())
 
+    def test_train(self):
+        self.game.nextTurn()
+        builderID = self.home.id
+        newUnitTypeID = self.pandaType.id
+        attemptTrain =lambda: self.game.train(builderID, newUnitTypeID)
+        self.assertNotEqual(True, attemptTrain()) #Not your turn
+        builderID = self.units[1].id
+        self.assertNotEqual(True, attemptTrain()) #Not a building
+        builderID = self.home.id
+        self.game.nextTurn()
+        self.assertEqual(True, attemptTrain())
+        for i in range(0, self.pandaType.trainTime * 2 - 1):
+            self.game.nextTurn()
+        previd = int(self.game.nextid)
+        self.game.nextTurn()
+        self.assertEqual(previd + 1, self.game.nextid)
+
