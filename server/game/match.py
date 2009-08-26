@@ -167,15 +167,16 @@ class Match:
         return None
 
     def dealHungerDamage(self):
-        totalHunger = 0
+        totalHunger = [0, 0, 0]
+
         for obj in self.objects.values():
             if (isinstance(obj, Building)):
                 if (obj.owner == self.turn):
-                    totalHunger -= obj.type.food
+                    totalHunger[obj.z] -= obj.type.food
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
-                    totalHunger += obj.type.hunger
+                    totalHunger[obj.z] += obj.type.hunger
         for obj in self.objects.values():
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
-                    obj.takeDamage(max(0,totalHunger), True)
+                    obj.takeDamage(max(0,totalHunger[obj.z]), True)
