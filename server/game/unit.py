@@ -85,9 +85,12 @@ class Unit(HittableObject):
                 return str(self.id) + " tried to build on top of a building"
             if (buildingType.builtBy != self.type):
                 return str(self.id) + " can not construct that type"
+            if (self.owner.gold < buildingType.price):
+                return "You do not have enough gold to build that"
             newBuilding = Building(self.game, targetX, targetY, self.z, \
                                    self.owner, buildingType)
             self.game.addObject(newBuilding)
+            self.owner.gold -= buildingType.price
         self.actions -= 1
         return True
 
