@@ -43,9 +43,11 @@ class Match:
             return "Game is not full"
         if (self.winner is not None or self.turn is not None):
             return "Game has already begun"
-        self.sendStatus(self.players)
         self.turn = self.players[0]
         self.organizeTechTree()
+        for player in self.players:
+            player.gold = 0
+        self.sendStatus(self.players)
         return True
 
     def nextTurn(self):

@@ -54,8 +54,11 @@ class Building(HittableObject):
             return str(self.id) + " can not train that type"
         if (self.training is not None):
             return str(self.id) + " is already training a unit"
+        if (self.owner.gold < newUnitType.price):
+            return "You can not afford to train this unit"
         self.training = newUnitType
         self.progress = 0
+        self.owner.gold -= newUnitType.price
         return True
 
 from unit import *
