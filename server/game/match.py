@@ -56,6 +56,7 @@ class Match:
             self.turn = self.players[1]
         else:
             self.turn = self.players[0]
+        self.dealHungerDamage()
         for obj in self.objects.values():
             obj.nextTurn()
     
@@ -164,3 +165,17 @@ class Match:
                 if (cmp(obj.name, name) == 0):
                     return obj
         return None
+
+    def dealHungerDamage(self):
+        totalHunger = 0
+        for obj in self.objects.values():
+            if (isinstance(obj, Building)):
+                if (obj.owner == self.turn):
+                    totalHunger -= obj.type.food
+            if (isinstance(obj, Unit)):
+                if (obj.owner == self.turn):
+                    totalHunger += obj.type.hunger
+        for obj in self.objects.values():
+            if (isinstance(obj, Unit)):
+                if (obj.owner == self.turn):
+                    obj.takeDamage(max(0,totalHunger), True)

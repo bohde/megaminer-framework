@@ -224,3 +224,12 @@ class TestActions(unittest.TestCase):
         self.game.nextTurn()
         self.assertEqual(previd + 1, self.game.nextid)
 
+    def test_hunger(self):
+        self.game.nextTurn()
+        self.assertEqual(21, self.units[0].hp)
+        self.game.removeObject(self.home)
+        self.game.nextTurn()
+        self.assertEqual(16, self.units[0].hp)
+        self.game.nextTurn()
+        self.assertEqual(16, self.units[0].hp)
+        
