@@ -132,10 +132,33 @@ class Match:
               builtBy attributes set to string names will have these values
               converted to the corresponding objects.  All others will have
               these attributes set to None.
+              This function allows the tech tree to be set in the config files
         """
-        pass
+        for obj in self.objects.values():
+            if (isinstance(obj, BuildingType)):
+                if (hasattr(obj, "builtBy")):
+                    obj.builtBy = self.getType(obj.builtBy)
+                else:
+                    obj.builtBy = None
+            if (isinstance(obj, UnitType)):
+                if (hasattr(obj, "trainedBy")):
+                    obj.trainedBy = self.getType(obj.trainedBy)
+                else:
+                    obj.trainedBy = None
+
 
     def getBuilding(self, x, y, z):
         for obj in self.world.periods[z].area[(x,y)]:
             if isinstance(obj, BuildingType):
                 return obj
+
+    def getType(self, name):
+        """
+        Pre: name is a string
+        Post: Returns the unit or building type with that name, or None
+        """
+        for obj in self.objects.values():
+            if (hasattr(obj, "name")):
+                if (cmp(obj.name, name) == 0):
+                    return obj
+        return None
