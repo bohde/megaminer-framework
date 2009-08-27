@@ -112,7 +112,8 @@ class TestObjectCreation(unittest.TestCase):
 
     def test_load_buildings(self):
         """
-        Tests Match.loadBuildingSet and Match.addObject applied to buildings
+        Tests Match.loadBuildingSet, Match.addObject applied to buildings,
+           and Building.bringToCompletion
         """
         previd = self.game.nextid
         self.game.loadBuildingSet("config/testBuildingSet.cfg")
@@ -122,9 +123,15 @@ class TestObjectCreation(unittest.TestCase):
         self.assertTrue(houseType.fancy)
         self.home = Building(self.game, 4, 7, 0, self.players[0], houseType)
         self.game.addObject(self.home)
+        self.assertEqual(self.home.hp, 44)
         self.assertEqual(self.game.objects.get(self.home.id), self.home)
         self.assertEqual(self.game.world.periods[0].area[(4,7)], [self.home])
-        self.assertEqual(self.home.hp, 44)
+        self.assertEqual([], self.game.world.periods[1].area[(4,7)])
+        self.home.bringToCompletion()
+        pastHouse = self.game.world.periods[1].area[(4,7)][0]
+        self.assertNotEqual([], self.game.world.periods[2].area[(4,7)])
+        self.game.removeObject(pastHouse)
+        self.assertEqual([], self.game.world.periods[2].area[(4,7)])
 
 
 class TestActions(unittest.TestCase):
