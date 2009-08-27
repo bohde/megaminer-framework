@@ -108,7 +108,7 @@ class TestObjectCreation(unittest.TestCase):
         self.assertEqual(previd + 1, self.game.nextid)
         self.game.addObject(self.unit)
         self.assertEqual(self.game.objects.get(self.unit.id), self.unit)
-        self.assertEqual(self.game.world.periods[0].area[(3,7)], [self.unit])
+        self.assertEqual(self.game.periods[0].area[(3,7)], [self.unit])
 
     def test_load_buildings(self):
         """
@@ -125,13 +125,13 @@ class TestObjectCreation(unittest.TestCase):
         self.game.addObject(self.home)
         self.assertEqual(self.home.hp, 44)
         self.assertEqual(self.game.objects.get(self.home.id), self.home)
-        self.assertEqual(self.game.world.periods[0].area[(4,7)], [self.home])
-        self.assertEqual([], self.game.world.periods[1].area[(4,7)])
+        self.assertEqual(self.game.periods[0].area[(4,7)], [self.home])
+        self.assertEqual([], self.game.periods[1].area[(4,7)])
         self.home.bringToCompletion()
-        pastHouse = self.game.world.periods[1].area[(4,7)][0]
-        self.assertNotEqual([], self.game.world.periods[2].area[(4,7)])
+        pastHouse = self.game.periods[1].area[(4,7)][0]
+        self.assertNotEqual([], self.game.periods[2].area[(4,7)])
         self.game.removeObject(pastHouse)
-        self.assertEqual([], self.game.world.periods[2].area[(4,7)])
+        self.assertEqual([], self.game.periods[2].area[(4,7)])
 
 
 class TestActions(unittest.TestCase):
@@ -165,7 +165,7 @@ class TestActions(unittest.TestCase):
         self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
         self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.assertEqual(None, self.game.objects.get(self.units[1].id))
-        self.assertEqual([], self.game.world.periods[0].area[(3,6)])
+        self.assertEqual([], self.game.periods[0].area[(3,6)])
         self.assertNotEqual(True, self.game.attack(234, 3, 6))
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
 
@@ -201,7 +201,7 @@ class TestActions(unittest.TestCase):
         self.players[1].gold = 180
         self.assertEqual(True, attemptBuild())
         self.assertEqual(29, self.players[1].gold)
-        newHouse = self.game.world.periods[0].area[(x,y)][0]
+        newHouse = self.game.periods[0].area[(x,y)][0]
         self.assertEqual(newHouse.type.name, "House")
         self.assertEqual(True, self.game.cancel(newHouse.id))
         self.assertEqual(180, self.players[1].gold)

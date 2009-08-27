@@ -21,7 +21,7 @@ class MappableObject(GameObject):
         return list
 
     def addToMap(self):
-        self.game.world.periods[self.z].area[(self.x, self.y)].append(self)
+        self.game.periods[self.z].area[(self.x, self.y)].append(self)
 
     def removeFromMap(self):
-        self.game.world.periods[self.z].area[(self.x, self.y)].remove(self)
+        self.game.periods[self.z].area[(self.x, self.y)].remove(self)

@@ -11,9 +11,9 @@ from unit import *
 from portal import *
 from config.config import *
 
-class Match:
-
+class Match(DefaultGameWorld):
     def __init__(self, id):
+        DefaultGameWorld.__init__(self, 10, 10)
         self.id = int(id)
         self.nextid = 0
         self.maxid = 2147483600
@@ -26,7 +26,6 @@ class Match:
                               #value: instance of the object
         self.turnNum = 0
         self.animations = []
-        self.world = DefaultGameWorld(10, 10)
         self.unitcfg = "config/unitSet.cfg"
         self.buildingcfg = "config/buildingSet.cfg"
         self.loadUnitSet(self.unitcfg)
@@ -155,7 +154,7 @@ class Match:
 
 
     def getBuilding(self, x, y, z):
-        for obj in self.world.periods[z].area[(x,y)]:
+        for obj in self.periods[z].area[(x,y)]:
             if isinstance(obj, Building):
                 return obj
         return None

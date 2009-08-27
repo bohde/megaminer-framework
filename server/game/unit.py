@@ -26,14 +26,14 @@ class Unit(HittableObject):
         self.moves = self.type.moves
 
     def move(self, targetX, targetY):
-        dis = self.game.world.distance(self.x, self.y, targetX, targetY)
+        dis = self.game.distance(self.x, self.y, targetX, targetY)
         if (not self.owner == self.game.turn):
             return str(self.id) + " does not belong to you"
         if (self.moves < 1):
             return str(self.id) + " is out of moves"
         if (dis != 1):
             return str(self.id) + " can only move to adjacent squares"
-        myPeriod = self.game.world.periods[self.z]
+        myPeriod = self.game.periods[self.z]
         if (not myPeriod.area.inBounds(targetX, targetY)):
             return str(self.id) + " can not move off the map"
         self.removeFromMap()
@@ -48,14 +48,14 @@ class Unit(HittableObject):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
-        dis = self.game.world.distance(self.x, self.y, targetX, targetY)
+        dis = self.game.distance(self.x, self.y, targetX, targetY)
         if (dis > self.type.maxRange):
             return str(self.id) + " is out of range of " + str(targetX) \
                    + ", " + str(targetY)
         if (dis < self.type.minRange):
             return str(self.id) + " is inside the min range of " \
                    + str(targetX) + ", " + str(targetY)
-        for target in self.game.world.periods[self.z].area[(targetX, targetY)]:
+        for target in self.game.periods[self.z].area[(targetX, targetY)]:
             target.takeDamage(self.type.damage)
         self.actions -= 1
         return True
@@ -69,7 +69,7 @@ class Unit(HittableObject):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
-        dis = self.game.world.distance(self.x, self.y, targetX, targetY)
+        dis = self.game.distance(self.x, self.y, targetX, targetY)
         if (dis > 1):
             return str(self.id) + " must be adjacent to build"
         existingBuilding = self.game.getBuilding(targetX, targetY, self.z)
