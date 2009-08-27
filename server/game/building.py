@@ -11,14 +11,35 @@ class Building(HittableObject):
         self.training = None #The type of unit in progress, or None
         self.progress = 0 #The number of turns spent training
         self.owner = owner
+        self.linked = False #True if this building also exists in a future era
+        self.complete = False
         if (self.game.turn is None):
             #buildings placed before the start of the game are complete
-            self.complete = True
-            self.hp = type.hp
+            self.bringToCompletion()
         else:
-            self.complete = False
             self.hp = 0
             self.beBuilt()
+
+    def bringToCompletion(self):
+        if (not self.complete):
+            self.complete = True
+            self.hp = self.type.hp
+            if (self.z < 2):
+                newBuilding = Building(self.game, self.x, self.y, self.z + 1,\
+                                   self.owner, self.type)
+                self.game.addObject(newBuilding)
+                newBuilding.bringToCompletion()
+                self.linked = True
+
+    def removeFromMap(self):
+        if (self.z > 0):
+            pastSelf = self.game.getBuilding(self.x, self.y, self.z-1)
+            if (pastSelf is not None):
+                pastSelf.linked = False
+        if (self.linked):
+            futureSelf = self.game.getBuilding(self.x, self.y, self.z+1)
+            self.game.removeObject(futureSelf)
+        HittableObject.removeFromMap(self)
 
     def nextTurn(self):
         HittableObject.nextTurn(self)
@@ -42,7 +63,7 @@ class Building(HittableObject):
         self.hp += math.ceil(self.type.hp * (1.0 / self.type.buildTime))
         self.hp = int(min(self.hp, self.type.hp))
         if (self.hp == self.type.hp):
-            self.complete = True
+            self.bringToCompletion()
 
     def train(self, newUnitType):
         """
