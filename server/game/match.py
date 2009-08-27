@@ -156,8 +156,9 @@ class Match:
 
     def getBuilding(self, x, y, z):
         for obj in self.world.periods[z].area[(x,y)]:
-            if isinstance(obj, BuildingType):
+            if isinstance(obj, Building):
                 return obj
+        return None
 
     def getType(self, name):
         """
@@ -175,7 +176,7 @@ class Match:
 
         for obj in self.objects.values():
             if (isinstance(obj, Building)):
-                if (obj.owner == self.turn):
+                if (obj.owner == self.turn and obj.complete):
                     totalHunger[obj.z] -= obj.type.food
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
