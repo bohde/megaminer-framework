@@ -1,4 +1,5 @@
 from mappableObject import *
 
-class Portal(MappableObject):
+class Terrain(MappableObject):
     pass
+
