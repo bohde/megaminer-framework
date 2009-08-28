@@ -13,19 +13,8 @@ from config.config import *
 
 class Match(DefaultGameWorld):
     def __init__(self, id):
-        DefaultGameWorld.__init__(self, 10, 10)
         self.id = int(id)
-        self.nextid = 0
-        self.maxid = 2147483600
-        self.players = []
-        self.turn = None #the player whose turn it is;
-                         #None before and after the game.
-        self.winner = None #the player who won the game;
-                           #None before and during the game 
-        self.objects = dict() #key: object's id
-                              #value: instance of the object
-        self.turnNum = 0
-        self.animations = []
+        DefaultGameWorld.__init__(self, 10, 10)
         self.unitcfg = "config/unitSet.cfg"
         self.buildingcfg = "config/buildingSet.cfg"
         self.loadUnitSet(self.unitcfg)
@@ -100,18 +89,6 @@ class Match(DefaultGameWorld):
         list.append(["game", self.turnNum])
         for i in players:
             i.writeSExpr(list)
-
-    def addObject(self, newObject):
-        self.animations += [["add", newObject.id]]
-        self.objects[newObject.id] = newObject
-        if (isinstance(newObject, MappableObject)):
-            newObject.addToMap()
-
-    def removeObject(self, oldObject):
-        self.animations += [["remove", oldObject.id]]
-        if isinstance(oldObject, MappableObject):
-            oldObject.removeFromMap()
-        del self.objects[oldObject.id]
 
     def loadUnitSet(self, cfgfile):
         unitConfig = readConfig(cfgfile)
