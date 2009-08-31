@@ -19,6 +19,8 @@ def formatAttr(n):
         return float(n)
     except:
         pass
+    if (n[0] == '['):
+        return eval(n)
     return n
 
 def readConfig(cfgfile):
