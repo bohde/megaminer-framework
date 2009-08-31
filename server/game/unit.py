@@ -48,6 +48,8 @@ class Unit(HittableObject):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
+        if (self.moves < self.type.attackCost):
+            return str(self.id) + " has insufficient moves"
         dis = self.game.distance(self.x, self.y, targetX, targetY)
         if (dis > self.type.maxRange):
             return str(self.id) + " is out of range of " + str(targetX) \
@@ -58,6 +60,7 @@ class Unit(HittableObject):
         for target in self.game.periods[self.z].area[(targetX, targetY)]:
             target.takeDamage(self.type.damage)
         self.actions -= 1
+        self.moves -= self.type.attackCost
         return True
 
     def build(self, targetX, targetY, buildingType=None):
