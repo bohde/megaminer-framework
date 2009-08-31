@@ -60,7 +60,7 @@ class Building(HittableObject):
         """
         if (self.complete):
             return str(self.id) + " is already complete"
-        self.hp += math.ceil(self.type.hp * (1.0 / self.type.buildTime))
+        self.hp += math.ceil(self.type.hp*(1.0 / self.type.buildTime[self.z]))
         self.hp = int(min(self.hp, self.type.hp))
         if (self.hp == self.type.hp):
             self.bringToCompletion()
