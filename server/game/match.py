@@ -10,6 +10,7 @@ from building import *
 from unit import *
 from portal import *
 from config.config import *
+from collections import defaultdict
 
 class Match(DefaultGameWorld):
     def __init__(self, id):
@@ -47,6 +48,12 @@ class Match(DefaultGameWorld):
         self.dealHungerDamage()
         for obj in self.objects.values():
             obj.nextTurn()
+        self.sendStatus(self.players)
+        self.writeToLog()
+        self.animations = []
+
+    def writeToLog(self):
+        pass
     
     @requireReferences(Building, UnitType)
     def train(self, buildingID, typeID):
@@ -85,10 +92,15 @@ class Match(DefaultGameWorld):
             i.writeSExpr(['ident', list, self.log.id])
 
     def sendStatus(self, players):
-        list = ["status"]
-        list.append(["game", self.turnNum])
+        msg = ["status"]
+        msg.append(["game", self.turnNum])
+        typeLists = defaultdict(list)
+        for obj in self.objects.values():
+            typeLists[obj.__class__].append(obj)
+        for type in typeLists.keys():
+            msg.append([type.__name__]+[j.toList() for j in typeLists[type]])
         for i in players:
-            i.writeSExpr(list)
+            i.writeSExpr(msg)
 
     def loadUnitSet(self, cfgfile):
         unitConfig = readConfig(cfgfile)
