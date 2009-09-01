@@ -16,8 +16,7 @@ class HittableObject(MappableObject):
 
     def toList(self):
         list = MappableObject.toList(self)
-        #TODO: Fix
-        #list.extend([self.hp])
+        list.extend([self.hp])
         return list
 
     def isDestroyed(self):
@@ -32,7 +31,9 @@ class HittableObject(MappableObject):
         else:
             dmgTaken = max(damage - self.type.armor, 1)
         self.hp -= dmgTaken
-        self.game.animations += [["hurt", self.id, self.hp]]
+        if (dmgTaken != 0):
+            self.changed
+            self.game.animations += [["hurt", self.id, self.hp]]
         if (self.isDestroyed()):
             self.game.removeObject(self)
 

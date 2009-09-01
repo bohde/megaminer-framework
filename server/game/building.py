@@ -13,12 +13,25 @@ class Building(HittableObject):
         self.owner = owner
         self.linked = False #True if this building also exists in a future era
         self.complete = False
+        self.level = 1
         if (self.game.turn is None):
             #buildings placed before the start of the game are complete
             self.bringToCompletion()
         else:
             self.hp = 0
             self.beBuilt()
+
+    def toList(self):
+        list = HittableObject.toList(self)
+        if (self.training is not None):
+            inTraining = self.training.id
+        else:
+            inTraining = -1
+        ownerIndex = self.game.players.index(self.owner)
+        list.extend([self.level, self.type.id, ownerIndex, inTraining, 
+                     self.progress, 1 * self.linked, 1 * self.complete])
+        return list
+
 
     def bringToCompletion(self):
         if (not self.complete):
@@ -46,6 +59,7 @@ class Building(HittableObject):
         if (self.training is not None):
             if (self.game.turn == self.owner):
                 self.progress += 1
+                self.changed = True
             if (self.progress >= self.training.trainTime):
                 newUnit = Unit(self.game, self.x, self.y, self.z, \
                                self.owner, self.training)
@@ -62,6 +76,7 @@ class Building(HittableObject):
             return str(self.id) + " is already complete"
         self.hp += math.ceil(self.type.hp*(1.0 / self.type.buildTime[self.z]))
         self.hp = int(min(self.hp, self.type.hp))
+        self.changed = True
         if (self.hp == self.type.hp):
             self.bringToCompletion()
 
@@ -83,6 +98,7 @@ class Building(HittableObject):
         self.training = newUnitType
         self.progress = 0
         self.owner.gold -= newUnitType.price
+        self.changed = True
         return True
 
     def cancel(self):
