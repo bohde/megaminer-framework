@@ -32,6 +32,7 @@ class HittableObject(MappableObject):
         else:
             dmgTaken = max(damage - self.type.armor, 1)
         self.hp -= dmgTaken
+        self.game.animations += [["hurt", self.id, self.hp]]
         if (self.isDestroyed()):
             self.game.removeObject(self)
 

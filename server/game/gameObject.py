@@ -21,7 +21,7 @@ class GameObject:
             game.nextid = 0
 
     def toList(self):
-        list = [self.myType, self.id]
+        list = [self.id]
         return list
 
     def nextTurn(self):
