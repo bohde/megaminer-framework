@@ -79,6 +79,7 @@ class Building(HittableObject):
             return "You can not afford to train this unit"
         if (not self.complete):
             return str(self.id) + " can not train until completed"
+        self.game.animations += [["train", self.id, newUnitType.id]]
         self.training = newUnitType
         self.progress = 0
         self.owner.gold -= newUnitType.price

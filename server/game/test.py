@@ -237,6 +237,7 @@ class TestActions(unittest.TestCase):
         previd = int(self.game.nextid)
         self.game.nextTurn()
         self.assertEqual(previd + 1, self.game.nextid)
+        print self.players[0].messages
 
     def test_hunger(self):
         self.game.nextTurn()

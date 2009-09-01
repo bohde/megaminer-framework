@@ -40,6 +40,7 @@ class Unit(HittableObject):
         self.x = targetX
         self.y = targetY
         self.moves -= 1
+        self.game.animations += [["move", self.id, targetX, targetY]]
         self.addToMap()
         return True
 
@@ -57,6 +58,7 @@ class Unit(HittableObject):
         if (dis < self.type.minRange):
             return str(self.id) + " is inside the min range of " \
                    + str(targetX) + ", " + str(targetY)
+        self.game.animations += [["attack", self.id, targetX, targetY]]
         for target in self.game.periods[self.z].area[(targetX, targetY)]:
             target.takeDamage(self.type.damage)
         self.actions -= 1
@@ -90,6 +92,7 @@ class Unit(HittableObject):
                 return str(self.id) + " can not construct that type"
             if (self.owner.gold < buildingType.price):
                 return "You do not have enough gold to build that"
+            self.game.animations += [["build", self.id, targetX, targetY]]
             newBuilding = Building(self.game, targetX, targetY, self.z, \
                                    self.owner, buildingType)
             self.game.addObject(newBuilding)
