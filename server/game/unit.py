@@ -13,11 +13,13 @@ class Unit(HittableObject):
         self.moves = 0
         self.owner = owner
         self.type = type
+        self.level = 1
 
     def toList(self):
         list = HittableObject.toList(self)
-        #TODO: fix
-        #list.extend([self.moves])
+        ownerIndex = self.game.players.index(self.owner)
+        list.extend([self.level, self.type.id, ownerIndex, self.actions, 
+                     self.moves])
         return list
 
     def nextTurn(self):
@@ -41,6 +43,7 @@ class Unit(HittableObject):
         self.y = targetY
         self.moves -= 1
         self.game.animations += [["move", self.id, targetX, targetY]]
+        self.changed = True
         self.addToMap()
         return True
 
@@ -63,6 +66,7 @@ class Unit(HittableObject):
             target.takeDamage(self.type.damage)
         self.actions -= 1
         self.moves -= self.type.attackCost
+        self.changed = True
         return True
 
     def build(self, targetX, targetY, buildingType=None):
@@ -98,5 +102,6 @@ class Unit(HittableObject):
             self.game.addObject(newBuilding)
             self.owner.gold -= buildingType.price
         self.actions -= 1
+        self.changed = True
         return True
 

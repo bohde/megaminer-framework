@@ -16,6 +16,7 @@ class GameObject:
         self.game = game
         self.id = game.nextid
         self.turnCreated = game.turnNum
+        self.changed = True
         game.nextid += 1
         if game.nextid > game.maxid:
             game.nextid = 0
