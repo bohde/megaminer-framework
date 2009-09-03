@@ -17,7 +17,7 @@ def requireReferences(*n):
         def wrapper(self, *expression):
             errMsg = verifyReferences(self, expression, n)
             if not (errMsg == True):
-                return False
+                return errMsg
             return f(self, *expression)
         return wrapper
     return dec
