@@ -4,18 +4,22 @@ client = 0
 server = 1
 
 UnitType = structures.Model('UnitType', key='id',
-  data = { 'id':int,
-    'cost':[int],
-    'hunger':int,
-    'hp':[int],
-    'moves':int,
-    'actions':int,
-    'attackcost':int,
-    'minrange':int,
-    'maxrange':int,
-    'damage':[int],
-    'buildSpeed':int,
-    'paintSpeed':int})
+  data = ( ('objectID', int),
+    ('name', str),
+    ('price', int),
+    ('hunger', int),
+    ('traintime', int),
+    ('hp', int),
+    ('armor', int),
+    ('moves', int),
+    ('actions', int),
+    ('attackcost', int),
+    ('damage', int),
+    ('minrange', int),
+    ('maxrange', int),
+    ('trainerID', int),
+    ('canpaint', int))
+  )
 
 """
 UnitType(Model):
