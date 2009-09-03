@@ -69,6 +69,27 @@ class Unit(HittableObject):
         self.changed = True
         return True
 
+    def paint(self, targetX, targetY):
+        if (not self.owner == self.game.turn):
+            return str(self.id) + " does not belong to you"
+        if (self.actions < 1):
+            return str(self.id) + " is out of actions"
+        dis = self.game.distance(self.x, self.y, targetX, targetY)
+        if (dis > 1):
+            return str(self.id) + " is not adjacent to target gallery"
+        gallery = self.game.getBuilding(targetX, targetY, self.z)
+        if (gallery is None):
+            return str(self.id) + " tried to paint the ground"
+        if (not gallery.type.allowPaint):
+            return str(self.id) + " tried to paint an invalid building"
+        if (not self.type.canPaint):
+            return str(self.id) + " can not paint"
+        self.game.animations += [["paint", self.id, targetX, targetY]]
+        self.owner.gold += 10
+        self.actions -= 1
+        self.changed = True
+        return True
+
     def build(self, targetX, targetY, buildingType=None):
         """
         Attempts to construct the desired building, or continues the building

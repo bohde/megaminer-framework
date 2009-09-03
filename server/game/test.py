@@ -246,4 +246,12 @@ class TestActions(unittest.TestCase):
         self.assertEqual(16, self.units[0].hp)
         self.game.nextTurn()
         self.assertEqual(16, self.units[0].hp)
-        
+
+    def test_paint(self):
+        attemptPaint = lambda: self.game.paint(self.units[0].id, 4, 7)
+        self.assertNotEqual(True, attemptPaint()) #No actions
+        self.game.nextTurn()
+        self.assertNotEqual(True, attemptPaint()) #Not your unit
+        self.game.nextTurn()
+        self.assertEqual(True, attemptPaint())
+
