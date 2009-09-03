@@ -21,11 +21,20 @@ class Match(DefaultGameWorld):
         self.loadUnitSet(self.unitcfg)
         self.loadBuildingSet(self.buildingcfg)
 
-    def addPlayer(self, player):
-        if len(self.players) >= 2:
+    def addPlayer(self, connection, type="player"):
+        if (len(self.players) >= 2 and cmp(type, "player") == 0):
             return "Game is full"
-        self.players.append(player)
+        if (cmp(type, "player") == 0):
+            self.players.append(connection)
+        elif (cmp(type, "spectator") == 0):
+            self.spectators.append(connection)
         return True
+
+    def removePlayer(self, connection):
+        if (cmp(connection.type, "player")):
+            self.players.remove(connection)
+        else:
+            self.spectators.remove(connection)
 
     def start(self):
         if len(self.players) < 2:
