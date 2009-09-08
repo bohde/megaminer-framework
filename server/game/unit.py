@@ -108,6 +108,12 @@ class Unit(HittableObject):
         dis = self.game.distance(self.x, self.y, targetX, targetY)
         if (dis > 1):
             return str(self.id) + " must be adjacent to build"
+        terrain = self.game.getTerrain(targetX, targetY, self.z)
+        if (terrain is not None):
+            if (terrain.blockBuild):
+                return str(self.id) + " can not build on a mountain"
+        if (self.game.containsEnemies(targetX, targetY, self.z)):
+            return str(self.id) + " can not build on enemy units or buildings"
         existingBuilding = self.game.getBuilding(targetX, targetY, self.z)
         if (buildingType is None):
             if (existingBuilding is None):
