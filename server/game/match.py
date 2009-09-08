@@ -44,7 +44,7 @@ class Match(DefaultGameWorld):
         self.turn = self.players[0]
         self.organizeTechTree()
         for player in self.players:
-            player.gold = 0
+            player.gold = [0, 0, 0]
         self.sendStatus(self.players)
         #self.sendChanged(self.players)
         self.writeToLog()

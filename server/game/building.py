@@ -90,14 +90,14 @@ class Building(HittableObject):
             return str(self.id) + " can not train that type"
         if (self.training is not None):
             return str(self.id) + " is already training a unit"
-        if (self.owner.gold < newUnitType.price):
+        if (self.owner.gold[self.z] < newUnitType.price):
             return "You can not afford to train this unit"
         if (not self.complete):
             return str(self.id) + " can not train until completed"
         self.game.animations += [["train", self.id, newUnitType.id]]
         self.training = newUnitType
         self.progress = 0
-        self.owner.gold -= newUnitType.price
+        self.owner.gold[self.z] -= newUnitType.price
         self.changed = True
         return True
 
@@ -106,7 +106,7 @@ class Building(HittableObject):
             return str(self.id) + " is not your building"
         if (self.complete):
             return str(self.id) + " is complete and can not be canceled."
-        self.owner.gold += self.type.price
+        self.owner.gold[self.z] += self.type.price
         self.game.removeObject(self)
         return True
 

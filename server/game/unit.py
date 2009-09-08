@@ -91,7 +91,7 @@ class Unit(HittableObject):
         if (not self.type.canPaint):
             return str(self.id) + " can not paint"
         self.game.animations += [["paint", self.id, targetX, targetY]]
-        self.owner.gold += 10
+        self.owner.gold[self.z] += 10
         self.actions -= 1
         self.changed = True
         return True
@@ -127,13 +127,13 @@ class Unit(HittableObject):
                 return str(self.id) + " tried to build on top of a building"
             if (buildingType.builtBy != self.type):
                 return str(self.id) + " can not construct that type"
-            if (self.owner.gold < buildingType.price):
+            if (self.owner.gold[self.z] < buildingType.price):
                 return "You do not have enough gold to build that"
             self.game.animations += [["build", self.id, targetX, targetY]]
             newBuilding = Building(self.game, targetX, targetY, self.z, \
                                    self.owner, buildingType)
             self.game.addObject(newBuilding)
-            self.owner.gold -= buildingType.price
+            self.owner.gold[self.z] -= buildingType.price
         self.actions -= 1
         self.changed = True
         return True
