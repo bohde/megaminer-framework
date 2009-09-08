@@ -6,3 +6,8 @@ class Terrain(MappableObject):
         self.blockMove = False
         self.blockBuild = False
 
+    def toList(self):
+        list = MappableObject.toList(self)
+        list.extend([1*self.blockMove, 1*self.blockBuild])
+        return list
+
