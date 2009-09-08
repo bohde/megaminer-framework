@@ -195,22 +195,22 @@ class TestActions(unittest.TestCase):
         x, y = 4, 6
         builderID = int(self.units[1].id)
         typeID = int(self.houseType.id)
-        self.players[1].gold = 180
+        self.players[1].gold[0] = 180
         attemptBuild = lambda: self.game.build(builderID, x, y, typeID)
         self.assertNotEqual(True, attemptBuild()) #not your unit
         self.game.nextTurn()
         y = 9
         self.assertNotEqual(True, attemptBuild()) #not adjacent
         y = 6
-        self.players[1].gold = 0
+        self.players[1].gold[0] = 0
         self.assertNotEqual(True, attemptBuild()) #no gold
-        self.players[1].gold = 180
+        self.players[1].gold[0] = 180
         self.assertEqual(True, attemptBuild())
-        self.assertEqual(29, self.players[1].gold)
+        self.assertEqual(29, self.players[1].gold[0])
         newHouse = self.game.periods[0].area[(x,y)][0]
         self.assertEqual(newHouse.type.name, "House")
         self.assertEqual(True, self.game.cancel(newHouse.id))
-        self.assertEqual(180, self.players[1].gold)
+        self.assertEqual(180, self.players[1].gold[0])
         self.assertNotEqual(True, self.game.cancel(self.home.id)) #completed
         self.game.nextTurn()
         builderID = int(self.units[0].id)
@@ -222,20 +222,20 @@ class TestActions(unittest.TestCase):
         builderID = self.home.id
         newUnitTypeID = self.pandaType.id
         attemptTrain =lambda: self.game.train(builderID, newUnitTypeID)
-        self.players[0].gold = 106
+        self.players[0].gold[0] = 106
         self.assertNotEqual(True, attemptTrain()) #Not your turn
         builderID = self.units[1].id
         self.assertNotEqual(True, attemptTrain()) #Not a building
         builderID = self.home.id
         self.game.nextTurn()
-        self.players[0].gold = 0
+        self.players[0].gold[0] = 0
         self.assertNotEqual(True, attemptTrain()) #No money
-        self.players[0].gold = 106
+        self.players[0].gold[0] = 106
         newUnitTypeID = self.wolfType.id
         self.assertNotEqual(True, attemptTrain()) #Invalid unit type
         newUnitTypeID = self.pandaType.id
         self.assertEqual(True, attemptTrain())
-        self.assertEqual(3, self.players[0].gold)
+        self.assertEqual(3, self.players[0].gold[0])
         for i in range(0, self.pandaType.trainTime * 2 - 1):
             self.game.nextTurn()
         previd = int(self.game.nextid)
