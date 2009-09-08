@@ -20,20 +20,19 @@
     Free Software Foundation, Inc.,
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  """
-from networking.Server import TCPServer
-from networking.Filter import PacketizerFilter, CompressionFilter
 import sys
 import signal
 from optparse import OptionParser
 from filters.RedirectFilter import RedirectFilter
 from filters.GameServer import GameServer
+from networking.Server import TCPServer
+from networking.Filter import PacketizerFilter, CompressionFilter
 
-def runAsMain(f):
+def run_as_main(f):
     def wrapper(*args, **kwargs):
         try:
             f(*args, **kwargs)
         except KeyboardInterrupt:
-            print ""
             sys.exit(0)
         except Exception, exception:
             print f.__name__, " - Unexpected error:", exception
@@ -42,39 +41,45 @@ def runAsMain(f):
     return wrapper
 
 
-def runRedirect(telnet_disabled):
+def run_redirect(telnet_disabled):
     print "Running Redirect Server.", 
-    filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [RedirectFilter]
+    filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) \
+              + [RedirectFilter]
     master = TCPServer(19000,  *filters)
     print "Listening on port 19000."
     master.run()
 
-def runGameServer(telnet_disabled):
+def run_game_server(telnet_disabled):
     server = GameServer("slave", "12345")
     server.run(telnet_disabled)
 
 
-def runServerAndRedirect(telnet_disabled):
+def run_server_and_redirect(telnet_disabled):
     from multiprocessing import Process
-    redir = Process(target=runRedirect, args=(telnet_disabled,))
+    redir = Process(target=run_as_main(run_redirect), args=(telnet_disabled,))
     redir.start()
-    server = Process(target=runGameServer, args=(telnet_disabled,))
+    server = Process(target=run_as_main(run_game_server), args=(telnet_disabled,))
     server.start()
+    redir.join()
+    server.join()
 
 def main():
     parser = OptionParser()
-    parser.add_option("-r", "--redirect", action="store_true", dest="redirect", default=False)
-    parser.add_option("-t", "--telnet-mode", action="store_false", dest="telnet_disabled", default=True)
-    parser.add_option("-b", "--run-both", action="store_true", dest="both", default=False)
+    parser.add_option("-r", "--redirect", action="store_true",
+                      dest="redirect", default=False)
+    parser.add_option("-t", "--telnet-mode", action="store_false",
+                      dest="telnet_disabled", default=True)
+    parser.add_option("-b", "--run-both", action="store_true",
+                      dest="both", default=False)
     
     (options, args) = parser.parse_args()
 
     runner = None
     if(options.both):
-        runner = runServerAndRedirect
+        runner = run_server_and_redirect
     else:
-        runner = (runGameServer, runRedirect)[options.redirect]
-    runAsMain(runner)(options.telnet_disabled)
+        runner = (run_game_server, run_redirect)[options.redirect]
+    run_as_main(runner)(options.telnet_disabled)
 
 if __name__ == "__main__":
     main()
