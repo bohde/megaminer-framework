@@ -181,6 +181,29 @@ class Match(DefaultGameWorld):
                 return obj
         return None
 
+    def getPortal(self, x, y, z):
+        for obj in self.periods[z].area[(x,y)]:
+            if isinstance(obj, Portal):
+                return obj
+        return None
+
+    def getTerrain(self, x, y, z):
+        for obj in self.periods[z].area[(x,y)]:
+            if isinstance(obj, Terrain):
+                return obj
+        return None
+
+    def containsEnemies(self, x, y, z):
+        """
+        Returns true iff the given square contains something owned by the
+          enemy.
+        """
+        for obj in self.periods[z].area[(x,y)]:
+            if (isinstance(obj, Building) or isinstance(obj, Unit)):
+                if (obj.owner != self.turn):
+                    return True
+        return False
+
     def getType(self, name):
         """
         Pre: name is a string

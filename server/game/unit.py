@@ -38,6 +38,12 @@ class Unit(HittableObject):
         myPeriod = self.game.periods[self.z]
         if (not myPeriod.area.inBounds(targetX, targetY)):
             return str(self.id) + " can not move off the map"
+        terrain = self.game.getTerrain(targetX, targetY, self.z)
+        if (terrain is not None):
+            if (terrain.blockMove):
+                return str(self.id) + " ran into a mountain"
+        if (self.game.containsEnemies(targetX, targetY, self.z)):
+            return str(self.id) + " ran into an enemy unit or building"
         self.removeFromMap()
         self.x = targetX
         self.y = targetY

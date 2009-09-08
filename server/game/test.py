@@ -172,10 +172,14 @@ class TestActions(unittest.TestCase):
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
 
     def test_move(self):
+        #No moves
         self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 8))
         self.game.nextTurn()
+        #Not your unit
         self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 8))
         self.game.nextTurn()
+        #Can not move onto enemy
+        self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 6))
         self.assertEqual(True, self.game.move(self.units[0].id, 3, 8))
         self.assertEqual(True, self.game.move(self.units[0].id, 3, 9))
         self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 10))
