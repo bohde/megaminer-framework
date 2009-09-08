@@ -206,3 +206,9 @@ class Match(DefaultGameWorld):
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
                     obj.takeDamage(max(0,totalHunger[obj.z]), True)
+
+    def chat(self, player, message):
+        for i in self.players:
+            i.writeSExpr(['says', player.user, message])
+        return True
+
