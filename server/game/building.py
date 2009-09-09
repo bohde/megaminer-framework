@@ -14,12 +14,6 @@ class Building(HittableObject):
         self.linked = False #True if this building also exists in a future era
         self.complete = False
         self.level = 1
-        if (self.game.turn is None):
-            #buildings placed before the start of the game are complete
-            self.bringToCompletion()
-        else:
-            self.hp = 0
-            self.beBuilt()
 
     def toList(self):
         list = HittableObject.toList(self)
@@ -43,6 +37,16 @@ class Building(HittableObject):
                 self.game.addObject(newBuilding)
                 newBuilding.bringToCompletion()
                 self.linked = True
+
+    def addToMap(self):
+        HittableObject.addToMap(self)
+        if (self.game.turn is None):
+            #buildings placed before the start of the game are complete
+            self.bringToCompletion()
+        else:
+            self.hp = 0
+            self.beBuilt()
+
 
     def removeFromMap(self):
         if (self.z > 0):
