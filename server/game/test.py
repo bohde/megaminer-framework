@@ -259,3 +259,11 @@ class TestActions(unittest.TestCase):
         self.game.nextTurn()
         self.assertEqual(True, attemptPaint())
 
+    def test_warp(self):
+        portal = Portal(self.game,3,6,0,1)
+        self.game.addObject(portal)
+        self.game.nextTurn()
+        self.players[1].gold[0] = portal.fee
+        self.game.warp(self.units[1].id)
+        self.assertEqual(1, self.units[1].z)
+        self.assertEqual(0, self.players[1].gold[0])

@@ -3,7 +3,7 @@ import math
 
 class Portal(MappableObject):
     feeInit = 25 #The initial portal fee value
-    freeIncr = 10 #The amount the fee is incremented for each unit
+    feeIncr = 10 #The amount the fee is incremented for each unit
     feeMultiplier = .8 #The value multiplied to the portal fee each turn
 
     def __init__(self, game, x, y, z, direction):
@@ -18,7 +18,7 @@ class Portal(MappableObject):
 
     def toList(self):
         list = GameObject.toList(self)
-        list.extend([self.fee])
+        list.extend([self.direction, self.fee])
         return list
 
     def nextTurn(self):
@@ -26,8 +26,10 @@ class Portal(MappableObject):
         oldFee = int(self.fee)
         self.fee = math.floor(self.fee * Portal.feeMultiplier)
 
-    def warpUnit(self, unit):
-        unit.z += self.direction
-        unit.owner.gold[self.z] -= self.fee
+    def chargeToll(self, player):
+        if (player.gold[self.z] < self.fee):
+            return "You can not afford the portal fee"
+        player.gold[self.z] -= self.fee
         self.fee += Portal.feeIncr
+        return True
 

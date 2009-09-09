@@ -198,6 +198,25 @@ def gameTrain(self, expression):
         return False
     return True
 
+@wrapper('game-warp')
+@require_length(2)
+@require_game
+def gameTrain(self, expression):
+    if games[self.game].turn != self:
+        self.writeSExpr(['game-warp-denied', 'not your turn'])
+        return False
+    try:
+        id = int(expression[1])
+    except:
+        self.writeSExpr(['game-warp-denied', 'arguments not integers'])
+        return False
+
+    errBuff = games[self.game].warp(id)
+    if errBuff != True:
+        self.writeSExpr(['game-warp-denied', errBuff])
+        return False
+    return True
+
 @wrapper('end-turn')
 @require_length(1)
 @require_game
