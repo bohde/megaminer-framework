@@ -61,7 +61,7 @@ class MockPlayer(object):
 
 class TestMatchStart(unittest.TestCase):
     def setUp(self):
-        self.game = Match(1)
+        self.game = Match(7000)
         self.players = [MockPlayer(), MockPlayer()]
 
     def test_join_game(self):
@@ -85,7 +85,7 @@ class TestMatchStart(unittest.TestCase):
 
 class TestObjectCreation(unittest.TestCase):
     def setUp(self):
-        self.game =  Match(1)
+        self.game =  Match(7001)
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
@@ -136,7 +136,7 @@ class TestObjectCreation(unittest.TestCase):
 
 class TestActions(unittest.TestCase):
     def setUp(self):
-        self.game = Match(1)
+        self.game = Match(7002)
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
@@ -155,6 +155,8 @@ class TestActions(unittest.TestCase):
         self.game.start()
     
     def test_attack(self):
+        #No actions
+        self.units[0].actions = 0
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.game.nextTurn()
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 6))
@@ -173,6 +175,7 @@ class TestActions(unittest.TestCase):
 
     def test_move(self):
         #No moves
+        self.units[0].moves = 0
         self.assertNotEqual(True, self.game.move(self.units[0].id, 3, 8))
         self.game.nextTurn()
         #Not your unit
@@ -253,6 +256,7 @@ class TestActions(unittest.TestCase):
 
     def test_paint(self):
         attemptPaint = lambda: self.game.paint(self.units[0].id, 4, 7)
+        self.units[0].actions = 0
         self.assertNotEqual(True, attemptPaint()) #No actions
         self.game.nextTurn()
         self.assertNotEqual(True, attemptPaint()) #Not your unit
