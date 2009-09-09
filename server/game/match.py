@@ -195,14 +195,15 @@ class Match(DefaultGameWorld):
 
     def containsEnemies(self, x, y, z):
         """
-        Returns true iff the given square contains something owned by the
-          enemy.
+        Returns a list of enemies (to the current player) at the given
+          location
         """
+        enemies = []
         for obj in self.periods[z].area[(x,y)]:
             if (isinstance(obj, Building) or isinstance(obj, Unit)):
                 if (obj.owner != self.turn):
-                    return True
-        return False
+                    enemies.append(obj)
+        return enemies
 
     def getType(self, name):
         """
