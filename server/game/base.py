@@ -39,9 +39,9 @@ def basicMapGeneration(game):
     Does nothing right now, but useful for testing.
     Use this as a template for more advanced map generation
     """
-    newPortal = Portal(game, 3, 2, 1)
+    newPortal = Portal(game, 3, 2, 1, 1)
     game.addObject(newPortal)
-    assert(game.periods[1].area[(3,2)] == [newPortal])
+    #assert(game.periods[1].area[(3,2)] == [newPortal])
     game.addObject(Terrain(game, 6, 3, 0))
     pass
 
