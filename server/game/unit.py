@@ -42,7 +42,7 @@ class Unit(HittableObject):
         if (terrain is not None):
             if (terrain.blockMove):
                 return str(self.id) + " ran into a mountain"
-        if (self.game.containsEnemies(targetX, targetY, self.z)):
+        if (self.game.getEnemies(targetX, targetY, self.z)):
             return str(self.id) + " ran into an enemy unit or building"
         self.removeFromMap()
         self.x = targetX
@@ -52,6 +52,27 @@ class Unit(HittableObject):
         self.changed = True
         self.addToMap()
         return True
+
+    def warp(self):
+        if (not self.owner == self.game.turn):
+            return str(self.id) + " does not belong to you"
+        portal = self.game.getPortal(self.x, self.y, self.z)
+        if (portal is None):
+            return str(self.id) + " can not warp without a portal"
+        errBuff = portal.chargeToll(self.owner)
+        if (errBuff != True):
+            return errBuff
+        self.removeFromMap()
+        self.z += portal.direction
+        self.game.animations += [["warp", self.id, self.z]]
+        #Kill all enemies in the way
+        squatters = self.game.getEnemies(self.x, self.y, self.z)
+        for obj in squatters:
+            self.game.removeObject(obj)
+        self.changed = True
+        self.addToMap()
+        return True
+
 
     def attack(self, targetX, targetY):
         if (not self.owner == self.game.turn):
@@ -112,7 +133,7 @@ class Unit(HittableObject):
         if (terrain is not None):
             if (terrain.blockBuild):
                 return str(self.id) + " can not build on a mountain"
-        if (self.game.containsEnemies(targetX, targetY, self.z)):
+        if (self.game.getEnemies(targetX, targetY, self.z)):
             return str(self.id) + " can not build on enemy units or buildings"
         existingBuilding = self.game.getBuilding(targetX, targetY, self.z)
         if (buildingType is None):

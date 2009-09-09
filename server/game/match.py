@@ -96,6 +96,10 @@ class Match(DefaultGameWorld):
     def cancel(self, buildingID):
         return self.objects[buildingID].cancel()
 
+    @requireReferences(Unit)
+    def warp(self, unitID):
+        return self.objects[unitID].warp()
+
     def sendMap(self, players):
         pass #TODO
 
@@ -193,7 +197,7 @@ class Match(DefaultGameWorld):
                 return obj
         return None
 
-    def containsEnemies(self, x, y, z):
+    def getEnemies(self, x, y, z):
         """
         Returns a list of enemies (to the current player) at the given
           location
