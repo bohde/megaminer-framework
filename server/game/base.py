@@ -72,7 +72,7 @@ class GameWorld(object):
                            #None before and during the game
         self.objects = dict() #key: object's id
                               #value: instance of the object
-        self.animations = []
+        self.animations = ["animations"]
 
         self.far_past, self.past, self.present = generator()
         self.periods = [self.far_past, self.past, self.present]

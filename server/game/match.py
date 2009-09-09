@@ -11,6 +11,8 @@ from unit import *
 from portal import *
 from config.config import *
 from collections import defaultdict
+from sexpr.sexpr import *
+import os
 
 class Match(DefaultGameWorld):
     def __init__(self, id):
@@ -20,6 +22,10 @@ class Match(DefaultGameWorld):
         self.buildingcfg = "config/buildingSet.cfg"
         self.loadUnitSet(self.unitcfg)
         self.loadBuildingSet(self.buildingcfg)
+        if (not os.path.exists("logs/")):
+            os.mkdir("logs/")
+        if (os.path.exists(self.logPath())):
+            os.remove(self.logPath())
 
     def addPlayer(self, connection, type="player"):
         if (len(self.players) >= 2 and cmp(type, "player") == 0):
@@ -41,16 +47,11 @@ class Match(DefaultGameWorld):
             return "Game is not full"
         if (self.winner is not None or self.turn is not None):
             return "Game has already begun"
-        self.turn = self.players[0]
         self.organizeTechTree()
         for player in self.players:
             player.gold = [0, 0, 0]
-        self.sendStatus(self.players)
-        #self.sendChanged(self.players)
-        self.writeToLog()
-        for obj in self.objects.values():
-            obj.changed = False
-        self.animations = []
+        self.turnNum = -1
+        self.nextTurn()
         return True
 
     def nextTurn(self):
@@ -62,15 +63,22 @@ class Match(DefaultGameWorld):
         self.dealHungerDamage()
         for obj in self.objects.values():
             obj.nextTurn()
+
         self.sendStatus(self.players)
         #self.sendChanged(self.players)
+
         self.writeToLog()
         for obj in self.objects.values():
             obj.changed = False
-        self.animations = []
+        self.animations = ["animations"]
+
+    def logPath(self):
+        return "logs/" + str(self.id) + ".gamelog"
 
     def writeToLog(self):
-        pass
+        log = open(self.logPath(), "a")
+        log.write(sexpr2str(self.status(False)))
+        log.write(sexpr2str(self.animations))
     
     @requireReferences(Building, UnitType)
     def train(self, buildingID, typeID):
@@ -100,9 +108,6 @@ class Match(DefaultGameWorld):
     def warp(self, unitID):
         return self.objects[unitID].warp()
 
-    def sendMap(self, players):
-        pass #TODO
-
     def sendIdent(self, players):
         if len(self.players) < 2:
             return False
@@ -113,38 +118,36 @@ class Match(DefaultGameWorld):
             i.writeSExpr(['ident', list, self.log.id])
 
     def sendStatus(self, players):
-        msg = ["status"]
-        msg.append(["game", self.turnNum, self.players[0].gold, 
-                    self.players[1].gold])
-        typeLists = defaultdict(list)
-        for obj in self.objects.values():
-            typeLists[obj.__class__].append(obj)
-        for type in typeLists.keys():
-            msg.append([type.__name__]+[j.toList() for j in typeLists[type]])
         for i in players:
-            i.writeSExpr(msg)
-            i.writeSExpr(["animations"] + self.animations)
+            i.writeSExpr(self.status())
+            i.writeSExpr(self.animations)
 
     def sendChanged(self, players):
         """
-        Development in progress.
         An alternative to sendStatus, where objects are only sent if they
         have changed since last turn.
         """
-        msg = ["changed"]
+        for i in players:
+            i.writeSExpr(self.status(False))
+            i.writeSExpr(self.animations)
+
+    def status(self, fullList = True):
+        if (fullList):
+            msg = ["status"]
+        else:
+            msg = ["changed"]
+
         msg.append(["game", self.turnNum, self.players[0].gold,
                     self.players[1].gold])
         typeLists = defaultdict(list)
         for obj in self.objects.values():
-            if (obj.changed):
+            if (fullList or obj.changed):
                 typeLists[obj.__class__].append(obj)
         for type in typeLists.keys():
             if (len(typeLists[type]) > 0):
-                msg.append([type.__name__] + 
+                msg.append([type.__name__] +
                            [j.toList() for j in typeLists[type]])
-        for i in players:
-            i.writeSExpr(msg)
-            i.writeSExpr(["animations"] + self.animations)
+        return msg
 
     def loadUnitSet(self, cfgfile):
         unitConfig = readConfig(cfgfile)

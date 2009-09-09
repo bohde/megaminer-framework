@@ -24,12 +24,15 @@ class Portal(MappableObject):
     def nextTurn(self):
         MappableObject.nextTurn(self)
         oldFee = int(self.fee)
-        self.fee = math.floor(self.fee * Portal.feeMultiplier)
+        self.fee = int(math.floor(self.fee * Portal.feeMultiplier))
+        if (oldFee != self.fee):
+            self.changed = True
 
     def chargeToll(self, player):
         if (player.gold[self.z] < self.fee):
             return "You can not afford the portal fee"
         player.gold[self.z] -= self.fee
         self.fee += Portal.feeIncr
+        self.changed = True
         return True
 
