@@ -104,7 +104,7 @@ class TestObjectCreation(unittest.TestCase):
         self.assertEqual(wolfType.name, "Wolf")
         self.assertTrue(not wolfType.cute and wolfType.deadly)
         previd = self.game.nextid
-        self.unit = Unit(self.game, 3, 7, 0, self.players[0], pandaType)
+        self.unit = Unit(self.game, 3, 7, 0, self.players[0], pandaType, 0)
         self.assertEqual(previd + 1, self.game.nextid)
         self.game.addObject(self.unit)
         self.assertEqual(self.game.objects.get(self.unit.id), self.unit)
@@ -121,7 +121,7 @@ class TestObjectCreation(unittest.TestCase):
         houseType = self.game.objects.get(self.game.nextid - 1)
         self.assertEqual(houseType.name, "House")
         self.assertTrue(houseType.fancy)
-        self.home = Building(self.game, 4, 7, 0, self.players[0], houseType)
+        self.home = Building(self.game, 4, 7, 0, self.players[0], houseType, 0)
         self.game.addObject(self.home)
         self.assertEqual(self.home.hp, 44)
         self.assertEqual(self.game.objects.get(self.home.id), self.home)
@@ -144,13 +144,16 @@ class TestActions(unittest.TestCase):
         self.wolfType = self.game.objects.get(self.game.nextid - 2)
         self.pandaType = self.game.objects.get(self.game.nextid - 1)
         self.units = []
-        self.units.append(Unit(self.game,3,7,0,self.players[0],self.wolfType))
-        self.units.append(Unit(self.game,3,6,0,self.players[1],self.pandaType))
+        self.units.append(Unit(self.game, 3, 7, 0, self.players[0],
+                                self.wolfType, 0))
+        self.units.append(Unit(self.game, 3, 6, 0, self.players[1],
+                                self.pandaType, 0))
         self.game.addObject(self.units[0])
         self.game.addObject(self.units[1])
         self.game.loadBuildingSet("config/testBuildingSet.cfg")
         self.houseType = self.game.objects.get(self.game.nextid - 1)
-        self.home = Building(self.game, 4,7,0, self.players[0],self.houseType)
+        self.home = Building(self.game, 4, 7, 0, self.players[0],
+                             self.houseType, 0)
         self.game.addObject(self.home)
         self.game.start()
     
@@ -172,6 +175,7 @@ class TestActions(unittest.TestCase):
         self.assertEqual([], self.game.periods[0].area[(3,6)])
         self.assertNotEqual(True, self.game.attack(234, 3, 6))
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
+        self.game.nextTurn()
 
     def test_move(self):
         #No moves
@@ -271,3 +275,4 @@ class TestActions(unittest.TestCase):
         self.game.warp(self.units[1].id)
         self.assertEqual(1, self.units[1].z)
         self.assertEqual(0, self.players[1].gold[0])
+

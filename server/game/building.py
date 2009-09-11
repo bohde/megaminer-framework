@@ -5,15 +5,14 @@ from hittableObject import *
 import math
 
 class Building(HittableObject):
-    def __init__(self, game, x, y, z, owner, type):
-        HittableObject.__init__(self, game, x, y, z, type)
+    def __init__(self, game, x, y, z, owner, type, level):
+        HittableObject.__init__(self, game, x, y, z, type, level)
         self.type = type
         self.training = None #The type of unit in progress, or None
         self.progress = 0 #The number of turns spent training
         self.owner = owner
         self.linked = False #True if this building also exists in a future era
         self.complete = False
-        self.level = 1
 
     def toList(self):
         list = HittableObject.toList(self)
@@ -26,14 +25,13 @@ class Building(HittableObject):
                      self.progress, 1 * self.linked, 1 * self.complete])
         return list
 
-
     def bringToCompletion(self):
         if (not self.complete):
             self.complete = True
-            self.hp = self.type.hp
+            self.hp = self.type.effHP(self.level)
             if (self.z < 2):
                 newBuilding = Building(self.game, self.x, self.y, self.z + 1,\
-                                   self.owner, self.type)
+                                   self.owner, self.type, self.level + 1)
                 self.game.addObject(newBuilding)
                 newBuilding.bringToCompletion()
                 self.linked = True
@@ -66,7 +64,7 @@ class Building(HittableObject):
                 self.changed = True
             if (self.progress >= self.training.trainTime):
                 newUnit = Unit(self.game, self.x, self.y, self.z, \
-                               self.owner, self.training)
+                               self.owner, self.training, 0)
                 self.game.addObject(newUnit)
                 self.training = None
                 self.progress = 0
@@ -78,10 +76,11 @@ class Building(HittableObject):
         """
         if (self.complete):
             return str(self.id) + " is already complete"
-        self.hp += math.ceil(self.type.hp*(1.0 / self.type.buildTime[self.z]))
-        self.hp = int(min(self.hp, self.type.hp))
+        self.hp += math.ceil(self.type.effHP(self.level) * 
+                     (1.0 / self.type.buildTime[self.z]))
+        self.hp = int(min(self.hp, self.type.effHP(self.level)))
         self.changed = True
-        if (self.hp == self.type.hp):
+        if (self.hp == self.type.effHP(self.level)):
             self.bringToCompletion()
 
     def train(self, newUnitType):
@@ -101,7 +100,7 @@ class Building(HittableObject):
         self.game.animations += [["train", self.id, newUnitType.id]]
         self.training = newUnitType
         self.progress = 0
-        self.owner.gold[self.z] -= newUnitType.price
+        self.owner.gold[self.z] -= newUnitType.effPrice(self.level)
         self.changed = True
         return True
 
@@ -110,7 +109,7 @@ class Building(HittableObject):
             return str(self.id) + " is not your building"
         if (self.complete):
             return str(self.id) + " is complete and can not be canceled."
-        self.owner.gold[self.z] += self.type.price
+        self.owner.gold[self.z] += self.type.effPrice(self.level)
         self.game.removeObject(self)
         return True
 

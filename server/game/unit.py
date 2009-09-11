@@ -6,14 +6,14 @@ class Unit(HittableObject):
     Any object that is owned by a player and can move inherits from this class.
     This class handles functions related to attacking and moving.
     """
-    def __init__(self, game, x, y, z, owner, type):
-        HittableObject.__init__(self, game, x, y, z, type)
-        self.hp = type.hp
+
+    def __init__(self, game, x, y, z, owner, type, level):
+        HittableObject.__init__(self, game, x, y, z, type, level)
+        self.hp = self.type.effHP(self.level)
         self.actions = 0
         self.moves = 0
         self.owner = owner
         self.type = type
-        self.level = 1
 
     def toList(self):
         list = HittableObject.toList(self)
@@ -24,8 +24,10 @@ class Unit(HittableObject):
 
     def nextTurn(self):
         HittableObject.nextTurn(self)
-        self.actions = self.type.actions
-        self.moves = self.type.moves
+        if (self.owner == self.game.turn):
+            self.actions = self.type.actions
+            self.moves = self.type.moves
+            changed = True
 
     def move(self, targetX, targetY):
         dis = self.game.distance(self.x, self.y, targetX, targetY)
@@ -68,7 +70,7 @@ class Unit(HittableObject):
         #Kill all enemies in the way
         squatters = self.game.getEnemies(self.x, self.y, self.z)
         for obj in squatters:
-            self.game.removeObject(obj)
+            obj.takeDamage(obj.hp, True)
         self.changed = True
         self.addToMap()
         return True
@@ -90,7 +92,7 @@ class Unit(HittableObject):
                    + str(targetX) + ", " + str(targetY)
         self.game.animations += [["attack", self.id, targetX, targetY]]
         for target in self.game.periods[self.z].area[(targetX, targetY)]:
-            target.takeDamage(self.type.damage)
+            target.takeDamage(self.type.effDamage(self.level))
         self.actions -= 1
         self.moves -= self.type.attackCost
         self.changed = True
@@ -112,7 +114,8 @@ class Unit(HittableObject):
         if (not self.type.canPaint):
             return str(self.id) + " can not paint"
         self.game.animations += [["paint", self.id, targetX, targetY]]
-        self.owner.gold[self.z] += 10
+        artWorth = self.type.artWorth(self.level, gallery.level)
+        self.owner.gold[self.z] += artWorth
         self.actions -= 1
         self.changed = True
         return True
@@ -152,7 +155,7 @@ class Unit(HittableObject):
                 return "You do not have enough gold to build that"
             self.game.animations += [["build", self.id, targetX, targetY]]
             newBuilding = Building(self.game, targetX, targetY, self.z, \
-                                   self.owner, buildingType)
+                                   self.owner, buildingType, self.level)
             self.game.addObject(newBuilding)
             self.owner.gold[self.z] -= buildingType.price
         self.actions -= 1
