@@ -2,9 +2,12 @@ from mappableObject import *
 import math
 
 class Portal(MappableObject):
-    feeInit = 25 #The initial portal fee value
-    feeIncr = 10 #The amount the fee is incremented for each unit
-    feeMultiplier = .8 #The value multiplied to the portal fee each turn
+    """
+    Configurable members of Portal (see config/defaults.cfg)
+    feeInit       - The initial portal fee value
+    feeIncr       - The amount the fee is incremented for each unit
+    feeMultiplier - The value multiplied to the portal fee each turn
+    """
 
     def __init__(self, game, x, y, z, direction):
         """
