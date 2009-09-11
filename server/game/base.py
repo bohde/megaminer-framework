@@ -97,7 +97,6 @@ class RectangularGameWorld(GameWorld):
     """
     def __init__(self, x, y):
         GameWorld.__init__(self, rectangularAreasBuilder(x, y))
-        basicMapGeneration(self)
 
     def distance(self, startX, startY, endX, endY):
         return abs(startX - endX) + abs(startY - endY)

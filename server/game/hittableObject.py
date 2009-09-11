@@ -7,9 +7,10 @@ class HittableObject(MappableObject):
     are solely related to health, damage, or healing.
     """
     myType = "HittableObject"
-    def __init__(self, game, x, y, z, type):
+    def __init__(self, game, x, y, z, type, level):
         MappableObject.__init__(self, game, x, y, z)
         self.type = type
+        self.level = level
 
     def nextTurn(self):
         MappableObject.nextTurn(self)
@@ -29,7 +30,7 @@ class HittableObject(MappableObject):
         if (ignoreArmor):
             dmgTaken = int(damage)
         else:
-            dmgTaken = max(damage - self.type.armor, 1)
+            dmgTaken = max(damage - self.type.effArmor(self.level), 1)
         self.hp -= dmgTaken
         if (dmgTaken != 0):
             self.changed

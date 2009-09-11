@@ -14,6 +14,13 @@ from collections import defaultdict
 from sexpr.sexpr import *
 import os
 
+def loadClassDefaults(cfgFile = "config/defaults.cfg"):
+    cfg = readConfig(cfgFile)
+    for className in cfg.keys():
+        for attr in cfg[className]:
+            setattr(eval(className), attr, cfg[className][attr])
+loadClassDefaults()
+
 class Match(DefaultGameWorld):
     def __init__(self, id):
         self.id = int(id)
@@ -48,6 +55,7 @@ class Match(DefaultGameWorld):
         if (self.winner is not None or self.turn is not None):
             return "Game has already begun"
         self.organizeTechTree()
+        basicMapGeneration(self)
         for player in self.players:
             player.gold = [0, 0, 0]
         self.turnNum = -1

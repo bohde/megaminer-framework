@@ -1,4 +1,4 @@
-class GameObject:
+class GameObject(object):
     """
     All objects that appear in the game will inherit from this class.
     This class assigns each object a unique id.
