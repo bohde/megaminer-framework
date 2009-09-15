@@ -1,34 +1,20 @@
 """
-
-   Copyright (C) 2008 by Steven Wallace
-   snwallace@gmail.com
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 3 of the License, or
+    Definition of client classes.
+    Copyright (C) 2009 by Steven Wallace <snwallace@gmail.com>
+                          Josh Bohde <josh.bohde@gmail.com>
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the
-    Free Software Foundation, Inc.,
-    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- """
-"""
-    File : Client.py
-
-    Arguments : python cliTelnet.py ipAddress portNumber
-                python cliTelnet.py
-                   - defaults to localhost, port 19000
-
-    Purpose : This file is used for preliminary testing of the server, 
-              mostly for whoever is programming the game rules (Game.py).
-              This is a handy little file because it allows you to send
-              string expressions directly from the console.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from Server import *
