@@ -12,16 +12,22 @@ def game_filter():
 
 class testClient(object):
 	def __init__(self):
-		connection = MockConnection([game_filter])
+		self.connection = MockConnection([game_filter])
+		self.connection.begin()
+		
 	def readConsole(self):
 		try:
 			while 1:
 				message = raw_input()
 				self.send(message)
-		except:
+		except KeyboardInterrupt, k:
+			print ""
+			sys.exit(0)
+		except Exception, e:
 			sys.exit(1)
+
 	def send(self, message):
-		 print connection.request(message)
+		 print self.connection.request(message)
 		
     
 
