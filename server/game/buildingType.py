@@ -20,6 +20,10 @@ class BuildingType(GameObject):
         self.armor = 0
         self.builtBy = ""
         self.allowPaint = 0
+        self.width = 1
+        self.height = 1
+        self.spawnX = 0
+        self.spawnY = 0
 
     def toList(self):
         list = GameObject.toList(self)
@@ -28,7 +32,8 @@ class BuildingType(GameObject):
         else:
             builderID = -1
         list.extend([self.name, self.price, self.food, self.buildTime,
-                     self.hp, self.armor, builderID, self.allowPaint])
+                     self.hp, self.armor, builderID, self.allowPaint,
+                     self.width, self.height, self.spawnX, self.spawnY])
         return list
 
     def effArmor(self, level):
