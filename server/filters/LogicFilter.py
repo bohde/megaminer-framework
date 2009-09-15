@@ -4,34 +4,9 @@ from networking.Filter import Filter
 
 LOGIN_CONFIG = 'config/login.cfg'
 
-class LogicFilter(Filter):
-    ID = 0
-    def _init(self, *args):
-        self.user = None
-        self.screenName = None
-        self.password = None
-        self.hash = None
-        self.game = None
-        self.type = None
-        self.hasMap = None
-        self.ID = str(LogicFilter.ID)
-        LogicFilter.ID += 1
-        self.run = True
-
+class SexprHandlerMixin(object):
     def writeSExpr(self, l):
         self.writeOut(sexpr.sexpr2str(l))
-
-    def _readOut(self, data):
-        try:
-            self.readSExpr(sexpr.str2sexpr(data))
-        except ValueError:
-            self.writeSExpr(['malformed-message', data])
-
-    def disconnect(self):
-        self.run = False
-        if self.game:
-            pass
-            #self.readSExpr("(leave-game)")
 
     def readSExpr(self, expression):
         for i in expression:
@@ -46,6 +21,32 @@ class LogicFilter(Filter):
         except Exception, e:
             print e
             self.writeSExpr(['malformed-statement', expression])
+
+class LogicFilter(Filter, SexprHandlerMixin):
+    ID = 0
+    def _init(self, *args):
+        self.user = None
+        self.screenName = None
+        self.password = None
+        self.hash = None
+        self.game = None
+        self.type = None
+        self.hasMap = None
+        self.ID = str(LogicFilter.ID)
+        LogicFilter.ID += 1
+        self.run = True
+
+    def _readOut(self, data):
+        try:
+            self.readSExpr(sexpr.str2sexpr(data))
+        except ValueError:
+            self.writeSExpr(['malformed-message', data])
+
+    def disconnect(self):
+        self.run = False
+        if self.game:
+            pass
+            #self.readSExpr("(leave-game)")
 
     def login(self, user, password):
         registered = False
