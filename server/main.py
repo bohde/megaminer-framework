@@ -27,6 +27,8 @@ from filters.RedirectFilter import RedirectFilter
 from filters.GameServer import GameServer
 from networking.Server import TCPServer
 from networking.Filter import PacketizerFilter, CompressionFilter
+from visualizer.visualizer import VisualizerClient
+
 
 def run_as_main(f):
     def wrapper(*args, **kwargs):
@@ -62,6 +64,8 @@ def run_server_and_redirect(telnet_disabled):
     server.start()
     redir.join()
     server.join()
+
+
 
 def main():
     parser = OptionParser()
