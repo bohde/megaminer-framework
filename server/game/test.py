@@ -130,6 +130,7 @@ class TestObjectCreation(unittest.TestCase):
         self.home.bringToCompletion()
         pastHouse = self.game.periods[1].area[(4,7)][0]
         self.assertNotEqual([], self.game.periods[2].area[(4,7)])
+        self.assertNotEqual([], self.game.periods[2].area[(5,7)])
         self.game.removeObject(pastHouse)
         self.assertEqual([], self.game.periods[2].area[(4,7)])
 
@@ -225,6 +226,9 @@ class TestActions(unittest.TestCase):
         self.assertNotEqual(True, attemptBuild())
 
     def test_train(self):
+        """
+        tests both Building.train and Building.cancel
+        """
         self.game.nextTurn()
         builderID = self.home.id
         newUnitTypeID = self.pandaType.id
@@ -243,11 +247,19 @@ class TestActions(unittest.TestCase):
         newUnitTypeID = self.pandaType.id
         self.assertEqual(True, attemptTrain())
         self.assertEqual(3, self.players[0].gold[0])
+        #cancel
+        self.assertEqual(True, self.game.cancel(self.home.id))
+        self.assertEqual(106, self.players[0].gold[0])
+        #restart
+        self.assertEqual(True, attemptTrain())
+        self.assertEqual(3, self.players[0].gold[0])
+        #wait for completion
         for i in range(0, self.pandaType.trainTime * 2 - 1):
             self.game.nextTurn()
         previd = int(self.game.nextid)
         self.game.nextTurn()
         self.assertEqual(previd + 1, self.game.nextid)
+        self.assertEqual(5, self.game.objects[previd].x)
 
     def test_hunger(self):
         self.game.nextTurn()
