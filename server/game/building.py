@@ -29,7 +29,21 @@ class Building(HittableObject):
         if (not self.complete):
             self.complete = True
             self.hp = self.type.effHP(self.level)
+            #Cascade through time
             if (self.z < 2):
+                #Check future terrain
+                for coord in self.coveredArea():
+                    terrain = self.game.getTerrain(coord[0],coord[1],self.z+1)
+                    portal = self.game.getPortal(coord[0], coord[1], self.z+1)
+                    if (terrain is not None and terrain.blockBuild):
+                        return
+                    if (portal is not None):
+                        return
+                #Kill enemies in the way
+                for coord in self.coveredArea():
+                    enemies = self.game.getEnemies(coord[0],coord[1],self.z+1)
+                    for e in enemies:
+                        e.takeDamage(self.hp, True)
                 newBuilding = Building(self.game, self.x, self.y, self.z + 1,\
                                    self.owner, self.type, self.level + 1)
                 self.game.addObject(newBuilding)
@@ -78,13 +92,11 @@ class Building(HittableObject):
         Increases this building's hp based on the amount of time required to
         build it.
         """
-        if (self.complete):
-            return str(self.id) + " is already complete"
         self.hp += math.ceil(self.type.effHP(self.level) * 
                      (1.0 / self.type.buildTime[self.z]))
         self.hp = int(min(self.hp, self.type.effHP(self.level)))
         self.changed = True
-        if (self.hp == self.type.effHP(self.level)):
+        if (not self.complete and self.hp == self.type.effHP(self.level)):
             self.bringToCompletion()
 
     def train(self, newUnitType):
@@ -127,6 +139,19 @@ class Building(HittableObject):
             self.owner.gold[self.z] += self.type.effPrice(self.level)
             self.game.removeObject(self)
         return True
+
+    def adjArea(self):
+        """
+        Returns a set of tuples (x,y) that are considered adjacent to this
+          building
+        """
+        return self.type.adjArea(self.x, self.y)
+
+    def coveredArea(self):
+        """
+        Returns a set of tuples (x,y) that are covered by this building
+        """
+        return self.type.coveredArea(self.x, self.y)
 
 from unit import *
 
