@@ -58,4 +58,28 @@ class BuildingType(GameObject):
         price = int(math.floor(price))
         return price
 
+    def adjArea(self, buildingX, buildingY):
+        """
+        Returns a set of tuples (x,y) that would be considered adjacent to
+          a hypothetical building of this type at the given x,y
+        """
+        area = set([])
+        for x in xrange(buildingX - 1, buildingX + self.width + 1):
+            for y in xrange(buildingY, buildingY + self.height):
+                area.add((x,y))
+        for x in xrange(buildingX, buildingX + self.width):
+            for y in xrange(buildingY - 1, buildingY + self.height + 1):
+                area.add((x,y))
+        return area
+
+    def coveredArea(self, buildingX, buildingY):
+        """
+        Returns a set of tuples (x,y) that would be covered by
+          a hypothetical building of this type at the given x,y
+        """
+        area = set([])
+        for x in xrange(buildingX, buildingX + self.width):
+            for y in xrange(buildingY, buildingY + self.height):
+                area.add((x,y))
+        return area
 

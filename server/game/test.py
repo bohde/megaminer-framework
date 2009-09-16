@@ -167,7 +167,7 @@ class TestActions(unittest.TestCase):
         self.game.nextTurn()
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 4, 9))
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 7))
-        self.assertEqual(2, self.units[0].moves)
+        self.assertEqual(2, self.units[0].moves)        
         self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.assertEqual(1, self.units[0].moves)
         self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
@@ -177,6 +177,17 @@ class TestActions(unittest.TestCase):
         self.assertNotEqual(True, self.game.attack(234, 3, 6))
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
         self.game.nextTurn()
+
+    def test_shelter(self):
+        self.game.nextTurn()
+        self.game.nextTurn()
+        self.shelter = Building(self.game, 2, 6, 0, self.players[0],
+                             self.houseType, 0)
+        self.game.addObject(self.shelter)
+        self.shelter.bringToCompletion()
+        self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
+        self.assertTrue(self.shelter.hp < self.houseType.effHP(0))
+        self.assertEqual(self.units[1].hp, self.pandaType.effHP(0))
 
     def test_move(self):
         #No moves

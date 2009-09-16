@@ -104,9 +104,9 @@ class Match(DefaultGameWorld):
     def paint(self, unitID, x, y):
         return self.objects[unitID].paint(x, y)
 
-    @requireReferences(Unit, None, None, BuildingType)
+    @requireReferences(Unit, None, None, None)
     def build(self, unitID, x, y, typeID):
-        return self.objects[unitID].build(x, y, self.objects[typeID])
+        return self.objects[unitID].build(x, y, self.objects.get(typeID,None))
 
     @requireReferences(Building)
     def cancel(self, buildingID):
@@ -237,7 +237,8 @@ class Match(DefaultGameWorld):
         for obj in self.objects.values():
             if (isinstance(obj, Building)):
                 if (obj.owner == self.turn and obj.complete):
-                    totalHunger[obj.z] -= obj.type.food
+                    totalHunger[obj.z] -= obj.type.food * \
+                                          obj.type.foodExp**obj.level
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
                     totalHunger[obj.z] += obj.type.hunger
