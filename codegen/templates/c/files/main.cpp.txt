@@ -12,18 +12,9 @@
 
 using namespace std;
 
-extern "C"
-{
-extern char** _argv;
-extern int    _argc;
-}
-
 int main(int argc, char** argv)
 {
-   _argv = argv;
-   _argc = argc;
 
-  bool practice = false;
   if(argc < 2)
   {
     cout<<"Please enter a host name."<<endl;
@@ -50,23 +41,15 @@ int main(int argc, char** argv)
   }
   else
   {
-    if (strcmp(argv[2], "practice")==0)
-    {
-      createGame();
-      practice = true;
-    }
-    else
-    {
-      joinGame(atoi(argv[2]));
-    }
+    joinGame(atoi(argv[2]));
   }
-  while(networkLoop(socket, practice))
+  while(networkLoop(socket))
   {
-    if(ai.startTurn() && !(ai.turnNum() == 1 && !isHuman()))
+    if(ai.startTurn())
     {
       endTurn();
     }
-    else if(!(ai.turnNum() == 1 && !isHuman()))
+    else
     {
       getStatus();
     }

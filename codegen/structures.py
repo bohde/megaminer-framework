@@ -20,7 +20,6 @@ class Model(object):
     if 'data' in kwargs:
       data = kwargs['data']
       for key, value in data:
-        print key
         if key in self.data:
           raise ValueError('Duplicate datum %s in %s' % (key, name))
         self.data[key] = value
