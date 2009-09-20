@@ -1,0 +1,13 @@
+//Copyright (C) 2009 - Missouri S&T ACM AI Team
+//Please do not modify this file while building your AI
+//See AI.h & AI.cpp for that
+
+#include "BaseAI.h"
+#include "game.h"
+
+
+
+bool BaseAI::startTurn()
+{
+  run();
+}
