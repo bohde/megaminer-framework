@@ -15,9 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-from Statements import require_length, dict_wrapper
-from StatementUtils import require_login
+from StatementUtils import require_login, require_length, dict_wrapper
 statements = {}
 mapper = dict_wrapper(statements)
 
