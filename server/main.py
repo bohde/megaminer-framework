@@ -31,7 +31,7 @@ from networking.Server import TCPServer
 from networking.Filter import PacketizerFilter, CompressionFilter
 from visualizer.visualizer import VisualizerClient
 
-def run_as_main(f):
+def runAsMain(f):
     def wrapper(*args, **kwargs):
         try:
             f(*args, **kwargs)
@@ -81,7 +81,7 @@ def main():
 
     runner = None
     if(options.both):
-        runner = run_server_and_redirect
+        runner = runServerAndRedirect
     else:
         runner = (runGameServer, runRedirect)[options.redirect]
     runAsMain(runner)(options.telnet_disabled, options.address, options.port)
