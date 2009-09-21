@@ -19,22 +19,45 @@ def formatAttr(n):
         return float(n)
     except:
         pass
-    if (n[0] == '['):
-        return eval(n)
     return n
 
-def readConfig(cfgfile):
+def configWeapons(cfgfile):
         """
-        function readConfig
-        reads the config file, and parses it.
+        function configWeapons
+        reads the config file, parses it, making each section a weapon.
         """
-        contents = dict()
+        weapons = dict()
         cparse = SafeConfigParser()
         cparse.optionxform = str
         cparse.read(cfgfile)
         for key in cparse.sections():
-            contents[key] = dict([(item[0], formatAttr(item[1])) for item in cparse.items(key)])
-        return contents
+            weapons[key] = dict([(item[0], formatAttr(item[1])) for item in cparse.items(key)])
+        return weapons
+
+def configClassDefaults(mainDict, cfgfile):
+    """
+    Pass in the namespace and the config file.
+    Iterates over the namespace, assigning values.
+    """
+    cparse = SafeConfigParser()
+    cparse.optionxform = str
+    cparse.read(cfgfile)
+    for k, v in mainDict.iteritems():
+        if cparse.has_section(k):
+            v.__dict__.update(dict([(item[0], formatAttr(item[1])) for item in cparse.items(k)]))
+
+def configHuman(human, cfgfile):
+    """
+    function configHuman
+    searches the config file for the human's weapon, then modifies the 
+    human's stats as specified in the config file.
+    """
+    cparse = SafeConfigParser()
+    cparse.optionxform = str
+    cparse.read(cfgfile)
+    if cparse.has_section(human.weapon.desc):
+        for item in cparse.items(human.weapon.desc):
+            setattr(human, item[0], formatAttr(item[1]))
 
 def getUserInfo(user, cfgfile):
     """getUserInfo
