@@ -10,8 +10,12 @@ struct _${model.name}
   % for key in model.data.keys():
   ${conversions[model.data[key]]} ${key};
   % endfor
+<<<<<<< HEAD:codegen/templates/c/files/structures.h.txt
 };
 
+=======
+}
+>>>>>>> origin/gamelogic:codegen/templates/c/files/structures.h.txt
 % endfor
 
 #endif

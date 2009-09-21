@@ -3,7 +3,11 @@ import structures
 client = 0
 server = 1
 
+<<<<<<< HEAD:codegen/data.py
 UnitType = structures.Model('UnitType', key='objectID',
+=======
+UnitType = structures.Model('UnitType', key='id',
+>>>>>>> origin/gamelogic:codegen/data.py
   data = ( ('objectID', int),
     ('name', str),
     ('price', int),
@@ -20,6 +24,7 @@ UnitType = structures.Model('UnitType', key='objectID',
     ('trainerID', int),
     ('canpaint', int))
   )
+<<<<<<< HEAD:codegen/data.py
 
 Unit = structures.Model('Unit', key='objectID',
   data = ( ('objectID', int),
@@ -63,6 +68,8 @@ Building = structures.Model('Building', key='objectID',
     ('linked', int),
     ('complete', int))
   )
+=======
+>>>>>>> origin/gamelogic:codegen/data.py
 
 """
 UnitType(Model):
