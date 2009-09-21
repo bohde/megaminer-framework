@@ -1,5 +1,7 @@
 from hittableObject import *
-from building import *
+
+#Moved to end of file
+#from building import *
 
 class Unit(HittableObject):
     """
@@ -164,6 +166,10 @@ class Unit(HittableObject):
                 portal = self.game.getPortal(coord[0], coord[1], self.z)
                 if (portal is not None):
                     return str(self.id) + " can not build on a portal"
+            for coord in buildingType.adjArea(targetX, targetY):
+                if not self.game.periods[self.z].area.inBounds(coord[0], 
+                                                                coord[1]):
+                    return str(self.id) + " can not build out of bounds"
             if (buildingType.builtBy != self.type):
                 return str(self.id) + " can not construct that type"
             if (self.owner.gold[self.z] < buildingType.price):
@@ -176,4 +182,6 @@ class Unit(HittableObject):
         self.actions -= 1
         self.changed = True
         return True
+
+from building import *
 

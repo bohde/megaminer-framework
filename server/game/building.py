@@ -1,7 +1,5 @@
 from hittableObject import *
-#This include has been moved to the end of 
-#the file to avoid recursive imports
-#from unit import *
+from unit import *
 import math
 
 class Building(HittableObject):
@@ -152,6 +150,4 @@ class Building(HittableObject):
         Returns a set of tuples (x,y) that are covered by this building
         """
         return self.type.coveredArea(self.x, self.y)
-
-from unit import *
 

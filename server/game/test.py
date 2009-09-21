@@ -90,6 +90,9 @@ class TestObjectCreation(unittest.TestCase):
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.game.start()
+        for key in xrange(self.game.nextid):
+            if self.game.objects.has_key(key):
+                self.game.removeObject(self.game.objects[key])
 
     def test_load_units(self):
         """
@@ -156,7 +159,12 @@ class TestActions(unittest.TestCase):
         self.home = Building(self.game, 4, 7, 0, self.players[0],
                              self.houseType, 0)
         self.game.addObject(self.home)
+        lastValidID = self.game.nextid - 1
         self.game.start()
+        #Remove objects created upon map generation
+        for key in xrange(self.game.nextid):
+            if self.game.objects.has_key(key) and key > lastValidID:
+                self.game.removeObject(self.game.objects[key])
     
     def test_attack(self):
         #No actions
