@@ -1,0 +1,7 @@
+*.pyc
+.coverage
+cover*
+*.xml
+badLogin.dat
+*#*
+*~*

@@ -1,0 +1,1 @@
+c = {int:'int', str:'char*'}
