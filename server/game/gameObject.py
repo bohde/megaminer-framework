@@ -1,4 +1,4 @@
-class GameObject:
+class GameObject(object):
     """
     All objects that appear in the game will inherit from this class.
     This class assigns each object a unique id.
@@ -16,12 +16,13 @@ class GameObject:
         self.game = game
         self.id = game.nextid
         self.turnCreated = game.turnNum
+        self.changed = True
         game.nextid += 1
         if game.nextid > game.maxid:
             game.nextid = 0
 
     def toList(self):
-        list = [self.myType, self.id]
+        list = [self.id]
         return list
 
     def nextTurn(self):
