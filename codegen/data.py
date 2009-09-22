@@ -3,11 +3,7 @@ import structures
 client = 0
 server = 1
 
-<<<<<<< HEAD:codegen/data.py
 UnitType = structures.Model('UnitType', key='objectID',
-=======
-UnitType = structures.Model('UnitType', key='id',
->>>>>>> origin/gamelogic:codegen/data.py
   data = ( ('objectID', int),
     ('name', str),
     ('price', int),
@@ -24,7 +20,6 @@ UnitType = structures.Model('UnitType', key='id',
     ('trainerID', int),
     ('canpaint', int))
   )
-<<<<<<< HEAD:codegen/data.py
 
 Unit = structures.Model('Unit', key='objectID',
   data = ( ('objectID', int),
@@ -68,64 +63,21 @@ Building = structures.Model('Building', key='objectID',
     ('linked', int),
     ('complete', int))
   )
-=======
->>>>>>> origin/gamelogic:codegen/data.py
 
-"""
-UnitType(Model):
-  _name = 'UnitType'
-  _key = 'id'
-  id = int
-  
-  cost = (int, int) #base, incr
-  hp = (int, int) #base, incr
-  moves = int
-  actions = int
-  range = (int, int) #min, max
-  damage = (int, int) #base, incr
-  
-  buildSpeed = int
-  paintSpeed = int
-  
+Terrain = structures.Model('Terrain', key='objectID',
+  data = ( ('objectID', int),
+    ('x', int),
+    ('y', int),
+    ('z', int),
+    ('blockmove', int),
+    ('blockbuild', int))
+  )
 
-class BuildingType(Model):
-  _name = 'BuildingType'
-  _key = 'id'
-  id = int
-  
-  cost = (int, int) #base, incr
-  hp = (int, int) #base, incr
-  buildTime = (int, int, int) #base, incr
-  builds = [UnitType]
-
-class MappableObject(Model):
-  _name = 'MappableObject'
-  _key = 'id'
-  id = int
-  x = int
-  y = int
-
-class Unit(MappableObject):
-  _name = 'Unit'
-  type = UnitType
-  level = int
-  hp = int
-  moves = int
-  actions = int
-
-class Buildng(MappableObject):
-  _name = 'Building'
-  type = BuildingType
-  level = int
-  hp = int
-
-class PlayerStatus(Model):
-  _name = 'PlayerStatus'
-  name = str
-  s
-
-class Status(Message):
-  _head = 'Status'
-  _source = server
-  _format = [int, int, [Unit]]
-"""
+Portal = structures.Model('Portal', key='objectID',
+  data = ( ('objectID', int),
+    ('x', int),
+    ('y', int),
+    ('z', int),
+    ('direction', int),
+    ('fee', int))
+  )

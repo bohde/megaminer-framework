@@ -34,6 +34,20 @@ namespace Windows
 using namespace std;
 
 static int turnNumber = 0;
+
+static int player0Gold0 = 0;
+static int player0Gold1 = 0;
+static int player0Gold2 = 0;
+static int player1Gold0 = 0;
+static int player1Gold1 = 0;
+static int player1Gold2 = 0;
+
+% for model in models:
+static _${model.name}* ${model.name}s = NULL;
+static int ${model.name}Count = 0;
+
+% endfor
+
 static char logID[100]="";
 
 static int socket;
@@ -88,11 +102,35 @@ DLLEXPORT void getStatus()
   send_string(socket, "(game-status)");
 }
 
+
+//Utility functions for parsing data
+% for model in models:
+void parse${model.name}(_${model.name}* object, sexp_t* expression)
+{
+  sexp_t* sub;
+  sub = expression->list;
+  
+  % for key in model.data.keys():
+  sub = sub->next;
+  %if model.data[key] == int:
+  object->${key} = atoi(sub->val);
+  %elif model.data[key] == str:
+  ##FIXME: This is such a memory leak.
+  object->name = new char[strlen(sub->val)+1];
+  strncpy(object->name, sub->val, strlen(sub->val));
+  object->name[strlen(sub->val)] = 0;
+  %endif
+  
+  %endfor
+  
+}
+% endfor
+
 DLLEXPORT int networkLoop(int socket)
 {
   while(true)
   {
-    sexp_t* expression, *sub;
+    sexp_t* expression, *sub, *subsub;
     expression = extract_sexpr(rec_string(socket));
     expression = expression->list;
     if(expression->val != NULL && strcmp(expression->val, "game-over") == 0)
@@ -132,6 +170,47 @@ DLLEXPORT int networkLoop(int socket)
       cout << expression->val << endl;
       cout << expression->next->val << endl;
     }
-  }
+    else if(expression->val != NULL && strstr(expression->val, "status"))
+    {
+      while(expression->next != NULL)
+      {
+        expression = expression->next;
+        sub = expression->list;
+        if(string(sub->val) == "game")
+        {
+          sub = sub->next;
+          turnNumber = atoi(sub->val);
+          sub = sub->next;
+          
+          subsub = sub->list;
+          player0Gold0 = atoi(sub->val);
+          subsub = subsub->next;
+          player0Gold1 = atoi(sub->val);
+          subsub = subsub->next;
+          player0Gold2 = atoi(sub->val);
+          sub = sub->next;
+          
+          subsub = sub->list;
+          player1Gold0 = atoi(sub->val);
+          subsub = subsub->next;
+          player1Gold1 = atoi(sub->val);
+          subsub = subsub->next;
+          player1Gold2 = atoi(sub->val);
+        }
+        % for model in models:
+        else if(string(sub->val) == "${model.name}")
+        {
+          ${model.name}Count =  sexp_list_length(expression)-1; //-1 for the header
+          ${model.name}s = new _${model.name}[${model.name}Count];
+          for(int i = 0; i < ${model.name}Count; i++)
+          {
+            sub = sub->next;
+            parse${model.name}(${model.name}s+i, sub);
+          }
+        }
+        % endfor
+      }
+    }
   return 0;
+  }
 }

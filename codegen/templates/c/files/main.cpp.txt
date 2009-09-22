@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   const char* message;
   sexp_t* expression;
   AI ai;
-  int socket = open_server_connection(argv[1], "19000");
+  int socket = open_server_connection(argv[1], "19001");
   if(socket == -1)
   {
     cerr << "Unable to connect to server" << endl;
