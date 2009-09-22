@@ -3,7 +3,11 @@ import structures
 client = 0
 server = 1
 
+<<<<<<< HEAD:codegen/data.py
+UnitType = structures.Model('UnitType', key='objectID',
+=======
 UnitType = structures.Model('UnitType', key='id',
+>>>>>>> origin/gamelogic:codegen/data.py
   data = ( ('objectID', int),
     ('name', str),
     ('price', int),
@@ -20,6 +24,52 @@ UnitType = structures.Model('UnitType', key='id',
     ('trainerID', int),
     ('canpaint', int))
   )
+<<<<<<< HEAD:codegen/data.py
+
+Unit = structures.Model('Unit', key='objectID',
+  data = ( ('objectID', int),
+    ('x', int),
+    ('y', int),
+    ('z', int),
+    ('hp', int),
+    ('level', int),
+    ('unitTypeID', int),
+    ('ownerIndex', int),
+    ('actions', int),
+    ('moves', int))
+  )
+
+BuildingType = structures.Model('BuildingType', key='objectID',
+  data = ( ('objectID', int),
+    ('name', str),
+    ('price', int),
+    ('food', int),
+    ('buildtime', int),
+    ('hp', int),
+    ('armor', int),
+    ('builderID', int),
+    ('allowPaint', int),
+    ('width', int),
+    ('height', int),
+    ('spawnX', int),
+    ('spawnY', int))
+  )
+
+Building = structures.Model('Building', key='objectID',
+  data = ( ('objectID', int),
+    ('x', int),
+    ('y', int),
+    ('z', int),
+    ('hp', int),
+    ('level', int),
+    ('buildingTypeID', int),
+    ('inTraining', int),
+    ('progress', int),
+    ('linked', int),
+    ('complete', int))
+  )
+=======
+>>>>>>> origin/gamelogic:codegen/data.py
 
 """
 UnitType(Model):

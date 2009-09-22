@@ -1,0 +1,35 @@
+//Copyright (C) 2009 - Missouri S&T ACM AI Team
+//Please do not modify this file while building your AI
+//See AI.h & AI.cpp for that
+#ifndef GAME_H
+#define GAME_H
+
+#include "network.h"
+#include "structures.h"
+
+#ifdef WIN32
+#define DLLEXPORT extern "C" __declspec(dllexport)
+#else
+#define DLLEXPORT
+#endif
+
+extern "C"
+{
+  DLLEXPORT bool login(int socket, const char* username, const char* password);
+  DLLEXPORT void createGame();
+  DLLEXPORT void joinGame(int id);
+
+  DLLEXPORT void endTurn();
+  DLLEXPORT void getStatus();
+
+
+//commands
+
+//accessors
+
+
+  DLLEXPORT int networkLoop(int socket);
+}
+
+
+#endif
