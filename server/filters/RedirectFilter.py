@@ -49,7 +49,7 @@ class RedirectFilter(LogicFilter):
 
     def chooseServer(self):
         ret = [[i,j.address] for i, j in sorted(RedirectFilter.Servers.iteritems(), key=(lambda x: x[1].count))]
-        return [[], ret[0]][len(ret)>0]
+        return ret[0] if len(ret)>0 else []
 
     def createGame(self):
         ret = ['game-number', RedirectFilter.GameNumber, ['server'] + self.chooseServer()]
