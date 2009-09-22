@@ -54,6 +54,7 @@ class Window(object):
 
     def updateScreen(self):
         for name, period in self.timePeriods.iteritems():
+            period.updateTimePeriod()
             pygame.transform.scale(period.surface, viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
         pygame.display.update()
 
@@ -68,27 +69,19 @@ class Window(object):
                             self.timePeriods[period].addBuilding(item)
                         if type == 'Terrain':
                             self.timePeriods[period].addTerrain(item)
-        self.updateScreen()
-                    
+                            
     def remove(self, id):
-        for period, dictionary in self.status.iteritems():
-            for type, list in dictionary.iteritems():
-                for item in list:
-                    if item['objectID'] == id:
-                        if type == 'Unit':
-                            self.timePeriods[period].removeUnit(item)
-                        if type == 'Building':
-                            self.timePeriods[period].removeBuilding(item)
-                        if type == 'Terrain':
-                            self.timePeriods[period].removeTerrain(item)
+        for name, period in self.timePeriods.iteritems():
+            period.remove(id)
     
     def move(self, id, targetX, targetY):
-        for period, dictionary in self.status.iteritems():
-            for type, list in dictionary.iteritems():
-                for item in list:
-                    if item['objectID'] == id:
-                        if type == 'Unit':
-                            self.timePeriods[period].moveUnit(item)
+        print "moving unit..."
+        for name, period in self.timePeriods.iteritems():
+            period.takeStep(id)
+            self.updateScreen()
+            pygame.time.delay(250)
+            period.move(id, targetX, targetY)
+            self.updateScreen()
     
     def attack(self, attackerID, targetX, targetY):
         for period, dictionary in self.status.iteritems():
@@ -141,23 +134,3 @@ class Window(object):
         else:
             return grassColor
         
-
-    
-pygame.init()
-
-x = Window()
-
-status = {'farPast':{"Unit":[{'objectID':1, 'location':(0,0), 'hp':100, 'level':0, 'unitType':'civE', 'ownerIndex':0, 'actions':2, 'moves':5}]},
-    'past':{"Unit":[{'objectID':2, 'location':(600,0), 'hp':100, 'level':0, 'unitType':'civE', 'ownerIndex':0, 'actions':2, 'moves':5}]},
-    'present':{"Unit":[{'objectID':3, 'location':(0,300), 'hp':100, 'level':0, 'unitType':'civE', 'ownerIndex':0, 'actions':2, 'moves':5}]}}
-
-x.updateStatus(status)
-
-x.add(3)
-x.add(1)
-x.add(2)
-
-while pygame.event.poll().type != MOUSEBUTTONDOWN:
-    if pygame.event.poll().type == KEYDOWN:
-        x.focusOn('farPast')
-        pass
