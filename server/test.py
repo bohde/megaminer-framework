@@ -1,10 +1,8 @@
 #!/usr/bin/python
 import unittest
-import game.test
 import networking.Filter as Filter
 import main
 import threading
-from game.test import *
 import functools
 from filters.GameServer import GameServer, GameFilter
 
