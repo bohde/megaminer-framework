@@ -18,8 +18,7 @@
 
 from networking.Client import Client
 from filters.LogicFilter import SexprHandlerMixin
-from statements.Statements import require_length, dict_wrapper
-from statements.StatementUtils import require_login
+from statements.StatementUtils import require_login, require_length, dict_wrapper 
 
 def protocol():
     statements = {}
