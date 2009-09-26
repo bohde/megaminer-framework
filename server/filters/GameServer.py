@@ -94,7 +94,7 @@ class GameServer(object):
         server_thread = threading.Thread(None, self.server.run)
         server_thread.run()
 
-    def run(self, telnet_disabled, address="localhost", port=1900):
+    def run(self, telnet_disabled, address="localhost", port=19000):
         self.client.connect(address, port)
         self.login()
         self.registerAsServer()
