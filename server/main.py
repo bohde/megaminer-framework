@@ -31,7 +31,7 @@ from networking.Server import TCPServer
 from networking.Filter import PacketizerFilter, CompressionFilter
 from visualizer.visualizer import VisualizerClient
 
-def run_as_main(f):
+def runAsMain(f):
     def wrapper(*args, **kwargs):
         try:
             f(*args, **kwargs)
@@ -43,6 +43,7 @@ def run_as_main(f):
         sys.exit(0)
     return wrapper
 
+@runAsMain
 def runRedirect(telnet_disabled, address, port):
     print "Running Redirect Server.", 
     filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [RedirectFilter]
@@ -50,10 +51,12 @@ def runRedirect(telnet_disabled, address, port):
     print "Listening on port 19000."
     master.run()
 
+@runAsMain
 def runGameServer(telnet_disabled, address, port):
     server = GameServer("slave", "12345")
     server.run(telnet_disabled, address, port)
 
+@runAsMain
 def runServerAndRedirect(telnet_disabled, address, port):
     from multiprocessing import Process
     redir = Process(target=runRedirect, args=(telnet_disabled,address, port))
@@ -81,10 +84,10 @@ def main():
 
     runner = None
     if(options.both):
-        runner = run_server_and_redirect
+        runner = runServerAndRedirect
     else:
         runner = (runGameServer, runRedirect)[options.redirect]
-    runAsMain(runner)(options.telnet_disabled, options.address, options.port)
+    runner(options.telnet_disabled, options.address, options.port)
 
 if __name__ == "__main__":
     main()

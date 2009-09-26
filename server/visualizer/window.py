@@ -4,12 +4,13 @@ from spriteClasses import Unit
 from timePeriod import TimePeriod
 
 windowDimensions = (1280,1024)
-viewDimensions={"l":{"dimensions":(853, 682), "upperLeftCorner":(213, 6)},
-                "s1":{"dimensions":(412, 330), "upperLeftCorner":(75, 691)},
-                "s2":{"dimensions":(412, 330), "upperLeftCorner":(793, 691)}}
-periodNames = ['farPast', 'past', 'present']
+viewDimensions={"l":{"dimensions":(1280, 360), "upperLeftCorner":(0, 6)},
+                "s1":{"dimensions":(620, 250), "upperLeftCorner":(10, 691)},
+                "s2":{"dimensions":(620, 250), "upperLeftCorner":(650, 691)}}
+periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
+periodDimensions = (20,20)
 grassColor = [0,123,12]
-black = [0,0,0]
+background = pygame.image.load(os.path.join("sprites", "background.jpg"))
 
 class Window(object):
     def __init__(self):
@@ -18,14 +19,14 @@ class Window(object):
         self.views = {}
         self.timePeriods = {}
         self.display = pygame.display.set_mode(windowDimensions)
-        self.display.fill(black)     #  ,pygame.NOFRAME)
+        self.display.blit(background, self.display.get_rect(), pygame.NOFRAME)
         self.setUpTimePeriods()
         #self.objects = []
         pygame.display.update()
         
     def setUpTimePeriods(self):
-        for name in periodNames:
-            self.timePeriods[name] = TimePeriod(name, viewDimensions['l']['dimensions'], self.color())
+        for name, color in periodNames.iteritems():
+            self.timePeriods[name] = TimePeriod(name, viewDimensions['l']['dimensions'], periodDimensions, color)
         self.timePeriods['farPast'].presentView = 's2'
         self.timePeriods['past'].presentView = 'l'
         self.timePeriods['present'].presentView = 's1'
@@ -55,7 +56,7 @@ class Window(object):
     def updateScreen(self):
         for name, period in self.timePeriods.iteritems():
             period.updateTimePeriod()
-            pygame.transform.scale(period.surface, viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
+            pygame.transform.scale(period.baseLayer, viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
         pygame.display.update()
 
     def add(self, id):
@@ -122,7 +123,7 @@ class Window(object):
     def updateStatus(self, newStatus):
         self.status = newStatus
 
-
+    """
     #just to help identify each view.
     def color(self):
         if self.colorIndex == 0:
@@ -133,4 +134,4 @@ class Window(object):
             return [0,0,100]
         else:
             return grassColor
-        
+       """ 

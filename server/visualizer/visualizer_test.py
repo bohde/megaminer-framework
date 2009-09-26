@@ -16,14 +16,14 @@ status = {'farPast':{"Unit":[{'objectID':1, 'location':(0,0), 'hp':100, 'level':
 x.updateStatus(status)
 
 i = 0
-
+"""
 x.add(3)
 x.add(1)
 x.add(2)
 x.add(5)
 x.add(4)
 x.updateScreen()
-
+"""
 while pygame.event.poll().type != QUIT:
     if pygame.event.poll().type == KEYDOWN:
         x.move(1, i, i)
