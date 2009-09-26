@@ -21,19 +21,6 @@ UnitType = structures.Model('UnitType', key='objectID',
     ('canpaint', int))
   )
 
-Unit = structures.Model('Unit', key='objectID',
-  data = ( ('objectID', int),
-    ('x', int),
-    ('y', int),
-    ('z', int),
-    ('hp', int),
-    ('level', int),
-    ('unitTypeID', int),
-    ('ownerIndex', int),
-    ('actions', int),
-    ('moves', int))
-  )
-
 BuildingType = structures.Model('BuildingType', key='objectID',
   data = ( ('objectID', int),
     ('name', str),
@@ -49,6 +36,24 @@ BuildingType = structures.Model('BuildingType', key='objectID',
     ('spawnX', int),
     ('spawnY', int))
   )
+
+Unit = structures.Model('Unit', key='objectID',
+  data = ( ('objectID', int),
+    ('x', int),
+    ('y', int),
+    ('z', int),
+    ('hp', int),
+    ('level', int),
+    ('unitTypeID', int),
+    ('ownerIndex', int),
+    ('actions', int),
+    ('moves', int)),
+  functions = ( ('attack', ( ('x', int), ('y', int) ) ),
+    ('build', ( ('x', int), ('y', int), ('type', BuildingType) ) ),
+    ('paint', ( ('x', int), ('y', int)) ),
+    ('warp', () ) )
+  )
+
 
 Building = structures.Model('Building', key='objectID',
   data = ( ('objectID', int),
