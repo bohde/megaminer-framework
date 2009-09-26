@@ -28,8 +28,13 @@ extern "C"
 % for model in models:
 % for func in model.functions.keys():
   DLLEXPORT bool ${model.name.lower()}${func.capitalize()}(\
-  
-  )
+% for arg in model.functions[func]:
+% if arg != model.functions[func][0]:
+, \
+% endif
+${conversions[arg[1]]} ${arg[0]}\
+% endfor
+)
 % endfor
 % endfor
 
