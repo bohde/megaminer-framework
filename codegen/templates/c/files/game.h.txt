@@ -25,6 +25,14 @@ extern "C"
 
 //commands
 
+% for model in models:
+% for func in model.functions.keys():
+  DLLEXPORT bool ${model.name.lower()}${func.capitalize()}(\
+  
+  )
+% endfor
+% endfor
+
 //accessors
 
 
