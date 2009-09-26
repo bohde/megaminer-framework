@@ -28,7 +28,7 @@ class Model(object):
       for key, value in functions:
         if key in self.functions:
           raise ValueError('Duplicate function %s in %s' % (key, name))
-        self.functions['key'] = value
+        self.functions[key] = value
     if 'key' in kwargs:
       self.key = kwargs['key']
 
