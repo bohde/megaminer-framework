@@ -24,7 +24,7 @@ class Model(object):
           raise ValueError('Duplicate datum %s in %s' % (key, name))
         self.data[key] = value
     if 'functions' in kwargs:
-      functions = kwargs['data']
+      functions = kwargs['functions']
       for key, value in functions:
         if key in self.functions:
           raise ValueError('Duplicate function %s in %s' % (key, name))
