@@ -34,7 +34,7 @@ extern "C"
 % endif
 ${conversions[arg[1]]} ${arg[0]}\
 % endfor
-)
+);
 % endfor
 % endfor
 
