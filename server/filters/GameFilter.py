@@ -18,8 +18,12 @@
 
 from LogicFilter import LogicFilter
 import statements.Statements as Statements
+import statements.GameStatements as GameStatements
 
 class GameFilter(LogicFilter):
      def _init(self):
         LogicFilter._init(self)
         self.statements = Statements.statements
+        for k in GameStatements.statements.keys():
+            self.statements[k] = GameStatements.statements[k]
+
