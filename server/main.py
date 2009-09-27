@@ -47,7 +47,7 @@ def runAsMain(f):
 def runRedirect(telnet_disabled, address, port):
     print "Running Redirect Server.", 
     filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [RedirectFilter]
-    master = TCPServer(1900,  *filters)
+    master = TCPServer(19000,  *filters)
     print "Listening on port 19000."
     master.run()
 
@@ -75,7 +75,7 @@ def main():
                       default=True, help="Make any servers started accessible via telnet")
     parser.add_option("-b", "--run-both", action="store_true", dest="both", default=False,
                       help="Run both a redirect and game server.")
-    parser.add_option("-p", "--port", action="store", dest="port", type="int", default=1900,           
+    parser.add_option("-p", "--port", action="store", dest="port", type="int", default=19000,           
                       help="Use the specified port. Defaults to 1900")
     parser.add_option("-a", "--address", action="store", dest="address", type="string",
                       default="127.0.0.1", help="Use the specified address. Defaults to localhost")
