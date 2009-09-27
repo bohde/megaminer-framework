@@ -1,8 +1,5 @@
 from hittableObject import *
-from building import *
-
-#Moved to end of file
-#from building import *
+from building import Building
 
 class Unit(HittableObject):
     """
@@ -184,6 +181,6 @@ class Unit(HittableObject):
                                    self.owner, buildingType, self.level)
             self.game.addObject(newBuilding)
             self.owner.gold[self.z] -= buildingType.price
+        return True
 
-from building import *
 

@@ -6,6 +6,8 @@ import threading
 import functools
 from filters.GameServer import GameServer, GameFilter
 
+from game.test import *
+
 class LoginException(Exception):
     pass
 

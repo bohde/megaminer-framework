@@ -1,5 +1,5 @@
 from hittableObject import *
-from unit import *
+import unit
 import math
 
 class Building(HittableObject):
@@ -78,7 +78,7 @@ class Building(HittableObject):
                 self.progress += 1
                 self.changed = True
             if (self.progress >= self.training.trainTime):
-                newUnit = Unit(self.game, self.x + self.type.spawnX,
+                newUnit = unit.Unit(self.game, self.x + self.type.spawnX,
                                self.y + self.type.spawnY, self.z, \
                                self.owner, self.training, 0)
                 self.game.addObject(newUnit)
