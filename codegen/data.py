@@ -66,7 +66,9 @@ Building = structures.Model('Building', key='objectID',
     ('inTraining', int),
     ('progress', int),
     ('linked', int),
-    ('complete', int))
+    ('complete', int)),
+  functions = ( ('train', ( ('unit', UnitType), ) ),
+    ('cancel', () ) )
   )
 
 Terrain = structures.Model('Terrain', key='objectID',
