@@ -1,3 +1,23 @@
+"""
+    Class files for a game server, interacting with the redirect server.
+    Copyright (C) 2009  Josh Bohde <josh.bohde@gmail.com>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""                                             
+
+import sys
+import signal
 import threading
 import sexpr.sexpr as sexpr
 
@@ -68,17 +88,14 @@ class GameServer(object):
         if not('successful' in self.client.getText()):
             raise ServerException("Couldn't regiser as a server")
 
-    #def startNewGame(self):
-        #self.sendToRedirect([
-
     def runServer(self, telnet_disabled):
         filters = ([PacketizerFilter, CompressionFilter] if telnet_disabled else []) + [self.GameFilter]
         self.server = TCPServer(19001,  *filters)
         server_thread = threading.Thread(None, self.server.run)
         server_thread.run()
 
-    def run(self, telnet_disabled):
-        self.client.connect(server="localhost", port=19000)
+    def run(self, telnet_disabled, address="localhost", port=19000):
+        self.client.connect(address, port)
         self.login()
         self.registerAsServer()
         self.runServer(telnet_disabled)

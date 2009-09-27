@@ -3,6 +3,8 @@ import collections
 import functools
 from portal import *
 from terrain import *
+from unit import *
+from building import *
 
 class RectangularArea(collections.defaultdict):
     """
@@ -36,15 +38,49 @@ class TimePeriod(object):
 
 def basicMapGeneration(game):
     """
-    Does nothing right now, but useful for testing.
-    Use this as a template for more advanced map generation
+    Adds some basic objects to the map.
     """
-    newPortal = Portal(game, 3, 2, 1, 1)
-    game.addObject(newPortal)
-    #assert(game.periods[1].area[(3,2)] == [newPortal])
-    game.addObject(Terrain(game, 6, 3, 0))
-    pass
+    schoolType = game.getType("School")
+    engineerType = game.getType("Engineer")
+    galleryType = game.getType("Gallery")
+    artistType = game.getType("Artist")
+    farmType = game.getType("Farm")
 
+    #Buildings
+    game.addObject(Building(game, -10, -10, 0, game.players[0], schoolType, 0))
+    game.addObject(Building(game, -10, -8, 0, game.players[0], galleryType, 0))
+    game.addObject(Building(game, -8, -10, 0, game.players[0], farmType, 0))
+
+    game.addObject(Building(game, 9, 9, 0, game.players[1], schoolType, 0))
+    game.addObject(Building(game, 7, 9, 0, game.players[1], galleryType, 0))
+    game.addObject(Building(game, 9, 7, 0, game.players[1], farmType, 0))
+
+    #Units
+    for z in xrange(3):
+        game.addObject(Unit(game, -10,-10,z, game.players[0], engineerType, 0))
+        game.addObject(Unit(game, -10, -8, z, game.players[0], artistType, 0))
+        game.addObject(Unit(game, 9, 9, z, game.players[1], engineerType, 0))
+        game.addObject(Unit(game, 7, 9, z, game.players[1], artistType, 0))
+
+    #Portals
+    #  Far past and Past
+    game.addObject(Portal(game, 10, 0, 0, 1))
+    game.addObject(Portal(game, 10, 0, 1, -1))
+    game.addObject(Portal(game, -10, 0, 0, 1))
+    game.addObject(Portal(game, -10, 0, 1, -1))
+
+    #  Past and Present
+    game.addObject(Portal(game, 0, 10, 1, 1))
+    game.addObject(Portal(game, 0, 10, 2, -1))
+    game.addObject(Portal(game, 0, -10, 1, 1))
+    game.addObject(Portal(game, 0, -10, 2, -1))
+
+    newTerrain = []
+    for z in range(3):
+        newTerrain.append(Terrain(game, 0, 0, z))
+        newTerrain[z].blockMove = True
+        newTerrain[z].blockBuild = True
+        game.addObject(newTerrain[z])
 
 def rectangularAreasBuilder(x, y):
     """

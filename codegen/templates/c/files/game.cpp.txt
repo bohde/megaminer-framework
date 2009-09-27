@@ -1,0 +1,216 @@
+//Copyright (C) 2009 - Missouri S&T ACM AI Team
+//Please do not modify this file while building your AI
+//See AI.h & AI.cpp for that
+#pragma warning(disable : 4996)
+
+#include <string>
+#include <cstring>
+#include <cstdlib>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include "game.h"
+#include "network.h"
+#include "structures.h"
+
+#include "sexp/sexp.h"
+#include "sexp/sexp_ops.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+#ifdef WIN32
+//Doh, namespace collision.
+namespace Windows
+{
+    #include <Windows.h>
+};
+#else
+#include <unistd.h>
+#endif
+
+using namespace std;
+
+static int turnNumber = 0;
+
+static int player0Gold0 = 0;
+static int player0Gold1 = 0;
+static int player0Gold2 = 0;
+static int player1Gold0 = 0;
+static int player1Gold1 = 0;
+static int player1Gold2 = 0;
+
+% for model in models:
+static _${model.name}* ${model.name}s = NULL;
+static int ${model.name}Count = 0;
+
+% endfor
+
+static char logID[100]="";
+
+static int socket;
+
+
+
+
+DLLEXPORT bool login(int s, const char* username, const char* password)
+{
+  socket = s;
+
+  string expr = "(login \"";
+  expr += username;
+  expr += "\" \"";
+  expr += password;
+  expr +="\")";
+
+  send_string(socket, expr.c_str());
+
+  sexp_t* expression;
+
+  expression = extract_sexpr(rec_string(socket));
+  expression = expression->list;
+  if(expression->val == NULL || strcmp(expression->val, "login-accepted") != 0)
+  {
+    cerr << "Unable to login to server" << endl;
+    return false;
+  }
+  return true;
+}
+
+DLLEXPORT void createGame()
+{
+  send_string(socket, "(create-game)");
+}
+
+DLLEXPORT void joinGame(int id)
+{
+  stringstream expr;
+  expr << "(join-game " << id << ")";
+  send_string(socket, expr.str().c_str());
+  send_string(socket, "(game-start)");
+}
+
+DLLEXPORT void endTurn()
+{
+  send_string(socket, "(end-turn)");
+}
+
+DLLEXPORT void getStatus()
+{
+  send_string(socket, "(game-status)");
+}
+
+
+//Utility functions for parsing data
+% for model in models:
+void parse${model.name}(_${model.name}* object, sexp_t* expression)
+{
+  sexp_t* sub;
+  sub = expression->list;
+  
+  % for key in model.data.keys():
+  sub = sub->next;
+  %if model.data[key] == int:
+  object->${key} = atoi(sub->val);
+  %elif model.data[key] == str:
+  ##FIXME: This is such a memory leak.
+  object->name = new char[strlen(sub->val)+1];
+  strncpy(object->name, sub->val, strlen(sub->val));
+  object->name[strlen(sub->val)] = 0;
+  %endif
+  
+  %endfor
+  
+}
+% endfor
+
+DLLEXPORT int networkLoop(int socket)
+{
+  while(true)
+  {
+    sexp_t* expression, *sub, *subsub;
+    expression = extract_sexpr(rec_string(socket));
+    expression = expression->list;
+    if(expression->val != NULL && strcmp(expression->val, "game-over") == 0)
+    {
+      char request[100]="(request-log ";
+      strcat(request, logID);
+      strcat(request, ")");
+      send_string(socket, request);
+      return 0;
+    }
+    else if(expression->val != NULL && strcmp(expression->val, "log") == 0)
+    {
+      ofstream out;
+      char filename[100];
+      expression = expression->next;
+      strcpy(filename, expression->val);
+      strcat(filename, ".gamelog");
+      expression = expression->next;
+      out.open(filename);
+      if (out.good())
+        out.write(expression->val, strlen(expression->val));
+      else
+        cerr << "Error : Could not create log." << endl;
+      out.close();
+      return 0;
+    }
+    else if(expression->val != NULL && strcmp(expression->val, "game-accepted")==0)
+    {
+      char gameID[30];
+
+      expression = expression->next;
+      strcpy(gameID, expression->val);
+      cout << "Created game " << gameID << endl;
+    }
+    else if(expression->val != NULL && strstr(expression->val, "denied"))
+    {
+      cout << expression->val << endl;
+      cout << expression->next->val << endl;
+    }
+    else if(expression->val != NULL && strstr(expression->val, "status"))
+    {
+      while(expression->next != NULL)
+      {
+        expression = expression->next;
+        sub = expression->list;
+        if(string(sub->val) == "game")
+        {
+          sub = sub->next;
+          turnNumber = atoi(sub->val);
+          sub = sub->next;
+          
+          subsub = sub->list;
+          player0Gold0 = atoi(sub->val);
+          subsub = subsub->next;
+          player0Gold1 = atoi(sub->val);
+          subsub = subsub->next;
+          player0Gold2 = atoi(sub->val);
+          sub = sub->next;
+          
+          subsub = sub->list;
+          player1Gold0 = atoi(sub->val);
+          subsub = subsub->next;
+          player1Gold1 = atoi(sub->val);
+          subsub = subsub->next;
+          player1Gold2 = atoi(sub->val);
+        }
+        % for model in models:
+        else if(string(sub->val) == "${model.name}")
+        {
+          ${model.name}Count =  sexp_list_length(expression)-1; //-1 for the header
+          ${model.name}s = new _${model.name}[${model.name}Count];
+          for(int i = 0; i < ${model.name}Count; i++)
+          {
+            sub = sub->next;
+            parse${model.name}(${model.name}s+i, sub);
+          }
+        }
+        % endfor
+      }
+    }
+  return 0;
+  }
+}

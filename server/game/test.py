@@ -87,6 +87,7 @@ class TestObjectCreation(unittest.TestCase):
     def setUp(self):
         self.game =  Match(7001)
         self.players = [MockPlayer(), MockPlayer()]
+<<<<<<< HEAD:server/game/test.py
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.game.start()
@@ -140,6 +141,65 @@ class TestActions(unittest.TestCase):
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
+=======
+        self.game.addPlayer(self.players[0])
+        self.game.addPlayer(self.players[1])
+        self.game.start()
+        for key in xrange(self.game.nextid):
+            if self.game.objects.has_key(key):
+                self.game.removeObject(self.game.objects[key])
+
+    def test_load_units(self):
+        """
+        Tests Match.loadUnitSet and Match.addObject applied to units and
+        unit types.
+        """
+        self.game.loadUnitSet("config/testUnitSet.cfg")
+        wolfType = self.game.objects.get(self.game.nextid - 2)
+        pandaType = self.game.objects.get(self.game.nextid - 1)
+        self.assertEqual(pandaType.name, "Panda")
+        self.assertTrue(pandaType.cute and not pandaType.deadly)
+        self.assertEqual(wolfType.name, "Wolf")
+        self.assertTrue(not wolfType.cute and wolfType.deadly)
+        previd = self.game.nextid
+        self.unit = Unit(self.game, 3, 7, 0, self.players[0], pandaType, 0)
+        self.assertEqual(previd + 1, self.game.nextid)
+        self.game.addObject(self.unit)
+        self.assertEqual(self.game.objects.get(self.unit.id), self.unit)
+        self.assertEqual(self.game.periods[0].area[(3,7)], [self.unit])
+
+    def test_load_buildings(self):
+        """
+        Tests Match.loadBuildingSet, Match.addObject applied to buildings,
+           and Building.bringToCompletion
+        """
+        previd = self.game.nextid
+        self.game.loadBuildingSet("config/testBuildingSet.cfg")
+        self.assertEqual(previd + 1, self.game.nextid)
+        houseType = self.game.objects.get(self.game.nextid - 1)
+        self.assertEqual(houseType.name, "House")
+        self.assertTrue(houseType.fancy)
+        self.home = Building(self.game, 4, 7, 0, self.players[0], houseType, 0)
+        self.game.addObject(self.home)
+        self.assertEqual(self.home.hp, 44)
+        self.assertEqual(self.game.objects.get(self.home.id), self.home)
+        self.assertEqual(self.game.periods[0].area[(4,7)], [self.home])
+        self.assertEqual([], self.game.periods[1].area[(4,7)])
+        self.home.bringToCompletion()
+        pastHouse = self.game.periods[1].area[(4,7)][0]
+        self.assertNotEqual([], self.game.periods[2].area[(4,7)])
+        self.assertNotEqual([], self.game.periods[2].area[(5,7)])
+        self.game.removeObject(pastHouse)
+        self.assertEqual([], self.game.periods[2].area[(4,7)])
+
+
+class TestActions(unittest.TestCase):
+    def setUp(self):
+        self.game = Match(7002)
+        self.players = [MockPlayer(), MockPlayer()]
+        self.game.addPlayer(self.players[0])
+        self.game.addPlayer(self.players[1])
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
         self.game.loadUnitSet("config/testUnitSet.cfg")
         self.wolfType = self.game.objects.get(self.game.nextid - 2)
         self.pandaType = self.game.objects.get(self.game.nextid - 1)
@@ -155,7 +215,16 @@ class TestActions(unittest.TestCase):
         self.home = Building(self.game, 4, 7, 0, self.players[0],
                              self.houseType, 0)
         self.game.addObject(self.home)
+<<<<<<< HEAD:server/game/test.py
         self.game.start()
+=======
+        lastValidID = self.game.nextid - 1
+        self.game.start()
+        #Remove objects created upon map generation
+        for key in xrange(self.game.nextid):
+            if self.game.objects.has_key(key) and key > lastValidID:
+                self.game.removeObject(self.game.objects[key])
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
     
     def test_attack(self):
         #No actions
@@ -166,7 +235,11 @@ class TestActions(unittest.TestCase):
         self.game.nextTurn()
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 4, 9))
         self.assertNotEqual(True, self.game.attack(self.units[0].id, 3, 7))
+<<<<<<< HEAD:server/game/test.py
         self.assertEqual(2, self.units[0].moves)
+=======
+        self.assertEqual(2, self.units[0].moves)        
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
         self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
         self.assertEqual(1, self.units[0].moves)
         self.assertEqual(self.game.objects.get(self.units[1].id).hp, 41)
@@ -177,6 +250,20 @@ class TestActions(unittest.TestCase):
         self.assertNotEqual(True, self.game.attack(self.units[1].id, 3, 7))
         self.game.nextTurn()
 
+<<<<<<< HEAD:server/game/test.py
+=======
+    def test_shelter(self):
+        self.game.nextTurn()
+        self.game.nextTurn()
+        self.shelter = Building(self.game, 2, 6, 0, self.players[0],
+                             self.houseType, 0)
+        self.game.addObject(self.shelter)
+        self.shelter.bringToCompletion()
+        self.assertEqual(True, self.game.attack(self.units[0].id, 3, 6))
+        self.assertTrue(self.shelter.hp < self.houseType.effHP(0))
+        self.assertEqual(self.units[1].hp, self.pandaType.effHP(0))
+
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
     def test_move(self):
         #No moves
         self.units[0].moves = 0
@@ -225,6 +312,12 @@ class TestActions(unittest.TestCase):
         self.assertNotEqual(True, attemptBuild())
 
     def test_train(self):
+<<<<<<< HEAD:server/game/test.py
+=======
+        """
+        tests both Building.train and Building.cancel
+        """
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
         self.game.nextTurn()
         builderID = self.home.id
         newUnitTypeID = self.pandaType.id
@@ -243,11 +336,25 @@ class TestActions(unittest.TestCase):
         newUnitTypeID = self.pandaType.id
         self.assertEqual(True, attemptTrain())
         self.assertEqual(3, self.players[0].gold[0])
+<<<<<<< HEAD:server/game/test.py
+=======
+        #cancel
+        self.assertEqual(True, self.game.cancel(self.home.id))
+        self.assertEqual(106, self.players[0].gold[0])
+        #restart
+        self.assertEqual(True, attemptTrain())
+        self.assertEqual(3, self.players[0].gold[0])
+        #wait for completion
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
         for i in range(0, self.pandaType.trainTime * 2 - 1):
             self.game.nextTurn()
         previd = int(self.game.nextid)
         self.game.nextTurn()
         self.assertEqual(previd + 1, self.game.nextid)
+<<<<<<< HEAD:server/game/test.py
+=======
+        self.assertEqual(5, self.game.objects[previd].x)
+>>>>>>> fd95d214cf37964015ebd2f9b99bf4f43d021278:server/game/test.py
 
     def test_hunger(self):
         self.game.nextTurn()

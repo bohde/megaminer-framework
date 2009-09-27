@@ -20,16 +20,15 @@ class Model(object):
     if 'data' in kwargs:
       data = kwargs['data']
       for key, value in data:
-        print key
         if key in self.data:
           raise ValueError('Duplicate datum %s in %s' % (key, name))
         self.data[key] = value
     if 'functions' in kwargs:
-      functions = kwargs['data']
+      functions = kwargs['functions']
       for key, value in functions:
         if key in self.functions:
           raise ValueError('Duplicate function %s in %s' % (key, name))
-        self.functions['key'] = value
+        self.functions[key] = value
     if 'key' in kwargs:
       self.key = kwargs['key']
 

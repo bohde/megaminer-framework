@@ -1,6 +1,9 @@
 from hittableObject import *
 from building import *
 
+#Moved to end of file
+#from building import *
+
 class Unit(HittableObject):
     """
     Any object that is owned by a player and can move inherits from this class.
@@ -77,6 +80,13 @@ class Unit(HittableObject):
 
 
     def attack(self, targetX, targetY):
+        """
+        This unit attacks the target coordinate.
+        If there is a completed building there, it takes the damage and 
+          all other units there go unharmed.
+        If there is no completed building there, the full damage hits each unit
+          and building in the target coordinate.
+        """
         if (not self.owner == self.game.turn):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
@@ -91,12 +101,20 @@ class Unit(HittableObject):
             return str(self.id) + " is inside the min range of " \
                    + str(targetX) + ", " + str(targetY)
         self.game.animations += [["attack", self.id, targetX, targetY]]
-        for target in self.game.periods[self.z].area[(targetX, targetY)]:
-            target.takeDamage(self.type.effDamage(self.level))
+        shelter = self.game.getBuilding(targetX, targetY, self.z)
+        if (shelter is not None and shelter.complete):
+            shelter.takeDamage(self.type.effDamage(self.level))
+        else:
+            for target in self.game.periods[self.z].area[(targetX, targetY)]:
+                target.takeDamage(self.type.effDamage(self.level))
         self.actions -= 1
         self.moves -= self.type.attackCost
         self.changed = True
         return True
+
+
+
+
 
     def paint(self, targetX, targetY):
         if (not self.owner == self.game.turn):
@@ -129,17 +147,12 @@ class Unit(HittableObject):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
-        dis = self.game.distance(self.x, self.y, targetX, targetY)
-        if (dis > 1):
-            return str(self.id) + " must be adjacent to build"
-        terrain = self.game.getTerrain(targetX, targetY, self.z)
-        if (terrain is not None):
-            if (terrain.blockBuild):
-                return str(self.id) + " can not build on a mountain"
         if (self.game.getEnemies(targetX, targetY, self.z)):
             return str(self.id) + " can not build on enemy units or buildings"
         existingBuilding = self.game.getBuilding(targetX, targetY, self.z)
         if (buildingType is None):
+            if (not (self.x,self.y) in existingBuilding.adjArea()):
+                return str(self.id) + " is not adjacent to that building"
             if (existingBuilding is None):
                 return str(self.id) + " tried to build nothing"
             if (existingBuilding.type.builtBy != self.type):
@@ -149,6 +162,19 @@ class Unit(HittableObject):
         else:
             if (existingBuilding is not None):
                 return str(self.id) + " tried to build on top of a building"
+            if (not(self.x, self.y)in buildingType.adjArea(targetX, targetY)):
+                return str(self.id) + "is not adjacent to new building"
+            for coord in buildingType.adjArea(targetX, targetY):
+                terrain = self.game.getTerrain(coord[0], coord[1], self.z)
+                if (terrain is not None and terrain.blockBuild):
+                    return str(self.id) + " can not build on a mountain"
+                portal = self.game.getPortal(coord[0], coord[1], self.z)
+                if (portal is not None):
+                    return str(self.id) + " can not build on a portal"
+            for coord in buildingType.adjArea(targetX, targetY):
+                if not self.game.periods[self.z].area.inBounds(coord[0], 
+                                                                coord[1]):
+                    return str(self.id) + " can not build out of bounds"
             if (buildingType.builtBy != self.type):
                 return str(self.id) + " can not construct that type"
             if (self.owner.gold[self.z] < buildingType.price):
@@ -158,7 +184,6 @@ class Unit(HittableObject):
                                    self.owner, buildingType, self.level)
             self.game.addObject(newBuilding)
             self.owner.gold[self.z] -= buildingType.price
-        self.actions -= 1
-        self.changed = True
-        return True
+
+from building import *
 

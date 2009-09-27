@@ -1,7 +1,5 @@
 from hittableObject import *
-#This include has been moved to the end of 
-#the file to avoid recursive imports
-#from unit import *
+from unit import *
 import math
 
 class Building(HittableObject):
@@ -29,7 +27,21 @@ class Building(HittableObject):
         if (not self.complete):
             self.complete = True
             self.hp = self.type.effHP(self.level)
+            #Cascade through time
             if (self.z < 2):
+                #Check future terrain
+                for coord in self.coveredArea():
+                    terrain = self.game.getTerrain(coord[0],coord[1],self.z+1)
+                    portal = self.game.getPortal(coord[0], coord[1], self.z+1)
+                    if (terrain is not None and terrain.blockBuild):
+                        return
+                    if (portal is not None):
+                        return
+                #Kill enemies in the way
+                for coord in self.coveredArea():
+                    enemies = self.game.getEnemies(coord[0],coord[1],self.z+1)
+                    for e in enemies:
+                        e.takeDamage(self.hp, True)
                 newBuilding = Building(self.game, self.x, self.y, self.z + 1,\
                                    self.owner, self.type, self.level + 1)
                 self.game.addObject(newBuilding)
@@ -37,14 +49,15 @@ class Building(HittableObject):
                 self.linked = True
 
     def addToMap(self):
-        HittableObject.addToMap(self)
+        for x in xrange(self.x, self.x + self.type.width):
+            for y in xrange(self.y, self.y + self.type.height):
+                self.game.periods[self.z].area[(x, y)].append(self)
         if (self.game.turn is None):
             #buildings placed before the start of the game are complete
             self.bringToCompletion()
         else:
             self.hp = 0
             self.beBuilt()
-
 
     def removeFromMap(self):
         if (self.z > 0):
@@ -54,7 +67,9 @@ class Building(HittableObject):
         if (self.linked):
             futureSelf = self.game.getBuilding(self.x, self.y, self.z+1)
             self.game.removeObject(futureSelf)
-        HittableObject.removeFromMap(self)
+        for x in xrange(self.x, self.x + self.type.width):
+            for y in xrange(self.y, self.y + self.type.height):
+                self.game.periods[self.z].area[(x, y)].remove(self)
 
     def nextTurn(self):
         HittableObject.nextTurn(self)
@@ -63,7 +78,8 @@ class Building(HittableObject):
                 self.progress += 1
                 self.changed = True
             if (self.progress >= self.training.trainTime):
-                newUnit = Unit(self.game, self.x, self.y, self.z, \
+                newUnit = Unit(self.game, self.x + self.type.spawnX,
+                               self.y + self.type.spawnY, self.z, \
                                self.owner, self.training, 0)
                 self.game.addObject(newUnit)
                 self.training = None
@@ -74,13 +90,11 @@ class Building(HittableObject):
         Increases this building's hp based on the amount of time required to
         build it.
         """
-        if (self.complete):
-            return str(self.id) + " is already complete"
         self.hp += math.ceil(self.type.effHP(self.level) * 
                      (1.0 / self.type.buildTime[self.z]))
         self.hp = int(min(self.hp, self.type.effHP(self.level)))
         self.changed = True
-        if (self.hp == self.type.effHP(self.level)):
+        if (not self.complete and self.hp == self.type.effHP(self.level)):
             self.bringToCompletion()
 
     def train(self, newUnitType):
@@ -105,13 +119,35 @@ class Building(HittableObject):
         return True
 
     def cancel(self):
+        """
+        If this building is not complete, cancels construction of this
+          building.  Otherwise, attempts to cancel training.
+        """
         if (not self.game.turn == self.owner):
             return str(self.id) + " is not your building"
         if (self.complete):
-            return str(self.id) + " is complete and can not be canceled."
-        self.owner.gold[self.z] += self.type.effPrice(self.level)
-        self.game.removeObject(self)
+            if (self.training is None):
+                return str(self.id) + " is complete not training anything."
+            #Cancel training
+            self.progress = 0
+            self.owner.gold[self.z] += self.training.effPrice(self.level)
+            self.training = None
+        else:
+            #Cancel construction of this building
+            self.owner.gold[self.z] += self.type.effPrice(self.level)
+            self.game.removeObject(self)
         return True
 
-from unit import *
+    def adjArea(self):
+        """
+        Returns a set of tuples (x,y) that are considered adjacent to this
+          building
+        """
+        return self.type.adjArea(self.x, self.y)
+
+    def coveredArea(self):
+        """
+        Returns a set of tuples (x,y) that are covered by this building
+        """
+        return self.type.coveredArea(self.x, self.y)
 
