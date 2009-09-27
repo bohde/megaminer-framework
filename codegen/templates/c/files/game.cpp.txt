@@ -102,6 +102,27 @@ DLLEXPORT void getStatus()
   send_string(socket, "(game-status)");
 }
 
+% for model in models:
+% for func in model.functions.keys():
+
+DLLEXPORT bool ${model.name.lower()}${func.capitalize()}(${conversions[model]} ${model.key}\
+% for arg in model.functions[func]:
+, \
+${conversions[arg[1]]} ${arg[0]}\
+% endfor
+)
+{
+  stringstream expr;
+  expr << "(game-${func} " << ${model.key}
+% for arg in model.functions[func]:
+       << " " << ${arg[0]}
+% endfor
+       << ")";
+  send_string(socket, expr.str().c_str());
+  return true;
+}
+% endfor
+% endfor
 
 //Utility functions for parsing data
 % for model in models:
