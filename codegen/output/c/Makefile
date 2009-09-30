@@ -3,7 +3,6 @@ objects = $(sources:.cpp=.o)
 deps = $(sources:.cpp=.d)
 
 CPPFLAGS += -I. -Isexp
-# CFLAGS += -std=gnu99
 
 all: main
 
