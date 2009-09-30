@@ -13,8 +13,10 @@
 #define DLLEXPORT
 #endif
 
+#ifdef __cplusplus
 extern "C"
 {
+#endif
   DLLEXPORT bool login(int socket, const char* username, const char* password);
   DLLEXPORT void createGame();
   DLLEXPORT void joinGame(int id);
@@ -40,7 +42,8 @@ ${conversions[arg[1]]} ${arg[0]}\
 
 
   DLLEXPORT int networkLoop(int socket);
+#ifdef __cplusplus
 }
-
+#endif
 
 #endif

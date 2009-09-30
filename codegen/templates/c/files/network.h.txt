@@ -12,12 +12,16 @@
 #define DLLEXPORT
 #endif
 
+#ifdef __cplusplus
 extern "C"
 {
+#endif
   DLLEXPORT int open_server_connection(const char* host, const char* port);
   DLLEXPORT int send_string(int socket, const char* payload);
   DLLEXPORT const char* rec_string(int socket);
   
   DLLEXPORT sexp_t* extract_sexpr(const char* sexpr);
+#ifdef __cplusplus
 }
+#endif
 #endif
