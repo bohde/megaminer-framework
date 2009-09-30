@@ -13,6 +13,8 @@ all: main
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
+.PHONY: clean all
+
 clean:
 	rm -f $(objects) $(deps)
 	$(MAKE) -C sexp clean

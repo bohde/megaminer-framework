@@ -1,35 +1,25 @@
-all: sexpbuild
+sources = $(wildcard *.c)
+objects = $(sources:.c=.o)
+deps = $(sources:.c=.d)
 
-
-sexpbuild: cstring.o sexp.o event_temp.o faststack.o io.o parser.o sexp_memory.o sexp_ops.o sexp_vis.o cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	touch sexpbuild
-
-sexp.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g sexp.c -c -fPIC
-
-cstring.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g cstring.c -c -fPIC
-
-event_temp.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g event_temp.c -c -fPIC
-
-faststack.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g faststack.c -c -fPIC
-
-io.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g io.c -c -fPIC
-
-parser.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g parser.c -c -fPIC
-
-sexp_memory.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ -g sexp_memory.c -c -fPIC
-
-sexp_ops.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ sexp_ops.c -c -fPIC
-
-sexp_vis.o: cstring.h  faststack.h  sexp_errors.h  sexp.h  sexp_memory.h  sexp_ops.h  sexp_vis.h
-	g++ sexp_vis.c -c -fPIC
+all: sexp.a
 
 clean:
-	rm -f *.o sexpbuild
+	rm -f $(objects) $(deps)
+
+%.d: %.c
+	@set -e; rm -f $@; \
+	(dirname $< | tr '\n' '/'; $(CC) -MM $(CPPFLAGS) $<) > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+.PHONY: sexp.a(PHONY) clean all
+
+sexp.a(${objects}) sexp.a(PHONY): ${objects}
+	ar cr sexp.a ${objects}
+	ranlib sexp.a
+
+sexp.a: sexp.a(PHONY)
+
+-include $(deps)
+

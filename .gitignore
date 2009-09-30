@@ -5,3 +5,9 @@ cover*
 badLogin.dat
 *#*
 *~*
+*.o
+*.a
+*.d
+codegen/output/c/*.cpp
+codegen/output/c/*.h
+codegen/output/c/main
