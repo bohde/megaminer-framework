@@ -15,7 +15,7 @@ all: main
 .PHONY: clean all
 
 clean:
-	rm -f $(objects) $(deps)
+	rm -f $(objects) $(deps) main
 	$(MAKE) -C sexp clean
 
 main: $(objects) sexp/sexp.a

@@ -5,7 +5,7 @@ deps = $(sources:.c=.d)
 all: sexp.a
 
 clean:
-	rm -f $(objects) $(deps)
+	rm -f $(objects) $(deps) sexp.a
 
 %.d: %.c
 	@set -e; rm -f $@; \
