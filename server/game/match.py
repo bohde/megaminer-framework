@@ -19,7 +19,6 @@ def loadClassDefaults(cfgFile = "config/defaults.cfg"):
     for className in cfg.keys():
         for attr in cfg[className]:
             setattr(eval(className), attr, cfg[className][attr])
-loadClassDefaults()
 
 class Match(DefaultGameWorld):
     def __init__(self, id):
@@ -79,6 +78,38 @@ class Match(DefaultGameWorld):
         for obj in self.objects.values():
             obj.changed = False
         self.animations = ["animations"]
+        self.checkWinner()
+
+    def checkWinner(self):
+        for p in self.players:
+            p.hasBuilding = False
+        for obj in self.objects.values():
+            if (isinstance(obj, Building)):
+                obj.owner.hasBuilding = True
+        if (self.players[0].hasBuilding == False):
+            self.declareWinner(self.players[1])
+        if (self.players[1].hasBuilding == False):
+            self.declareWinner(self.players[0])
+        if (self.turnNum > self.turnLimit):
+            if (self.netWorth(self.players[0]) > \
+              self.netWorth(self.players[1])):
+                self.declareWinner(self.players[0])
+            else:
+                self.declareWinner(self.players[1])
+
+    def netWorth(self, player):
+        value = 0
+        for obj in self.objects.values():
+            if (hasattr(obj, "owner")):
+                if (obj.owner == player):
+                    value += obj.type.effPrice(obj.level)
+        return value
+    
+    def declareWinner(self, winner):
+        self.winner = winner
+        for p in self.players:
+            p.writeSExpr(["game-winner", self.id, self.winner.user])
+        
 
     def logPath(self):
         return "logs/" + str(self.id) + ".gamelog"
@@ -251,4 +282,7 @@ class Match(DefaultGameWorld):
         for i in self.players:
             i.writeSExpr(['says', player.user, message])
         return True
+
+
+loadClassDefaults()
 

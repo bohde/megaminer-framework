@@ -51,6 +51,7 @@ class MockPlayer(object):
     """
     def __init__(self):
         self.messages = [] #A list of messages this player has received
+        self.user = "Username"
 
     def writeSExpr(self, message):
         self.messages.append(message)
@@ -63,6 +64,7 @@ class TestMatchStart(unittest.TestCase):
     def setUp(self):
         self.game = Match(7000)
         self.players = [MockPlayer(), MockPlayer()]
+        self.game.declareWinner = lambda self: None
 
     def test_join_game(self):
         """
@@ -86,6 +88,7 @@ class TestMatchStart(unittest.TestCase):
 class TestObjectCreation(unittest.TestCase):
     def setUp(self):
         self.game =  Match(7001)
+        self.game.declareWinner = lambda self: None
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
@@ -120,8 +123,8 @@ class TestObjectCreation(unittest.TestCase):
         """
         previd = self.game.nextid
         self.game.loadBuildingSet("config/testBuildingSet.cfg")
-        self.assertEqual(previd + 1, self.game.nextid)
-        houseType = self.game.objects.get(self.game.nextid - 1)
+        self.assertEqual(previd + 2, self.game.nextid)
+        houseType = self.game.getType("House")
         self.assertEqual(houseType.name, "House")
         self.assertTrue(houseType.fancy)
         self.home = Building(self.game, 4, 7, 0, self.players[0], houseType, 0)
@@ -145,8 +148,8 @@ class TestActions(unittest.TestCase):
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])
         self.game.loadUnitSet("config/testUnitSet.cfg")
-        self.wolfType = self.game.objects.get(self.game.nextid - 2)
-        self.pandaType = self.game.objects.get(self.game.nextid - 1)
+        self.wolfType = self.game.getType("Wolf")
+        self.pandaType = self.game.getType("Panda")
         self.units = []
         self.units.append(Unit(self.game, 3, 7, 0, self.players[0],
                                 self.wolfType, 0))
@@ -155,10 +158,14 @@ class TestActions(unittest.TestCase):
         self.game.addObject(self.units[0])
         self.game.addObject(self.units[1])
         self.game.loadBuildingSet("config/testBuildingSet.cfg")
-        self.houseType = self.game.objects.get(self.game.nextid - 1)
+        self.houseType = self.game.getType("House")
         self.home = Building(self.game, 4, 7, 0, self.players[0],
                              self.houseType, 0)
+        self.herbertType = self.game.getType("Herbert")
+        self.herbert = Building(self.game, -5, 5, 2, self.players[1],
+                             self.herbertType, 0)
         self.game.addObject(self.home)
+        self.game.addObject(self.herbert)
         lastValidID = self.game.nextid - 1
         self.game.start()
         #Remove objects created upon map generation
@@ -282,6 +289,7 @@ class TestActions(unittest.TestCase):
         self.assertEqual(5, self.game.objects[previd].x)
 
     def test_hunger(self):
+        self.game.declareWinner = lambda self: None
         self.game.nextTurn()
         self.assertEqual(21, self.units[0].hp)
         self.game.removeObject(self.home)
@@ -307,4 +315,20 @@ class TestActions(unittest.TestCase):
         self.game.warp(self.units[1].id)
         self.assertEqual(1, self.units[1].z)
         self.assertEqual(0, self.players[1].gold[0])
+
+    def test_win_annihilation(self):
+       for t in xrange(20):
+           self.game.nextTurn()
+       self.assertEqual(self.game.winner, None)
+       self.game.removeObject(self.herbert)
+       self.game.nextTurn()
+       self.assertEqual(self.game.winner, self.players[0])
+
+    def test_win_turn_limit(self):
+        for t in xrange(self.game.turnLimit):
+            self.game.nextTurn()
+        self.assertEqual(self.game.winner, None)
+        self.game.nextTurn()
+        self.assertEqual(self.game.winner, self.players[1])
+
 
