@@ -25,7 +25,7 @@ class TimePeriod(object):
     def drawGrass(self):
         for x in range(self.mapDim[0]):
             for y in range(self.mapDim[1]):
-                self.terrain.add(Terrain(None, coordinates[(x,y)], False, False))
+                self.terrain.add(Terrain(None, coordinates[(x,y)], True, False))
         self.terrain.draw(self.terrainLayer)
         
     def clearGroups(self):
@@ -78,7 +78,7 @@ class TimePeriod(object):
         self.terrain.add(newTerrain)
         
     def remove(self, id):
-        print "removing unit..."
+        print "removing object..."
         for unit in self.units.sprites():
             if unit.objectID == id:
                 self.units.remove(unit)
@@ -90,34 +90,35 @@ class TimePeriod(object):
                 self.terrain.remove(unit)
 
     def setUp(self, mapDim, pixelDim):
-        xChange = int(pixelDim[0]/float(mapDim[0]+1))+2
-        yChange = int(pixelDim[1]/float(mapDim[1]+1))
+        xChange = int(pixelDim[0]/float(mapDim[0]))
+        yChange = int(pixelDim[1]/float(mapDim[1]))
 
-        x = [3]
-        y = [0]
-    
-        i = 0
-        while x[i] < pixelDim[0]:
-            x.append(x[i]+xChange)
-            i += 1
-                    
-        i = 0
-        while y[i] < pixelDim[0]:
-            y.append(y[i]+yChange)
-            i += 1    
-        
-        switch = True
+        origin = [0, pixelDim[1]/2]
         for xCoord in range(mapDim[0]):
+            i = 0
             for yCoord in range(mapDim[1]):
-                if switch:
-                    coordinates[(xCoord, yCoord)] = (x[xCoord],y[yCoord])
-                    print "Map: (%(1)i , %(2)i)  Pixel: (%(3)i , %(4)i)" % \
-                        {'1':xCoord, '2':yCoord, '3':x[xCoord], '4':y[yCoord]}
-                    switch = False
-                else:
-                    coordinates[(xCoord, yCoord)] = (x[xCoord]+xChange/2,y[yCoord])
-                    print "Map: (%(1)i , %(2)i)  Pixel: (%(3)i , %(4)i)" % \
-                        {'1':xCoord, '2':yCoord, '3':x[xCoord], '4':y[yCoord]}
-                    switch = True
-                                
-        loadAllImages()
+                coordinates[(xCoord,yCoord)] = (origin[0]+i*xChange/2, origin[1]-i*yChange/2)
+                i+=1
+
+            origin[0] = origin[0] + xChange/2
+            origin[1] = origin[1] + yChange/2
+    
+        print "xChange %(1)i ... yChange %(2)i" %{'1':xChange, '2':yChange}
+        
+        loadAllImages((xChange,yChange))
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

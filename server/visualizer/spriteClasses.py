@@ -10,8 +10,6 @@ buildingImages = {"school":{'0':[], '1':[]}, "gallery":{'0':[], '1':[]}, "farm":
 
 terrainImages = {"rock":[], "sand":[], "tree":[], "grass":[]}
 
-tileSize = (60,70)
-
 class Unit(pygame.sprite.Sprite):
     def __init__(self, objectID, location, hp, level, unitType, ownerIndex, actions, moves):
         pygame.sprite.Sprite.__init__(self)
@@ -79,10 +77,10 @@ class Terrain(pygame.sprite.Sprite):
     
 
         
-def loadAllImages():
+def loadAllImages(tileSize):
         if not terrainImages['rock']:
             for name, images in terrainImages.iteritems():
-                images.append(loadImage(name))
+                images.append(loadImage(name, tileSize))
 """
       if not unitImages['civE']['0']:
             for name, players in unitImages.iteritems():
@@ -96,11 +94,12 @@ def loadAllImages():
                     images.append(loadImage(name, index, "Done"))
 """
 
-def loadImage(name, ownerIndex = "", option = ""):
+def loadImage(name, size, key = True, ownerIndex = "", option = ""):
     path = os.path.join("sprites", ownerIndex+name+option+".png")
     try:
         image = pygame.image.load(path)
     except pygame.error, message:
         print "CANNOT LOAD IMAGE"
-    image.set_colorkey(image.get_at((0,0)), RLEACCEL)
-    return pygame.transform.scale(image.convert(), tileSize)
+    if key:
+        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+    return pygame.transform.scale(image.convert(), size)

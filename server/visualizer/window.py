@@ -4,9 +4,9 @@ from spriteClasses import Unit
 from timePeriod import TimePeriod
 
 windowDimensions = (1280,1024)
-viewDimensions={"l":{"dimensions":(1280, 360), "upperLeftCorner":(0, 6)},
-                "s1":{"dimensions":(620, 250), "upperLeftCorner":(10, 691)},
-                "s2":{"dimensions":(620, 250), "upperLeftCorner":(650, 691)}}
+viewDimensions={"l":{"dimensions":(1280, 640), "upperLeftCorner":(0, 0)},
+                "s1":{"dimensions":(608, 342), "upperLeftCorner":(0, 682 )},
+                "s2":{"dimensions":(608, 342), "upperLeftCorner":(672, 682)}}
 periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 periodDimensions = (20,20)
 grassColor = [0,123,12]
@@ -19,7 +19,7 @@ class Window(object):
         self.views = {}
         self.timePeriods = {}
         self.display = pygame.display.set_mode(windowDimensions)
-        self.display.blit(background, self.display.get_rect(), pygame.NOFRAME)
+        #self.display.blit(background, self.display.get_rect())
         self.setUpTimePeriods()
         #self.objects = []
         pygame.display.update()
