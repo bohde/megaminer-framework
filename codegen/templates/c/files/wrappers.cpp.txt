@@ -1,0 +1,44 @@
+// -*-c++-*-
+
+#include "wrappers.h"
+#include "game.h"
+
+% for model in models:
+${model.name}::${model.name}()
+{
+
+}
+
+${model.name}::${model.name}(_${model.name}* ptr) : ptr(ptr)
+{
+
+}
+
+%   for key in model.data.keys():
+${conversions[model.data[key]]} ${model.name}::${key}()
+{
+  return ptr->${key};
+}
+
+%   endfor
+
+%   for func in model.functions.keys():
+bool ${model.name}::${func}(\
+%     for arg in model.functions[func]:
+%       if model.functions[func][0] != arg:
+, \
+%       endif
+${conversions[arg[1]]} ${arg[0]}\
+%     endfor
+)
+{
+  return ${model.name.lower()}${func.capitalize()}(ptr->${model.key}\
+%     for arg in model.functions[func]:
+, ${arg[0]}\
+%     endfor
+);
+}
+
+%   endfor
+
+% endfor
