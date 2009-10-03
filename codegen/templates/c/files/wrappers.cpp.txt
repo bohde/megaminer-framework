@@ -4,12 +4,7 @@
 #include "game.h"
 
 % for model in models:
-${model.name}::${model.name}()
-{
-
-}
-
-${model.name}::${model.name}(_${model.name}* ptr) : ptr(ptr)
+${model.name}::${model.name}(_${model.name}* ptr = NULL) : ptr(ptr)
 {
 
 }
