@@ -51,6 +51,7 @@ Unit = structures.Model('Unit', key='objectID',
   functions = ( ('attack', ( ('x', int), ('y', int) ) ),
     ('build', ( ('x', int), ('y', int), ('type', BuildingType) ) ),
     ('paint', ( ('x', int), ('y', int)) ),
+    ('move', ( ('x', int), ('y', int)) ),
     ('warp', () ) )
   )
 
