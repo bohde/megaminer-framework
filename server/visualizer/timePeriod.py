@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from spriteClasses import Building, Unit, Terrain, loadAllImages
 
+
 coordinates = {}
 
 class TimePeriod(object):
@@ -11,8 +12,8 @@ class TimePeriod(object):
         self.baseLayer = pygame.Surface(pixelDim)
         self.baseLayer.fill(color)
         self.terrainLayer = self.baseLayer.subsurface(self.baseLayer.get_rect()) 
-        self.buildingLayer = self.baseLayer.subsurface(self.terrainLayer.get_rect())
-        self.unitLayer = self.baseLayer.subsurface(self.buildingLayer.get_rect())
+        self.buildingLayer = self.terrainLayer.subsurface(self.baseLayer.get_rect())
+        self.unitLayer = self.buildingLayer.subsurface(self.baseLayer.get_rect())
         self.color = color
         self.mapDim = mapDim
         self.name = name
@@ -25,21 +26,21 @@ class TimePeriod(object):
     def drawGrass(self):
         for x in range(self.mapDim[0]):
             for y in range(self.mapDim[1]):
-                self.terrain.add(Terrain(None, coordinates[(x,y)], True, False))
+                self.terrain.add(Terrain(None, coordinates[(x,y)], False, False))
         self.terrain.draw(self.terrainLayer)
         
     def clearGroups(self):
+        self.baseLayer.fill(self.color)
         self.units.clear(self.unitLayer, self.baseLayer)
         self.buildings.clear(self.buildingLayer, self.baseLayer)
         self.terrain.clear(self.terrainLayer, self.baseLayer)
        
-       
     def updateTimePeriod(self):
-        self.clearGroups()
         self.terrain.update()
         self.units.update()
         self.buildings.update()
-        self.terrain.draw(self.baseLayer)
+        self.clearGroups()
+        self.terrain.draw(self.terrainLayer)
         self.buildings.draw(self.buildingLayer)
         self.units.draw(self.unitLayer)
        
@@ -52,13 +53,15 @@ class TimePeriod(object):
         for unit in self.units.sprites():
             if unit.objectID == unitID:
                 unit.image = unit.stand
-                unit.rect.topleft = (targetX, targetY)
+                unit.faceRight = True
+                self.units.update()
+                unit.rect.midbottom = coordinates[(targetX, targetY)]
                 self.updateTimePeriod()
 
        
     def addUnit(self, statusDict):
         print "adding new unit..."
-        newUnit = Unit(statusDict['objectID'], statusDict['location'], statusDict['hp'],
+        newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]], statusDict['hp'],
                                   statusDict['level'], statusDict['unitType'], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])
         self.units.add(newUnit)
@@ -66,34 +69,77 @@ class TimePeriod(object):
     
     def addBuilding(self, statusDict):
         print "adding new building..."
-        newBuilding = Building(statusDict['objectID'], statusDict['location'], statusDict['hp'],
-                                  statusDict['level'], statusDict['buildingType'], statusDict['ownerIndex'],
-                                  statusDict['inTraining'], statusDict['progress'], statusDict['linked'], statusDict['complete'])
+        newBuilding = Building(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]],
+                                statusDict['hp'], statusDict['level'], statusDict['buildingType'], statusDict['ownerIndex'],
+                                statusDict['inTraining'], statusDict['progress'], statusDict['linked'], statusDict['complete'])
         self.buildings.add(newBuilding)
 
 
     def addTerrain(self, statusDict):
         print "adding new terrain..."
-        newTerrain = Terrain(statusDict['objectID'], statusDict['location'], statusDict['blockMove'], statusDict['blockBuild'])
+        newTerrain = Terrain(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]], statusDict['blockMove'], statusDict['blockBuild'])
         self.terrain.add(newTerrain)
         
-    def remove(self, id):
-        print "removing object..."
+    def hurt(self, id, changeHP):
         for unit in self.units.sprites():
             if unit.objectID == id:
+                print "huring unit..."
+                unit.hp -= changeHP
+        for building in self.buildings.sprites():
+            if building.objectID == id:
+                print "hurting building..."
+                building.hp -= changHP
+
+
+
+    def attack(self, attackerID, targetX, targetY):
+        for unit in self.units.sprites():
+            if unit.objectID == attackerID:
+                type = unit.unitType
+                if type != 'artil' and type != 'spear' and type != 'cav':
+                    raise Exception("*****You tried to attack with an invalid unitType")
+                if unit.rect.midbottom[0] > coordinates[(targetX, targetY)][0]:
+                    unit.image = pygame.transform.flip(unit.action, True, False)
+                else:
+                    unit.image = unit.action
+
+                    
+    def build(self, id, targetX, targetY):
+        for unit in self.units.sprites():
+            if unit.objectID == id:
+                if unit.unitType != 'civE':
+                    raise Exception("*****Tried to build with a non-engineer!")
+                unit.working = True
+            
+    
+                    
+    def reset(self, attackerID):
+        for unit in self.units.sprites():
+            if unit.objectID == attackerID:
+                unit.image = unit.stand
+                unit.faceRight = True
+                self.updateTimePeriod()
+        
+    def remove(self, id):
+        for unit in self.units.sprites():
+            if unit.objectID == id:
+                print "removing unit..."
                 self.units.remove(unit)
         for building in self.buildings.sprites():
             if building.objectID == id:
-                self.building.remove(unit)
+                print "removing building..."
+                self.buildings.remove(building)
         for terrain in self.terrain.sprites():
             if terrain.objectID == id:
-                self.terrain.remove(unit)
+                print "removing terrain..."
+                self.terrain.remove(terrain)
+
 
     def setUp(self, mapDim, pixelDim):
         xChange = int(pixelDim[0]/float(mapDim[0]))
         yChange = int(pixelDim[1]/float(mapDim[1]))
 
-        origin = [0, pixelDim[1]/2]
+        origin = [xChange/2, pixelDim[1]/2]
         for xCoord in range(mapDim[0]):
             i = 0
             for yCoord in range(mapDim[1]):

@@ -1,5 +1,6 @@
 import pygame,os
 from pygame.locals import *
+from math import hypot
 
 
 unitImages = {"civE":{'0':[], '1':[]}, "art":{'0':[], '1':[]},"spear":{'0':[], '1':[]}, "artil":{'0':[], '1':[]}}
@@ -15,11 +16,15 @@ class Unit(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.stand = unitImages[unitType][str(ownerIndex)][0].copy()
         self.step = unitImages[unitType][str(ownerIndex)][1].copy()
-        self.image = self.stand
+        self.action = unitImages[unitType][str(ownerIndex)][2].copy()
         self.rect = self.stand.get_rect()
-        self.rect.topleft = location
+        self.rect.midbottom = location
+        self.image = self.stand
+        self.health = self.image.subsurface(pygame.Rect(0,0,5,self.rect.height))
+        self.faceRight = True
+        self.working = False
         self.objectID = objectID
-        self.unitTupe = unitType
+        self.unitType = unitType
         self.hp = hp
         self.level = level
         self.ownerIndex = ownerIndex
@@ -27,8 +32,27 @@ class Unit(pygame.sprite.Sprite):
         self.moves = moves
     
     def update(self):
-        pass
+        if self.faceRight and self.rect.midbottom[0] > 1280/2:
+            self.faceRight = False
+            self.image = pygame.transform.flip(self.image, True, False)
+        elif not self.faceRight and self.rect.midbottom[0] < 1280/2:
+            self.faceRight = True
+            self.image = pygame.transform.flip(self.image, True, False)
         
+        if self.hp > 50:
+            pygame.draw.rect(self.health, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
+        elif self.hp <= 50 and self.hp >= 25:
+            self.health.fill([0,0,0])
+            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height*2/3))
+        else:
+            self.health.fill([0,0,0])
+            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/3))
+            
+        if self.working:
+            if self.image == self.stand:
+                self.image = self.action
+            else:
+                self.image = self.stand
     
 
 class Building(pygame.sprite.Sprite):
@@ -36,9 +60,10 @@ class Building(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.construction = buildingImages[buildingType][str(ownerIndex)][0].copy()
         self.done = buildingImages[buildingType][str(ownerIndex)][1].copy()
-        self.image = self.construction
         self.rect = self.construction.get_rect()
-        self.rect.topleft = location
+        self.rect.midbottom = location
+        self.image = self.construction
+        self.health = self.image.subsurface(pygame.Rect(0,0,5,self.rect.height))
         self.objectID = objectID
         self.buildingType = buildingType
         self.hp = hp
@@ -52,6 +77,15 @@ class Building(pygame.sprite.Sprite):
     def update(self):
         if self.complete:
             self.image = self.done
+            
+        if self.hp > 50:
+            pygame.draw.rect(self.health, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
+        elif self.hp <= 50 and self.hp >= 25:
+            self.health.fill([0,0,0])
+            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height*2/3))
+        else:
+            self.health.fill([0,0,0])
+            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/3))
 
 
 
@@ -69,7 +103,7 @@ class Terrain(pygame.sprite.Sprite):
             self.terrainType = 'grass'
         self.image = terrainImages[self.terrainType][0].copy()
         self.rect = self.image.get_rect()
-        self.rect.midleft = location
+        self.rect.center = location
         self.objectID = objectID
         self.blockMove = blockMove
         self.blockBuild = blockBuild
@@ -78,28 +112,29 @@ class Terrain(pygame.sprite.Sprite):
 
         
 def loadAllImages(tileSize):
-        if not terrainImages['rock']:
-            for name, images in terrainImages.iteritems():
-                images.append(loadImage(name, tileSize))
-"""
-      if not unitImages['civE']['0']:
-            for name, players in unitImages.iteritems():
-                for index, images in players.iteritems():
-                    images.append(loadImage(name, index,"Stand"))
-                    images.append(loadImage(name, index, "Step"))
-        if not buildingImages['school']['0']:
-            for name, players in buildingImages.iteritems():
-                for index, images in players.iteritems():
-                    images.append(loadImage(name, index,"Construction"))
-                    images.append(loadImage(name, index, "Done"))
-"""
+    spriteSize = (tileSize[1], tileSize[1])
+    if not terrainImages['rock']:
+        for name, images in terrainImages.iteritems():
+            images.append(loadImage(name, tileSize))       
+    if not unitImages['civE']['0']:
+        for name, players in unitImages.iteritems():
+            for index, images in players.iteritems():
+                images.append(loadImage(name, spriteSize, index,"Stand"))
+                images.append(loadImage(name, spriteSize, index, "Step"))
+                images.append(loadImage(name, spriteSize, index,"Action"))
+    if not buildingImages['school']['0']:
+        for name, players in buildingImages.iteritems():
+            for index, images in players.iteritems():
+                images.append(loadImage(name, tileSize, index,"Construction"))
+                images.append(loadImage(name, tileSize, index, "Done"))
+        
 
-def loadImage(name, size, key = True, ownerIndex = "", option = ""):
+def loadImage(name, size, ownerIndex = "", option = "", key = True):
     path = os.path.join("sprites", ownerIndex+name+option+".png")
     try:
         image = pygame.image.load(path)
     except pygame.error, message:
-        print "CANNOT LOAD IMAGE"
+        print "CANNOT LOAD IMAGE %(1)s" %{'1':(ownerIndex+name+option+".png")}
     if key:
         image.set_colorkey(image.get_at((0,0)), RLEACCEL)
     return pygame.transform.scale(image.convert(), size)
