@@ -18,8 +18,8 @@ extern "C"
 {
 #endif
   DLLEXPORT bool login(int socket, const char* username, const char* password);
-  DLLEXPORT void createGame();
-  DLLEXPORT void joinGame(int id);
+  DLLEXPORT int createGame();
+  DLLEXPORT int joinGame(int id);
 
   DLLEXPORT void endTurn();
   DLLEXPORT void getStatus();

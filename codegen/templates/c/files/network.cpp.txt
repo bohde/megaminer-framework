@@ -62,8 +62,8 @@ DLLEXPORT int open_server_connection(const char* host, const char* port)
 #endif
         return -1;
     }
-    rec_string(sock_server);
-    send_string(sock_server, "");
+    rec_string(sock_server); //Receive the list of extra compression methods the server supports.
+    send_string(sock_server, ""); //We reply with the list we support, which is presently none.
     return sock_server;
 }
 

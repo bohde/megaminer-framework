@@ -37,11 +37,11 @@ int main(int argc, char** argv)
 
   if(argc < 3)
   {
-    createGame();
+    socket = createGame();
   }
   else
   {
-    joinGame(atoi(argv[2]));
+    socket = joinGame(atoi(argv[2]));
   }
   while(networkLoop(socket))
   {

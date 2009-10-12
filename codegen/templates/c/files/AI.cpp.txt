@@ -2,7 +2,7 @@
 
 const char* AI::username()
 {
-  return "username";
+  return "Shell AI";
 }
 
 const char* AI::password()
