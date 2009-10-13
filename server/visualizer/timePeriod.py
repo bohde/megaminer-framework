@@ -109,7 +109,12 @@ class TimePeriod(object):
             if unit.objectID == id:
                 if unit.unitType != 'civE':
                     raise Exception("*****Tried to build with a non-engineer!")
-                unit.working = True
+                if unit.working == False:
+                    unit.working = True
+                    print "unit has begun building..."
+                else:
+                    unit.working = False
+                    print "unit has stopped building..."
             
     
                     

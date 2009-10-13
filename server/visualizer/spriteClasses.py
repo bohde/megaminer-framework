@@ -43,10 +43,10 @@ class Unit(pygame.sprite.Sprite):
             pygame.draw.rect(self.health, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
         elif self.hp <= 50 and self.hp >= 25:
             self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height*2/3))
+            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
             self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/3))
+            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
             
         if self.working:
             if self.image == self.stand:
