@@ -176,9 +176,9 @@ void parse${model.name}(_${model.name}* object, sexp_t* expression)
   object->${key} = atoi(sub->val);
   %elif model.data[key] == str:
   ##FIXME: This is such a memory leak.
-  object->name = new char[strlen(sub->val)+1];
-  strncpy(object->name, sub->val, strlen(sub->val));
-  object->name[strlen(sub->val)] = 0;
+  object->${key} = new char[strlen(sub->val)+1];
+  strncpy(object->${key}, sub->val, strlen(sub->val));
+  object->${key}[strlen(sub->val)] = 0;
   %endif
   
   %endfor
@@ -283,3 +283,15 @@ DLLEXPORT int networkLoop(int socket)
   return 0;
   }
 }
+
+% for model in models:
+DLLEXPORT _${model.name}* get${model.name}(int num)
+{
+  return ${model.name}s + num;
+}
+DLLEXPORT int get${model.name}Count()
+{
+  return ${model.name}Count;
+}
+
+% endfor

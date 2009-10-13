@@ -9,5 +9,15 @@
 
 bool BaseAI::startTurn()
 {
+  int count = 0;
+  % for model in models:
+  count = get${model.name}Count();
+  ${model.name.lower()}s.clear();
+  ${model.name.lower()}s.resize(count);
+  for(int i = 0; i < count; i++)
+  {
+    ${model.name.lower()}s[i] = ${model.name}(get${model.name}(i));
+  }
+  % endfor
   run();
 }

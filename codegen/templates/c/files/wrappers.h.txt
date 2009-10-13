@@ -3,6 +3,7 @@
 #ifndef WRAPPERS_H
 #define WRAPPERS_H
 
+#include <cstdlib>
 #include "structures.h"
 
 % for model in models:
@@ -13,8 +14,7 @@ class ${model.name};
 class ${model.name} {
   _${model.name}* ptr;
  public:
-  ${model.name}();
-  ${model.name}(_${model.name}* ptr);
+  ${model.name}(_${model.name}* ptr = NULL);
 
   // Accessors
   % for key in model.data.keys():
