@@ -23,8 +23,11 @@ import random
 import math
 from game.match import Match
 from StatementUtils import dict_wrapper, require_length, require_game
+import statements.Statements as Statements
 
-games = {}
+games = Statements.games
+
+
 id = 0
 client_version = 2
 statements = {}
