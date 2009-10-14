@@ -52,13 +52,18 @@ class RedirectFilter(LogicFilter):
         return ret[0] if len(ret)>0 else []
 
     def createGame(self):
-        ret = ['game-number', RedirectFilter.GameNumber, ['server'] + self.chooseServer()]
+        srv = self.chooseServer()
+        ret = ['game-number', RedirectFilter.GameNumber, ['server'] + srv]
         with RedirectFilter.GameLock:
             RedirectFilter.Games[RedirectFilter.GameNumber] = ret[2]
+        RedirectFilter.Servers[srv[0]].sendGameCreation(RedirectFilter.GameNumber)
         RedirectFilter.GameNumber += 1
         RedirectFilter.Servers[ret[2][1]].count += 1
         return ret
 
+    def sendGameCreation(self, id):
+        self.writeSExpr(["create-game", id])
+        
     def lookupGame(self, number):
         with RedirectFilter.GameLock:
             return RedirectFilter.Games[number]
