@@ -50,6 +50,31 @@ def createGame(self, expression):
     try:
         game = int(expression[1])
     except:
-        game = None
+        self.writeSExpr(['create-game-denied', 'invalid game number'])
+        return False
 
     games[game] = Match(game)
+
+    return True
+
+@wrapper('join-game')
+@require_length(2)
+def joinGame(self, expression):
+    try:
+        game = int(expression[1])
+    except:
+        game = None
+
+    if game not in games:
+        self.writeSExpr(['join-game-denied', 'no such game', game])
+        return False
+
+    errBuff = games[game].addPlayer(self)
+
+    if errBuff != True:
+        self.writeSExpr(['join-game-denied', errBuff])
+        return False
+
+    self.game = game
+
+    return True

@@ -35,6 +35,7 @@ class SexprHandlerMixin(object):
         if type(expression) != list:
             self.writeSExpr(['invalid-expression', expression])
             return False
+
         try:
             self.statements[expression[0]](self, expression)
         except Exception, e:
