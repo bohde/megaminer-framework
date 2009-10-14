@@ -44,3 +44,12 @@ def winner(self, expression):
     self.writeSExpr(['game-winner', game, games[game].winner and games[game].winner.user])
     return True
 
+@wrapper('create-game')
+@require_length(2)
+def createGame(self, expression):
+    try:
+        game = int(expression[1])
+    except:
+        game = None
+
+    games[game] = Match(game)
