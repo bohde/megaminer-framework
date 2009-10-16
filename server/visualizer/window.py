@@ -18,7 +18,7 @@ viewDimensions={"l":{"dimensions":(1280, 640), "upperLeftCorner":(0, 0)},
 periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 
 #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
-periodDimensions = (10,10)
+periodDimensions = (20,20)
 
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
