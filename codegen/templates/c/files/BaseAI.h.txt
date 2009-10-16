@@ -7,17 +7,7 @@
 #include <vector>
 #include <ctime>
 #include "game.h"
-
-#define DOWN 5
-#define DOWN_LEFT 4
-#define UP_LEFT 3
-#define UP 2
-#define UP_RIGHT 1
-#define DOWN_RIGHT 0
-
-
-#define TURN_LEFT 1
-#define TURN_RIGHT -1
+#include "wrappers.h"
 
 /// \brief A basic AI interface.
 
@@ -27,6 +17,9 @@
 class BaseAI
 {
 protected:
+% for model in models:
+  std::vector<${model.name}> ${model.name.lower()}s;
+% endfor
 public:
   ///
   ///Make this your username, which should be provided.

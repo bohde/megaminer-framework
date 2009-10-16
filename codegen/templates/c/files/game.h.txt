@@ -40,6 +40,12 @@ ${conversions[arg[1]]} ${arg[0]}\
 
 //accessors
 
+% for model in models:
+DLLEXPORT _${model.name}* get${model.name}(int num);
+DLLEXPORT int get${model.name}Count();
+
+% endfor
+
 
   DLLEXPORT int networkLoop(int socket);
 #ifdef __cplusplus
