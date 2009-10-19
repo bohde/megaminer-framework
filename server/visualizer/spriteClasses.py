@@ -3,8 +3,8 @@ from pygame.locals import *
 from math import hypot
 
 
-unitImages = {"civE":{'0':[], '1':[]}, "art":{'0':[], '1':[]},"spear":{'0':[], '1':[]}, "artil":{'0':[], '1':[]}}
-    #"cav":[cavStand, cavStep], "pig":[pigStand, pigStep]}
+unitImages = {"civE":{'0':[], '1':[]}, "art":{'0':[], '1':[]},"spear":{'0':[], '1':[]}, "artil":{'0':[], '1':[]}, "blank":{'0':[], '1':[]},"pig":{'0':[], '1':[]}}
+    #"cav":{'0':[], '1':[]}, }}
 
 buildingImages = {"school":{'0':[], '1':[]}, "gallery":{'0':[], '1':[]}, "farm":{'0':[], '1':[]},
     "warFac":{'0':[], '1':[]}}  # ,"bunker":{'0':[], '1':[]}}
@@ -20,9 +20,10 @@ class Unit(pygame.sprite.Sprite):
         self.rect = self.stand.get_rect()
         self.rect.midbottom = location
         self.image = self.stand
-        self.health = self.image.subsurface(pygame.Rect(0,0,5,self.rect.height))
-        self.faceRight = True
+        self.health = pygame.Surface((5,self.rect.height))
         self.working = False
+        self.stepping = False
+        self.attacking = False
         self.objectID = objectID
         self.unitType = unitType
         self.hp = hp
@@ -31,29 +32,40 @@ class Unit(pygame.sprite.Sprite):
         self.actions = actions
         self.moves = moves
     
+    def changeType(self, unitType):
+        self.stand = unitImages[unitType][str(ownerIndex)][0].copy()
+        self.step = unitImages[unitType][str(ownerIndex)][1].copy()
+        self.action = unitImages[unitType][str(ownerIndex)][2].copy()
+        self.unitType = unitType
+    
     def update(self):
-        if self.faceRight and self.rect.midbottom[0] > 1280/2:
-            self.faceRight = False
-            self.image = pygame.transform.flip(self.image, True, False)
-        elif not self.faceRight and self.rect.midbottom[0] < 1280/2:
-            self.faceRight = True
-            self.image = pygame.transform.flip(self.image, True, False)
+        if self.stepping:
+            tempImage = self.step
+        elif self.attacking:
+            tempImage = self.action
+            self.attacking = False
+        elif self.working:
+            if self.image == self.stand:
+                tempImage = self.action
+            else:
+                tempImage = self.stand
+        else:
+            tempImage = self.stand
         
         if self.hp > 50:
-            pygame.draw.rect(self.health, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
+            pygame.draw.rect(tempImage, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
         elif self.hp <= 50 and self.hp >= 25:
             self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
+            pygame.draw.rect(tempImage, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
             self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
+            pygame.draw.rect(tempImage, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
+                 
+        if self.rect.midbottom[0] > 1280/2:
+            tempImage = pygame.transform.flip(tempImage, True, False)
+        
+        self.image = tempImage
             
-        if self.working:
-            if self.image == self.stand:
-                self.image = self.action
-            else:
-                self.image = self.stand
-    
 
 class Building(pygame.sprite.Sprite):
     def __init__(self, objectID, location, hp, level, buildingType, ownerIndex, inTraining, progress, linked, complete):

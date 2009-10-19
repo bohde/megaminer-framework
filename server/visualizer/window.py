@@ -20,6 +20,12 @@ periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
 periodDimensions = (20,20)
 
+#Converts integer UnitID to string
+unitTypeConversion = {0:'blank', 1:'civE', 2:'art', 3:'spear', 4:'artil', 5:'cav', 6:'pig'}
+
+#Delay time between frams. In milliseconds
+delaytime = 10
+
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
 # visualizer
@@ -75,7 +81,7 @@ class Window(object):
         for name, period in self.timePeriods.iteritems():
             period.updateTimePeriod()
             pygame.transform.scale(period.baseLayer, viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
-        pygame.time.delay(250)
+        pygame.time.delay(delaytime)
         pygame.display.update()
 
     ## iterates through the status to find the requested id, and it to the
@@ -117,11 +123,10 @@ class Window(object):
     #  does NOT cause it to move to (targetX,targetY)
     #  @param attackerID- objectID; targetX/Y- target coords (all ints)
     def attack(self, attackerID, targetX, targetY):
+        print "attacking...."
         for name, period in self.timePeriods.iteritems():
             period.attack(attackerID, targetX, targetY)
             self.updateScreen()
-            #pygame.time.delay(250)
-            period.reset(attackerID)
     
     ## calls hurt on each TimePeriod for id, "id's" hp is then decremented
     #  by changeHP
@@ -140,12 +145,8 @@ class Window(object):
     ## trains a unit to be a certain type of unit
     # @param
     def train(self, id, newUnitTypeID):
-        for period, dictionary in self.status.iteritems():
-            for type, list in dictionary.iteritems():
-                for item in list:
-                    if item['objectID'] == id:
-                        if type == 'Unit':
-                            self.timePeriods[period].trainUnit(item)
+        for name, period in self.timePeriods.iteritems():
+            period.train(id, unitTypeConversion[newUnitTypeID])
     
     ## replaces old status dictionary with newStatus
     # @param newStatus- a status dictionary.
