@@ -19,6 +19,7 @@
 from LogicFilter import LogicFilter
 import statements.Statements as Statements
 import statements.GameStatements as GameStatements
+import statements.ServerStatements as ServerStatements
 
 class GameFilter(LogicFilter):
      def _init(self):
@@ -26,5 +27,7 @@ class GameFilter(LogicFilter):
         self.statements = Statements.statements
         for k in GameStatements.statements.keys():
             self.statements[k] = GameStatements.statements[k]
+        for k in ServerStatements.statements.keys():
+            self.statements[k] = ServerStatements.statements[k]
 
 
