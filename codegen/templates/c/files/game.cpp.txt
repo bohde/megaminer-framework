@@ -34,7 +34,7 @@ namespace Windows
 using namespace std;
 
 % for datum in globals:
-static int ${datum.name} = 0;
+static ${conversions[datum.type]} ${datum.name} = 0;
 % endfor
 
 
@@ -290,4 +290,11 @@ DLLEXPORT int get${model.name}Count()
   return ${model.name}Count;
 }
 
+% endfor
+
+% for datum in globals:
+DLLEXPORT ${conversions[datum.type]} get${capitalize(datum.name)}()
+{
+  return ${datum.name};
+}
 % endfor

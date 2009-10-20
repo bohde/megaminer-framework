@@ -5,7 +5,12 @@
 #include "BaseAI.h"
 #include "game.h"
 
-
+% for datum in globals:
+${conversions[datum.type]} BaseAI::${datum.name}()
+{
+  return get${capitalize(datum.name)}();
+}
+% endfor
 
 bool BaseAI::startTurn()
 {

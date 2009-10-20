@@ -21,6 +21,10 @@ protected:
   std::vector<${model.name}> ${model.name.lower()}s;
 % endfor
 public:
+% for datum in globals:
+  ${conversions[datum.type]} ${datum.name}();
+% endfor
+  
   ///
   ///Make this your username, which should be provided.
   virtual const char* username() = 0;

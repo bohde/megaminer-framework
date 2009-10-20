@@ -2,9 +2,11 @@ from mako.template import Template
 import glob
 
 import conversions
+import util
 
 def write(data):
   data['conversions'] = conversions.c
+  data['capitalize'] = util.capitalize
   for file in glob.glob('templates/c/files/*.txt'):
     writeFile(file[18:-4], data) #file[18:-4] should strip the templates/c/files/ and .txt
 
