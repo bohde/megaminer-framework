@@ -97,6 +97,10 @@ DLLEXPORT int createGame()
   login(socket, last_username, last_password);
 
   stringstream expr;
+  expr << "(create-game " << gameNum << ")";
+  send_string(socket, expr.str().c_str());
+  
+  expr.str("");
   expr << "(join-game " << gameNum << ")";
   send_string(socket, expr.str().c_str());
   
@@ -167,7 +171,6 @@ void parse${model.name}(_${model.name}* object, sexp_t* expression)
   sub = expression->list;
   
   % for key in model.data.keys():
-  sub = sub->next;
   %if model.data[key] == int:
   object->${key} = atoi(sub->val);
   %elif model.data[key] == str:
@@ -176,7 +179,7 @@ void parse${model.name}(_${model.name}* object, sexp_t* expression)
   strncpy(object->${key}, sub->val, strlen(sub->val));
   object->${key}[strlen(sub->val)] = 0;
   %endif
-  
+  sub = sub->next;
   %endfor
   
 }
@@ -239,19 +242,19 @@ DLLEXPORT int networkLoop(int socket)
           sub = sub->next;
           
           subsub = sub->list;
-          player0Gold0 = atoi(sub->val);
+          player0Gold0 = atoi(subsub->val);
           subsub = subsub->next;
-          player0Gold1 = atoi(sub->val);
+          player0Gold1 = atoi(subsub->val);
           subsub = subsub->next;
-          player0Gold2 = atoi(sub->val);
+          player0Gold2 = atoi(subsub->val);
           sub = sub->next;
           
           subsub = sub->list;
-          player1Gold0 = atoi(sub->val);
+          player1Gold0 = atoi(subsub->val);
           subsub = subsub->next;
-          player1Gold1 = atoi(sub->val);
+          player1Gold1 = atoi(subsub->val);
           subsub = subsub->next;
-          player1Gold2 = atoi(sub->val);
+          player1Gold2 = atoi(subsub->val);
         }
         % for model in models:
         else if(string(sub->val) == "${model.name}")
