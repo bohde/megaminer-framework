@@ -1,4 +1,4 @@
-mport itertools
+import itertools
 import collections
 import functools
 import random
