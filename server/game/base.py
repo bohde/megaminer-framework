@@ -72,10 +72,10 @@ def initialSetup(game):
     y = -y - h + 1
 
     # Buildings for player 1
-    game.addObject(Building(game, x, y, 0, game.players[0], farmType, 0))
-    game.addObject(Building(game, x, y + farmType.height, 0, game.players[0], galleryType, 0))
+    game.addObject(Building(game, x, y, 0, game.players[1], farmType, 0))
+    game.addObject(Building(game, x, y + farmType.height, 0, game.players[1], galleryType, 0))
     game.addObject(Building(game, x, y + farmType.height + galleryType.height,
-                            0, game.players[0], schoolType, 0))
+                            0, game.players[1], schoolType, 0))
 
     # Units for player 1
     for z in xrange(3):
@@ -172,6 +172,7 @@ class GameWorld(object):
         self.maxid = 2147483600
         self.turnNum = 0
         self.players = []
+        self.spectators = []
         self.turn = None #the player whose turn it is;
                          #None before and after the game.
         self.winner = None #the player who won the game;

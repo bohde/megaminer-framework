@@ -22,7 +22,8 @@ import sexpr.sexpr
 import random
 import math
 from game.match import Match
-from StatementUtils import dict_wrapper, require_length, require_game
+from StatementUtils import dict_wrapper, require_length, require_game, \
+                           require_login
 
 games = {}
 id = 0
@@ -63,18 +64,24 @@ def createGame(self, expression):
     return True
 
 @wrapper('join-game')
-@require_length(2)
+@require_login
+@require_length(2, 3)
 def joinGame(self, expression):
     try:
         game = int(expression[1])
     except:
         game = None
 
+    try:
+        type = str(expression[2])
+    except:
+        type = "player"
+
     if game not in games:
         self.writeSExpr(['join-game-denied', 'no such game', game])
         return False
 
-    errBuff = games[game].addPlayer(self)
+    errBuff = games[game].addPlayer(self, type)
 
     if errBuff != True:
         self.writeSExpr(['join-game-denied', errBuff])

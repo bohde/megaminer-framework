@@ -40,13 +40,33 @@ class Match(DefaultGameWorld):
             self.players.append(connection)
         elif (cmp(type, "spectator") == 0):
             self.spectators.append(connection)
+        self.sendIdent()
         return True
+
+    def sendIdent(self):
+        #Tells everybody who is in the game
+        msg = self.identList()
+        for p in self.players:
+            p.writeSExpr(msg)
+        for s in self.spectators:
+            s.writeSExpr(msg)
+    
+    def identList(self):
+        #Generates the ident message
+        #(ident (player, player) (spectator, spectator, spectator...)
+        msg = ['ident', [], []]
+        for p in self.players:
+            msg[1].append(p.user)
+        for s in self.spectators:
+            msg[2].append(s.user)
+        return msg
 
     def removePlayer(self, connection):
         if (cmp(connection.type, "player")):
             self.players.remove(connection)
         else:
             self.spectators.remove(connection)
+        self.sendIdent()
 
     def start(self):
         if len(self.players) < 2:
@@ -107,6 +127,7 @@ class Match(DefaultGameWorld):
     
     def declareWinner(self, winner):
         self.winner = winner
+        self.turn = None
         for p in self.players:
             p.writeSExpr(["game-winner", self.id, self.winner.user])
         
@@ -146,15 +167,6 @@ class Match(DefaultGameWorld):
     @requireReferences(Unit)
     def warp(self, unitID):
         return self.objects[unitID].warp()
-
-    def sendIdent(self, players):
-        if len(self.players) < 2:
-            return False
-        list = []
-        for i in self.players:
-            list += [[i.ID, i.user, i.screenName, i.type]]
-        for i in players:
-            i.writeSExpr(['ident', list, self.log.id])
 
     def sendStatus(self, players):
         for i in players:
