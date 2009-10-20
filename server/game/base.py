@@ -1,6 +1,7 @@
-import itertools
+mport itertools
 import collections
 import functools
+import random
 from portal import *
 from terrain import *
 from unit import *
@@ -36,51 +37,120 @@ class TimePeriod(object):
         self.area = factory()
 
 
-def basicMapGeneration(game):
+def initialSetup(game):
     """
-    Adds some basic objects to the map.
+    Places the initial buildings and units for the players
     """
+
     schoolType = game.getType("School")
     engineerType = game.getType("Engineer")
     galleryType = game.getType("Gallery")
     artistType = game.getType("Artist")
     farmType = game.getType("Farm")
 
-    #Buildings
-    game.addObject(Building(game, -10, -10, 0, game.players[0], schoolType, 0))
-    game.addObject(Building(game, -10, -8, 0, game.players[0], galleryType, 0))
-    game.addObject(Building(game, -8, -10, 0, game.players[0], farmType, 0))
+    h = schoolType.height + galleryType.height + farmType.height
+    w = max([schoolType.width, galleryType.width, farmType.width])
+    x = 0
+    y = 0
 
-    game.addObject(Building(game, 9, 9, 0, game.players[1], schoolType, 0))
-    game.addObject(Building(game, 7, 9, 0, game.players[1], galleryType, 0))
-    game.addObject(Building(game, 9, 7, 0, game.players[1], farmType, 0))
+    while (x + y < game.periods[1].area.max_x / 2):
+        x = random.randint(0, game.periods[1].area.max_x - w)
+        y = random.randint(0, game.periods[1].area.max_y - h)
 
-    #Units
+    #Buildings for player 0
+    game.addObject(Building(game, x, y, 0, game.players[0], schoolType, 0))
+    game.addObject(Building(game, x, y + schoolType.height, 0, game.players[0], galleryType, 0))
+    game.addObject(Building(game, x, y + schoolType.height + galleryType.height,
+                            0, game.players[0], farmType, 0))
+
+    # Units for player 0
     for z in xrange(3):
-        game.addObject(Unit(game, -10,-10,z, game.players[0], engineerType, 0))
-        game.addObject(Unit(game, -10, -8, z, game.players[0], artistType, 0))
-        game.addObject(Unit(game, 9, 9, z, game.players[1], engineerType, 0))
-        game.addObject(Unit(game, 7, 9, z, game.players[1], artistType, 0))
+        game.addObject(Unit(game, x, y, z, game.players[0], engineerType, 0))
+        game.addObject(Unit(game, x, y + schoolType.height, z, game.players[0], artistType, 0))
 
-    #Portals
-    #  Far past and Past
-    game.addObject(Portal(game, 10, 0, 0, 1))
-    game.addObject(Portal(game, 10, 0, 1, -1))
-    game.addObject(Portal(game, -10, 0, 0, 1))
-    game.addObject(Portal(game, -10, 0, 1, -1))
+    x = -x - w + 1
+    y = -y - h + 1
 
-    #  Past and Present
-    game.addObject(Portal(game, 0, 10, 1, 1))
-    game.addObject(Portal(game, 0, 10, 2, -1))
-    game.addObject(Portal(game, 0, -10, 1, 1))
-    game.addObject(Portal(game, 0, -10, 2, -1))
+    # Buildings for player 1
+    game.addObject(Building(game, x, y, 0, game.players[0], farmType, 0))
+    game.addObject(Building(game, x, y + farmType.height, 0, game.players[0], galleryType, 0))
+    game.addObject(Building(game, x, y + farmType.height + galleryType.height,
+                            0, game.players[0], schoolType, 0))
 
-    newTerrain = []
-    for z in range(3):
-        newTerrain.append(Terrain(game, 0, 0, z))
-        newTerrain[z].blockMove = True
-        newTerrain[z].blockBuild = True
-        game.addObject(newTerrain[z])
+    # Units for player 1
+    for z in xrange(3):
+        game.addObject(Unit(game, x, y + farmType.height + galleryType.height,
+                       z, game.players[1], engineerType, 0))
+        game.addObject(Unit(game, x, y + schoolType.height, z, game.players[1], artistType, 0))
+
+
+def portalDisCheck(game, farPastPortals, x, y):
+    """
+    Returns False if the distance between the supplied point and any portal
+    in the supplied list is less than a minimum
+    """
+
+    MIN_DIS = 3 # To config file?
+    for p in farPastPortals:
+        if game.distance(x, y, p.x, p.y) < MIN_DIS:
+            return False
+    return True
+
+
+def basicMapGeneration(game):
+    """
+    Adds initial buildings and units and generates terrain and portals
+    """
+
+    initialSetup(game)
+
+    n = 10 # To config file?
+    t = 10 # To config file?
+    numPortals = 0
+    numTerrain = 0
+    farPastPortals = []
+
+    # Pick portals linking far past and past
+    while (numPortals <= n):
+        x = random.randint(-game.periods[1].area.max_x, game.periods[1].area.max_x)
+        y = random.randint(-game.periods[1].area.max_y, game.periods[1].area.max_y)
+        if game.periods[1].area[(x, y)] == [] and (game.periods[1].area[(-x, -y)] == []):
+            farPastPortals.append(Portal(game, x, y, 1, -1))
+            game.addObject(farPastPortals[-1])
+            farPastPortals.append(Portal(game, -x, -y, 1, -1))
+            game.addObject(farPastPortals[-1])
+            game.addObject(Portal(game, x, y, 0, 1))
+            game.addObject(Portal(game, -x, -y, 0, 1))
+            numPortals += 2
+
+    # Pick portals linking past and present
+    numPortals = 0
+    while (numPortals <= n):
+        x = random.randint(-game.periods[1].area.max_x, game.periods[1].area.max_x)
+        y = random.randint(-game.periods[1].area.max_y, game.periods[1].area.max_y)
+        if game.periods[1].area[(x, y)] == [] \
+                and (game.periods[1].area[(-x, -y)] ==  []) \
+                and portalDisCheck(game, farPastPortals, x, y):
+            game.addObject(Portal(game, x, y, 1, 1))
+            game.addObject(Portal(game, -x, -y, 1, 1))
+            game.addObject(Portal(game, x, y, 2, -1))
+            game.addObject(Portal(game, -x, -y, 2, -1))
+            numPortals += 2
+
+            game.addObject(Terrain(game, x, y, 0, True, True))
+            game.addObject(Terrain(game, -x, -y, 0, True, True))
+
+    # Add blocking terrain
+    for z in xrange(3):
+        numTerrain = 0
+        while (numTerrain <= t):
+            x = random.randint(-game.periods[z].area.max_x, game.periods[z].area.max_x)
+            y = random.randint(-game.periods[z].area.max_y, game.periods[z].area.max_y)
+            if (game.periods[z].area[(x, y)] == []) and (game.periods[z].area[(-x, -y)] == []):
+                game.addObject(Terrain(game, x, y, z, True, True))
+                game.addObject(Terrain(game, -x, -y, z, True, True))
+                numTerrain += 2
+
 
 def rectangularAreasBuilder(x, y):
     """
