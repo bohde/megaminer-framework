@@ -62,11 +62,15 @@ class Match(DefaultGameWorld):
         return msg
 
     def removePlayer(self, connection):
-        if (cmp(connection.type, "player")):
+        if (cmp(connection.type, "player") == 0):
             self.players.remove(connection)
         else:
             self.spectators.remove(connection)
         self.sendIdent()
+        if self.winner is None and \
+           self.turn is not None and \
+           len(self.players) == 1:
+            self.declareWinner(self.players[0])
 
     def start(self):
         if len(self.players) < 2:

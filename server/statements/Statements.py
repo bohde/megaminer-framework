@@ -67,21 +67,30 @@ def createGame(self, expression):
 @require_login
 @require_length(2, 3)
 def joinGame(self, expression):
+    if self.game is not None:
+        self.writeSExpr(['join-game-denied', 'already in a game'])
+        return False
+
     try:
         game = int(expression[1])
     except:
         game = None
 
     try:
-        type = str(expression[2])
+        self.type = str(expression[2])
     except:
-        type = "player"
+        self.type = "player"
+
+    if not self.type in ["player", "spectator"]:
+        self.writeSExpr(['join-game-denied', 'invalid connection type'])
+        self.type = None
+        return False
 
     if game not in games:
         self.writeSExpr(['join-game-denied', 'no such game', game])
         return False
 
-    errBuff = games[game].addPlayer(self, type)
+    errBuff = games[game].addPlayer(self, self.type)
 
     if errBuff != True:
         self.writeSExpr(['join-game-denied', errBuff])
@@ -90,3 +99,14 @@ def joinGame(self, expression):
     self.game = game
 
     return True
+
+@wrapper('leave-game')
+@require_game
+@require_length(1)
+def leaveGame(self, expression):
+    games[self.game].removePlayer(self)
+    if len(games[self.game].players) + len(games[self.game].spectators) == 0:
+        del games[self.game]
+    self.type = None
+    self.game = None
+
