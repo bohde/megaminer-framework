@@ -33,14 +33,10 @@ namespace Windows
 
 using namespace std;
 
-static int turnNumber = 0;
+% for datum in globals:
+static int ${datum.name} = 0;
+% endfor
 
-static int player0Gold0 = 0;
-static int player0Gold1 = 0;
-static int player0Gold2 = 0;
-static int player1Gold0 = 0;
-static int player1Gold1 = 0;
-static int player1Gold2 = 0;
 
 % for model in models:
 static _${model.name}* ${model.name}s = NULL;

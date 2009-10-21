@@ -9,10 +9,13 @@ def insertModel(list, model):
 
 def parseData():
   models = []
+  globals = []
   for i in members(data):
     if isinstance(i, structures.Model):
       insertModel(models, i)
-  return {'models':models}
+    elif isinstance(i, structures.Global):
+      globals.append(i)
+  return {'models':models, 'globals':globals}
 
 
 

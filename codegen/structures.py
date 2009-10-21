@@ -7,6 +7,7 @@ class Model(object):
   functions = OrderedDict()
   key = ''
   name = ''
+  doc = ''
   parent = None
   def __init__(self, name, **kwargs):
     self.data = OrderedDict()
@@ -31,6 +32,16 @@ class Model(object):
         self.functions[key] = value
     if 'key' in kwargs:
       self.key = kwargs['key']
+
+class Global(object):
+  name = ''
+  type = ''
+  doc = ''
+  
+  def __init__(self, name, type, doc = ''):
+    self.name = name
+    self.type = type
+    self.doc = doc
 
 """
 TODO: Write these.
