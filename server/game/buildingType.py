@@ -31,9 +31,10 @@ class BuildingType(GameObject):
             builderID = self.builtBy.id
         else:
             builderID = -1
-        list.extend([self.name, self.price, self.food, self.buildTime,
-                     self.hp, self.armor, builderID, self.allowPaint,
-                     self.width, self.height, self.spawnX, self.spawnY])
+        list.extend([self.name, self.price, self.food, self.buildTime[0],
+                     self.buildTime[1], self.buildTime[2], self.hp,
+                     self.armor, builderID, self.allowPaint, self.width,
+                     self.height, self.spawnX, self.spawnY])
         return list
 
     def effArmor(self, level):
