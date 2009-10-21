@@ -229,7 +229,12 @@ DLLEXPORT int networkLoop(int socket)
       cout << expression->val << endl;
       cout << expression->next->val << endl;
     }
-    else if(expression->val != NULL && strstr(expression->val, "status"))
+    else if(expression->val != NULL && strcmp(expression->val, "ident") == 0)
+    {
+      expression = expression->next->next->next;
+      playerID = atoi(expression->val);
+    }
+    else if(expression->val != NULL && strcmp(expression->val, "status") == 0)
     {
       while(expression->next != NULL)
       {
@@ -278,8 +283,8 @@ DLLEXPORT int networkLoop(int socket)
         }
         % endfor
       }
+      if(turnNumber % 2 == playerID) return 1;
     }
-  return 0;
   }
 }
 
