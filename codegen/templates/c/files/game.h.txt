@@ -40,6 +40,10 @@ ${conversions[arg[1]]} ${arg[0]}\
 
 //accessors
 
+% for datum in globals:
+DLLEXPORT ${conversions[datum.type]} get${capitalize(datum.name)}();
+% endfor
+
 % for model in models:
 DLLEXPORT _${model.name}* get${model.name}(int num);
 DLLEXPORT int get${model.name}Count();

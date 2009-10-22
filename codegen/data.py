@@ -26,7 +26,9 @@ BuildingType = structures.Model('BuildingType', key='objectID',
     ('name', str),
     ('price', int),
     ('food', int),
-    ('buildtime', int),
+    ('pastBuildTime', int),
+    ('presentBuildTime', int),
+    ('futureBuildTime', int),
     ('hp', int),
     ('armor', int),
     ('builderID', int),
@@ -89,3 +91,12 @@ Portal = structures.Model('Portal', key='objectID',
     ('direction', int),
     ('fee', int))
   )
+
+turnNumber = structures.Global('turnNumber', int)
+player0Gold0 = structures.Global('player0Gold0', int)
+player0Gold1 = structures.Global('player0Gold1', int)
+player0Gold2 = structures.Global('player0Gold2', int)
+player1Gold0 = structures.Global('player1Gold0', int)
+player1Gold1 = structures.Global('player1Gold1', int)
+player1Gold2 = structures.Global('player1Gold2', int)
+playerID = structures.Global('playerID', int)

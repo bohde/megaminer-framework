@@ -33,14 +33,10 @@ namespace Windows
 
 using namespace std;
 
-static int turnNumber = 0;
+% for datum in globals:
+static ${conversions[datum.type]} ${datum.name} = 0;
+% endfor
 
-static int player0Gold0 = 0;
-static int player0Gold1 = 0;
-static int player0Gold2 = 0;
-static int player1Gold0 = 0;
-static int player1Gold1 = 0;
-static int player1Gold2 = 0;
 
 % for model in models:
 static _${model.name}* ${model.name}s = NULL;
@@ -101,6 +97,10 @@ DLLEXPORT int createGame()
   login(socket, last_username, last_password);
 
   stringstream expr;
+  expr << "(create-game " << gameNum << ")";
+  send_string(socket, expr.str().c_str());
+  
+  expr.str("");
   expr << "(join-game " << gameNum << ")";
   send_string(socket, expr.str().c_str());
   
@@ -171,7 +171,6 @@ void parse${model.name}(_${model.name}* object, sexp_t* expression)
   sub = expression->list;
   
   % for key in model.data.keys():
-  sub = sub->next;
   %if model.data[key] == int:
   object->${key} = atoi(sub->val);
   %elif model.data[key] == str:
@@ -180,7 +179,7 @@ void parse${model.name}(_${model.name}* object, sexp_t* expression)
   strncpy(object->${key}, sub->val, strlen(sub->val));
   object->${key}[strlen(sub->val)] = 0;
   %endif
-  
+  sub = sub->next;
   %endfor
   
 }
@@ -230,7 +229,12 @@ DLLEXPORT int networkLoop(int socket)
       cout << expression->val << endl;
       cout << expression->next->val << endl;
     }
-    else if(expression->val != NULL && strstr(expression->val, "status"))
+    else if(expression->val != NULL && strcmp(expression->val, "ident") == 0)
+    {
+      expression = expression->next->next->next;
+      playerID = atoi(expression->val);
+    }
+    else if(expression->val != NULL && strcmp(expression->val, "status") == 0)
     {
       while(expression->next != NULL)
       {
@@ -243,19 +247,19 @@ DLLEXPORT int networkLoop(int socket)
           sub = sub->next;
           
           subsub = sub->list;
-          player0Gold0 = atoi(sub->val);
+          player0Gold0 = atoi(subsub->val);
           subsub = subsub->next;
-          player0Gold1 = atoi(sub->val);
+          player0Gold1 = atoi(subsub->val);
           subsub = subsub->next;
-          player0Gold2 = atoi(sub->val);
+          player0Gold2 = atoi(subsub->val);
           sub = sub->next;
           
           subsub = sub->list;
-          player1Gold0 = atoi(sub->val);
+          player1Gold0 = atoi(subsub->val);
           subsub = subsub->next;
-          player1Gold1 = atoi(sub->val);
+          player1Gold1 = atoi(subsub->val);
           subsub = subsub->next;
-          player1Gold2 = atoi(sub->val);
+          player1Gold2 = atoi(subsub->val);
         }
         % for model in models:
         else if(string(sub->val) == "${model.name}")
@@ -279,8 +283,8 @@ DLLEXPORT int networkLoop(int socket)
         }
         % endfor
       }
+      if(turnNumber % 2 == playerID) return 1;
     }
-  return 0;
   }
 }
 
@@ -294,4 +298,11 @@ DLLEXPORT int get${model.name}Count()
   return ${model.name}Count;
 }
 
+% endfor
+
+% for datum in globals:
+DLLEXPORT ${conversions[datum.type]} get${capitalize(datum.name)}()
+{
+  return ${datum.name};
+}
 % endfor

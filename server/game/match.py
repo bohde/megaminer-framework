@@ -45,20 +45,31 @@ class Match(DefaultGameWorld):
 
     def sendIdent(self):
         #Tells everybody who is in the game
-        msg = self.identList()
         for p in self.players:
+            msg = self.identList(p)
             p.writeSExpr(msg)
+        msg = self.identList()
         for s in self.spectators:
             s.writeSExpr(msg)
     
-    def identList(self):
+    def identList(self, tailoredTo=None):
         #Generates the ident message
-        #(ident (player, player) (spectator, spectator, spectator...)
+        #(ident (player, player) (spectator, spectator, ...) playerNum)
+        #playerNum is 0 or 1 if you are player 0 or 1.
+        #otherwise, playerNum is -1.
+        #"You" is defined as the connection that is referred to by
+        #  the tailoredTo Parameter
         msg = ['ident', [], []]
         for p in self.players:
             msg[1].append(p.user)
         for s in self.spectators:
             msg[2].append(s.user)
+        playerNum = -1
+        if len(self.players) >= 1 and self.players[0] == tailoredTo:
+            playerNum = 0
+        if len(self.players) >= 2 and self.players[1] == tailoredTo:
+            playerNum = 1
+        msg.append(playerNum)
         return msg
 
     def removePlayer(self, connection):

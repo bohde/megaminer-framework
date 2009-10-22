@@ -20,7 +20,7 @@ class Portal(MappableObject):
         self.fee = Portal.feeInit
 
     def toList(self):
-        list = GameObject.toList(self)
+        list = MappableObject.toList(self)
         list.extend([self.direction, self.fee])
         return list
 
