@@ -65,20 +65,66 @@ def animation_defs():
 
     return anims
 
+def status_defs():
+    statii = {}
+    status_mapper = dict_wrapper(statii)
+
+    @status_mapper("game")
+    @require_length(4)
+    def game(self, expr):
+        self.turn, self.player0gold, self.player1gold = expr[1:]
+
+    @status_mapper("UnitType")
+    def unitType(self, expr):
+        return expr[1:]
+
+    @status_mapper("Portal")
+    def portal(self, expr):
+        return expr[1:]
+
+    @status_mapper("Unit")
+    def unit(self, expr):
+        return expr[1:]
+    
+    @status_mapper("Terrain")
+    def terrain(self, expr):
+        def convert(l):
+            return { "objectID" : l[0],
+                     "location" : l[1,2],
+                     "period" : ["far past", "past", "present"][l[3]],
+                     "blockMove" : l[4],
+                     "blockBuild" : l[5]
+                }
+        return [convert(x) for x in l[1:]]
+            
+    @status_mapper("BuildingType")
+    def buildingType(self, expr):
+        return expr[1:]
+
+    @status_mapper("Building")
+    def building(self, expr):
+        return expr[1:]
+
+    return statii
+
+
 def protocol():
     statements = {}
     mapper = dict_wrapper(statements)
     anim_defs = animation_defs()
+    status_d = status_defs()
 
     @mapper("changed")
     def status(self, expr):
-        """
-        parses the status into a dict, then updates it
-        """
-        st = dict()
-        """
-        TODO: Parse
-        """
+        st = {}
+        for i in expr:
+            if type(i) != list:
+                raise MalformedAnimation()
+            try:
+                st[i[0]] = status_d[expr[0]](self, expr)
+            except Exception, e:
+                print e
+                raise MalformedAnimation()
         self.window.updateStatus(st)
 
     @mapper("animations")
@@ -114,3 +160,4 @@ class FileVisualizer(SexprHandlerMixin):
          with open(filename) as f:
              for line in f:
                  self.readRawSExpr(line)
+
