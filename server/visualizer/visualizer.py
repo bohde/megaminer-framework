@@ -21,11 +21,56 @@ from filters.LogicFilter import SexprHandlerMixin
 from statements.StatementUtils import require_login, require_length, dict_wrapper 
 from window import Window
 
+def MalformedAnimation(Exception):
+    pass
+
+def animation_defs():
+    anims = {}
+    anim_mapper = dict_wrapper(anims)
+
+    @anim_mapper("add")
+    @require_length(2)
+    def add(self, expr):
+        self.window.add(expr[1])
+
+    @anim_mapper("remove")
+    @require_length(2)
+    def remove(self, expr):
+        self.window.remove(self, expr[1])
+
+    @anim_mapper("move")
+    @require_length(4)
+    def move(self, expr):
+        self.window.move(self, *expr[1:])
+
+    @anim_mapper("attack")
+    @require_length(4)
+    def attack(self, expr):
+        self.window.attack(self, *expr[1:])
+
+    @anim_mapper("hurt")
+    @require_length(3)
+    def hurt(self, expr):
+        self.window.hurt(self, *expr[1:])
+
+    @anim_mapper("build")
+    @require_length(4)
+    def build(self, expr):
+        self.window.build(self, *expr[1:])
+
+    @anim_mapper("train")
+    @require_length(3)
+    def train(self, expr):
+        self.window.train(self, *expr[1:])
+
+    return anims
+
 def protocol():
     statements = {}
     mapper = dict_wrapper(statements)
+    anim_defs = animation_defs()
 
-    @mapper("status")
+    @mapper("changed")
     def status(self, expr):
         """
         parses the status into a dict, then updates it
@@ -36,43 +81,16 @@ def protocol():
         """
         self.window.updateStatus(st)
 
-    @mapper("add")
-    @require_length(2)
-    def add(self, expr):
-        '''
-        takes an id, but how do I know what to display?
-        '''
-        self.window.add(expr[1])
-
-    @mapper("remove")
-    @require_length(2)
-    def remove(self, expr):
-        pass
-    
-    @mapper("move")
-    @require_length(4)
-    def move(self, expr):
-        pass
-
-    @mapper("attack")
-    @require_length(4)
-    def attack(self, expr):
-        pass
-  
-    @mapper("hurt")
-    @requires_length(3)
-    def hurt(self, expr):
-        pass
-
-    @mapper("build")
-    @requires_length(4)
-    def build(self, expr):
-        pass
-
-    @mapper("train")
-    @requires_length(3)
-    def train(self, expr):
-        pass
+    @mapper("animations")
+    def animations(self, expr):
+        for i in expr:
+            if type(i) != list:
+                raise MalformedAnimation()
+            try:
+                anim_defs[expr[0]](self, expr)
+            except Exception, e:
+                print e
+                raise MalformedAnimation()
 
     return statements
 
@@ -84,6 +102,15 @@ class VisualizerClient(Client, SexprHandlerMixin):
         Client.__init__(self, *args, **kwargs)
         self.statements = protocol()
         self.window = Window()
-        
+    
+    
+class FileVisualizer(SexprHandlerMixin):
+     def __init__(self, filename):
+         self.statements = protocol()
+         self.window = Window()
+         self.filename = filename
 
- 
+     def mainloop(self):
+         with open(filename) as f:
+             for line in f:
+                 self.readRawSExpr(line)
