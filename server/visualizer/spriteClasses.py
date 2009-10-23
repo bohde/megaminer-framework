@@ -27,6 +27,7 @@ class Unit(pygame.sprite.Sprite):
         self.objectID = objectID
         self.unitType = unitType
         self.hp = hp
+        self.maxHp = hp
         self.level = level
         self.ownerIndex = ownerIndex
         self.actions = actions
@@ -52,9 +53,9 @@ class Unit(pygame.sprite.Sprite):
         else:
             tempImage = self.stand
         
-        if self.hp > 50:
+        if self.hp > self.maxHp/2:
             pygame.draw.rect(tempImage, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
-        elif self.hp <= 50 and self.hp >= 25:
+        elif self.hp <= self.maxHp/2 and self.hp >= self.maxHp/4:
             self.health.fill([0,0,0])
             pygame.draw.rect(tempImage, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
@@ -72,13 +73,16 @@ class Building(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.construction = buildingImages[buildingType][str(ownerIndex)][0].copy()
         self.done = buildingImages[buildingType][str(ownerIndex)][1].copy()
+        self.train = buildingImages[buildingType][str(ownerIndex)][2].copy()
         self.rect = self.construction.get_rect()
         self.rect.midbottom = location
         self.image = self.construction
         self.health = self.image.subsurface(pygame.Rect(0,0,5,self.rect.height))
+        self.training = False
         self.objectID = objectID
         self.buildingType = buildingType
         self.hp = hp
+        self.maxHp = hp
         self.level = level
         self.ownerIndex = ownerIndex
         self.inTraining = inTraining
@@ -87,17 +91,21 @@ class Building(pygame.sprite.Sprite):
         self.complete = complete
     
     def update(self):
-        if self.complete:
+        if self.training:
+            if self.image == self.done:
+                self.image = self.train
+                self.training = False;
+        elif self.complete:
             self.image = self.done
-            
-        if self.hp > 50:
+        
+        if self.hp > self.maxHp/2:
             pygame.draw.rect(self.health, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
-        elif self.hp <= 50 and self.hp >= 25:
+        elif self.hp <= self.maxHp/2 and self.hp >= self.maxHp/4:
             self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height*2/3))
+            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
             self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/3))
+            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
 
 
 
@@ -139,6 +147,7 @@ def loadAllImages(tileSize):
             for index, images in players.iteritems():
                 images.append(loadImage(name, tileSize, index,"Construction"))
                 images.append(loadImage(name, tileSize, index, "Done"))
+                images.append(loadImage(name, tileSize, index, "Train"))
         
 
 def loadImage(name, size, ownerIndex = "", option = "", key = True):

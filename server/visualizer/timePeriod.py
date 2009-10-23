@@ -97,6 +97,7 @@ class TimePeriod(object):
                                   statusDict['level'], statusDict['unitType'], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])
         self.units.add(newUnit)
+            
 
     ## adds a building to the building sprite group
     def addBuilding(self, statusDict):
@@ -161,22 +162,17 @@ class TimePeriod(object):
                 print "removing terrain..."
                 self.terrain.remove(terrain)
 
-    ## sets a blank unit to animate training and sets unit type
-    def train(self, id, unitName):
-        for unit in self.units.sprites():
-            if unit.objectid == id:
-                if unit.unitType != 'blank':
-                    raise Exception("*****You tried training a not-blank unit")
-                unit.working = True
-                unit.unitType = unitName
+    ## sets a building to animate training
+    def train(self, id):
+        for building in self.buildings.sprites():
+            if building.objectid == id:
+                building.training = True
                 
     ## stops animating training and sets unitType images
     def stopTrain(self, id):
-        for unit in self.units.sprites():
-            if unit.objectid == id:
-                if unit.working:
-                    unit.working = False
-                    unit.changeType(unit.unitType)
+        for building in self.buildingss.sprites():
+            if building.objectid == id:
+                building.training = False
 
     ## sets up coordinate dictionary for easier map->pixel coordinate conversions
     def setUp(self, mapDim, pixelDim):
@@ -196,19 +192,4 @@ class TimePeriod(object):
         print "xChange %(1)i ... yChange %(2)i" %{'1':xChange, '2':yChange}
         
         loadAllImages((xChange,yChange))
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         

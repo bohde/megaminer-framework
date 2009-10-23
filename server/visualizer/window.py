@@ -114,7 +114,6 @@ class Window(object):
         for name, period in self.timePeriods.iteritems():
             period.takeStep(id)
             self.updateScreen()
-            #pygame.time.delay(250)
             period.move(id, targetX, targetY)
             self.updateScreen()
     
@@ -146,7 +145,7 @@ class Window(object):
     # @param
     def train(self, id, newUnitTypeID):
         for name, period in self.timePeriods.iteritems():
-            period.train(id, unitTypeConversion[newUnitTypeID])
+            period.train(id)
     
     ## replaces old status dictionary with newStatus
     # @param newStatus- a status dictionary.
