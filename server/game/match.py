@@ -107,7 +107,7 @@ class Match(DefaultGameWorld):
             obj.nextTurn()
 
         self.sendStatus(self.players)
-        #self.sendChanged(self.players)
+        self.sendChanged(self.spectators)
 
         self.writeToLog()
         for obj in self.objects.values():
@@ -153,7 +153,9 @@ class Match(DefaultGameWorld):
     def writeToLog(self):
         log = open(self.logPath(), "a")
         log.write(sexpr2str(self.status(False)))
+        log.write('\n')
         log.write(sexpr2str(self.animations))
+        log.write('\n')
     
     @requireReferences(Building, UnitType)
     def train(self, buildingID, typeID):
@@ -207,7 +209,7 @@ class Match(DefaultGameWorld):
                     self.players[1].gold])
         typeLists = defaultdict(list)
         for obj in self.objects.values():
-            if (fullList or obj.changed):
+            if (fullList == True or obj.changed == True):
                 typeLists[obj.__class__].append(obj)
         for type in typeLists.keys():
             if (len(typeLists[type]) > 0):
