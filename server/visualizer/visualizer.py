@@ -19,10 +19,22 @@
 from networking.Client import Client
 from filters.LogicFilter import SexprHandlerMixin
 from statements.StatementUtils import require_login, require_length, dict_wrapper 
+from window import Window
 
 def protocol():
     statements = {}
     mapper = dict_wrapper(statements)
+
+    @mapper("status")
+    def status(self, expr):
+        """
+        parses the status into a dict, then updates it
+        """
+        st = dict()
+        """
+        TODO: Parse
+        """
+        self.window.updateStatus(st)
 
     @mapper("add")
     @require_length(2)
@@ -30,7 +42,7 @@ def protocol():
         '''
         takes an id, but how do I know what to display?
         '''
-        pass
+        self.window.add(expr[1])
 
     @mapper("remove")
     @require_length(2)
@@ -71,6 +83,7 @@ class VisualizerClient(Client, SexprHandlerMixin):
     def __init__(self, *args, **kwargs):
         Client.__init__(self, *args, **kwargs)
         self.statements = protocol()
-
+        self.window = Window()
     
     
+ 
