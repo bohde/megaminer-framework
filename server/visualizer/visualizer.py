@@ -20,6 +20,7 @@ from networking.Client import Client
 from filters.LogicFilter import SexprHandlerMixin
 from statements.StatementUtils import require_login, require_length, dict_wrapper 
 from window import Window
+import sexpr.sexpr as sexpr
 
 def MalformedAnimation(Exception):
     pass
@@ -72,7 +73,7 @@ def status_defs():
     @status_mapper("game")
     @require_length(4)
     def game(self, expr):
-        self.turn, self.player0gold, self.player1gold = expr[1:]
+        return expr[1:]
 
     @status_mapper("UnitType")
     def unitType(self, expr):
@@ -90,12 +91,12 @@ def status_defs():
     def terrain(self, expr):
         def convert(l):
             return { "objectID" : l[0],
-                     "location" : l[1,2],
-                     "period" : ["far past", "past", "present"][l[3]],
+                     "location" : l[1:2],
+                     "period" : ["far past", "past", "present"][int(l[3])],
                      "blockMove" : l[4],
                      "blockBuild" : l[5]
                 }
-        return [convert(x) for x in l[1:]]
+        return [convert(x) for x in expr[1:]]
             
     @status_mapper("BuildingType")
     def buildingType(self, expr):
@@ -117,26 +118,26 @@ def protocol():
     @mapper("changed")
     def status(self, expr):
         st = {}
-        for i in expr:
+        for i in expr[1:]:
             if type(i) != list:
-                raise MalformedAnimation()
+                raise Exception("Not a list!")
             try:
-                st[i[0]] = status_d[expr[0]](self, expr)
+                print i
+                st[i[0]] = status_d[i[0]](self, i)
             except Exception, e:
                 print e
-                raise MalformedAnimation()
-        self.window.updateStatus(st)
+                raise Exception("Unhandled exception!")
+        #self.window.updateStatus(st)
 
     @mapper("animations")
     def animations(self, expr):
-        for i in expr:
-            if type(i) != list:
-                raise MalformedAnimation()
+        for i in expr[1:]:
             try:
-                anim_defs[expr[0]](self, expr)
+                pass
+               # anim_defs[i[0]](self, i)
             except Exception, e:
                 print e
-                raise MalformedAnimation()
+                raise Exception("Unhandled exception!")
 
     return statements
 
@@ -153,11 +154,13 @@ class VisualizerClient(Client, SexprHandlerMixin):
 class FileVisualizer(SexprHandlerMixin):
      def __init__(self, filename):
          self.statements = protocol()
-         self.window = Window()
+#         self.window = Window()
          self.filename = filename
 
      def mainloop(self):
-         with open(filename) as f:
+         with open(self.filename) as f:
              for line in f:
                  self.readRawSExpr(line)
 
+     def writeOut(self, data):
+         pass
