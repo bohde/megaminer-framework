@@ -20,9 +20,6 @@ periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
 periodDimensions = (20,20)
 
-#Converts integer UnitID to string
-unitTypeConversion = {0:'blank', 1:'civE', 2:'art', 3:'spear', 4:'artil', 5:'cav', 6:'pig'}
-
 #Delay time between frams. In milliseconds
 delaytime = 10
 

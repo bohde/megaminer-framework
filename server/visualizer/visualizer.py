@@ -58,7 +58,7 @@ def protocol():
     @require_length(4)
     def attack(self, expr):
         pass
-
+  
     @mapper("hurt")
     @requires_length(3)
     def hurt(self, expr):
@@ -84,6 +84,6 @@ class VisualizerClient(Client, SexprHandlerMixin):
         Client.__init__(self, *args, **kwargs)
         self.statements = protocol()
         self.window = Window()
-    
-    
+        
+
  
