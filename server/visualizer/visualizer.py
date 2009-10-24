@@ -67,8 +67,23 @@ def animation_defs():
     return anims
 
 def status_defs():
+    categories = ["Terrain", "Portal", "Unit", "Building", "UnitType", "BuildingType"]
+    timePeriodConversion = {0:"farPast", 1:"past", 2:"present"}
+    unitTypeConversion = {0:'civE', 1:'art', 2:'spear', 3:'artil', 4:'cav', 5:'pig'}
+
     statii = {}
     status_mapper = dict_wrapper(statii)
+
+    def base_dict(convert):
+        def inner(self, expr):
+            def base(l):
+                ret =  {"objectID" : l[0],
+                        "location" : l[1:2],
+                        "period" : ["farPast", "past", "present"][int(l[3])]}
+                ret.update(convert(l))
+                return ret
+            return [convert(x) for x in expr[1:]]
+        return inner
 
     @status_mapper("game")
     @require_length(4)
@@ -81,22 +96,26 @@ def status_defs():
 
     @status_mapper("Portal")
     def portal(self, expr):
-        return expr[1:]
+        def convert(l):
+            return { 
+                     "direction" : l[4],
+                     "fee" : l[5]
+                   }
+        return base_dict(convert)(self, expr)
 
     @status_mapper("Unit")
     def unit(self, expr):
-        return expr[1:]
+        def convert(l):
+            return dict(zip(("hp","level", "unitType", "ownerIndex", "actions", "moves"),
+                     l[4:]))
+        return base_dict(convert)(self, expr)
+
     
     @status_mapper("Terrain")
     def terrain(self, expr):
         def convert(l):
-            return { "objectID" : l[0],
-                     "location" : l[1:2],
-                     "period" : ["far past", "past", "present"][int(l[3])],
-                     "blockMove" : l[4],
-                     "blockBuild" : l[5]
-                }
-        return [convert(x) for x in expr[1:]]
+            return { "blockMove" : l[4],"blockBuild" : l[5] }
+        return base_dict(convert)(self, expr)
             
     @status_mapper("BuildingType")
     def buildingType(self, expr):
@@ -104,7 +123,12 @@ def status_defs():
 
     @status_mapper("Building")
     def building(self, expr):
-        return expr[1:]
+        def convert(l):
+            return dict(zip(("hp","level", "buildingType", "ownerIndex", "inTraining", "progress",
+                          "linked", "complete"),
+                     l[4:]))
+        return base_dict(convert)(self, expr)
+
 
     return statii
 
@@ -122,11 +146,11 @@ def protocol():
             if type(i) != list:
                 raise Exception("Not a list!")
             try:
-                print i
                 st[i[0]] = status_d[i[0]](self, i)
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
+        print st
         #self.window.updateStatus(st)
 
     @mapper("animations")
