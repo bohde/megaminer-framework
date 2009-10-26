@@ -3,4 +3,5 @@
 from visualizer.visualizer import FileVisualizer
 
 if __name__ == "__main__":
-    FileVisualizer("test/0.gamelog")
+    vis = FileVisualizer("visualizer/test/0.gamelog")
+    vis.mainloop()
