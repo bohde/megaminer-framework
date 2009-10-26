@@ -5,7 +5,7 @@ CPPFLAGS = -DSHOW_NETWORK -g
 
 CPPFLAGS += -I. -Isexp
 
-all: client
+all: client libclient.so
 
 %.d: %.cpp
 	@set -e; rm -f $@; \
@@ -16,7 +16,7 @@ all: client
 .PHONY: clean all
 
 clean:
-	rm -f $(objects) $(deps) client
+	rm -f $(objects) $(deps) client libclient.so
 	$(MAKE) -C sexp clean
 
 client: $(objects) sexp/sexp.a
