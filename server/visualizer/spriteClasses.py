@@ -109,6 +109,7 @@ class Building(pygame.sprite.Sprite):
 
 
 
+
 class Terrain(pygame.sprite.Sprite):
     def __init__(self, objectID, location, blockMove, blockBuild):
         pygame.sprite.Sprite.__init__(self)
@@ -135,23 +136,27 @@ def loadAllImages(tileSize):
     spriteSize = (tileSize[1], tileSize[1])
     if not terrainImages['rock']:
         for name, images in terrainImages.iteritems():
+            print "Loading: ", name , "..."
             images.append(loadImage(name, tileSize))       
     if not unitImages['civE']['0']:
         for name, players in unitImages.iteritems():
             for index, images in players.iteritems():
+                print "Loading: ", name , " ", index, "..."
                 images.append(loadImage(name, spriteSize, index,"Stand"))
                 images.append(loadImage(name, spriteSize, index, "Step"))
                 images.append(loadImage(name, spriteSize, index,"Action"))
     if not buildingImages['school']['0']:
         for name, players in buildingImages.iteritems():
             for index, images in players.iteritems():
-                images.append(loadImage(name, tileSize, index,"Construction"))
-                images.append(loadImage(name, tileSize, index, "Done"))
-                images.append(loadImage(name, tileSize, index, "Train"))
+                print "Loading: ", name, " ", index, "..."
+                size = (tileSize[0]*2, tileSize[1]*2)
+                images.append(loadImage(name, size, index,"Construction"))
+                images.append(loadImage(name, size, index, "Done"))
+                images.append(loadImage(name, size, index, "Train"))
         
 
 def loadImage(name, size, ownerIndex = "", option = "", key = True):
-    path = os.path.join("visualizer/sprites", ownerIndex+name+option+".png")
+    path = os.path.join("visualizer/sprites", ownerIndex+name+option+".png") 
     try:
         image = pygame.image.load(path)
     except pygame.error, message:

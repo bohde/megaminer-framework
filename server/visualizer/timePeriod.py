@@ -84,7 +84,7 @@ class TimePeriod(object):
                 unit.stepping = False
                 unit.faceRight = True
                 self.units.update()
-                unit.rect.midbottom = coordinates[(targetX, targetY)]
+                unit.rect.midbottom = coordinates[(targetX+10, targetY+10)]
                 self.updateTimePeriod()
                 self.spaceOccupation[unit.rect.midbottom]+=1
                 print "The space count is %i" %self.spaceOccupation[unit.rect.midbottom]
@@ -93,7 +93,7 @@ class TimePeriod(object):
     def addUnit(self, statusDict):
         print "adding new unit..."
         self.spaceOccupation[coordinates[statusDict['location']]]+=1
-        newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]], statusDict['hp'],
+        newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['hp'],
                                   statusDict['level'], statusDict['unitType'], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])
         self.units.add(newUnit)
@@ -102,15 +102,17 @@ class TimePeriod(object):
     ## adds a building to the building sprite group
     def addBuilding(self, statusDict):
         print "adding new building..."
-        newBuilding = Building(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]],
+        
+        newBuilding = Building(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10],
                                 statusDict['hp'], statusDict['level'], statusDict['buildingType'], statusDict['ownerIndex'],
                                 statusDict['inTraining'], statusDict['progress'], statusDict['linked'], statusDict['complete'])
+
         self.buildings.add(newBuilding)
 
     ## adds terrain to the terrain sprite group
     def addTerrain(self, statusDict):
         print "adding new terrain..."
-        newTerrain = Terrain(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]], statusDict['blockMove'], statusDict['blockBuild'])
+        newTerrain = Terrain(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['blockMove'], statusDict['blockBuild'])
         self.terrain.add(newTerrain)
         
     ## applies damage to an object
@@ -188,6 +190,17 @@ class TimePeriod(object):
 
             origin[0] = origin[0] + xChange/2
             origin[1] = origin[1] + yChange/2
+        '''
+        for xCoord in range(-10,11,1):
+            i = 0
+            for yCoord in range(-10,11,1):
+                j = 0
+                coordinates[(xCoord,yCoord)] = tempCoords[(i,j)]
+        '''
+        
+        print "Coordinates: "
+        for key, value in coordinates.iteritems():
+            print "  Map: ", key, " Pixel: ", value
     
         print "xChange %(1)i ... yChange %(2)i" %{'1':xChange, '2':yChange}
         

@@ -21,7 +21,7 @@ periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 periodDimensions = (20,20)
 
 #Delay time between frams. In milliseconds
-delaytime = 10
+delaytime = 250
 
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
@@ -82,6 +82,7 @@ class Window(object):
         pygame.time.delay(delaytime)
         pygame.display.update()
 
+
     ## iterates through the status to find the requested id, and it to the
     #  appropriate sprite group and TimePeriod
     # @param id- an objectID (int)
@@ -91,13 +92,15 @@ class Window(object):
             for type, list in dictionary.iteritems():
                 for item in list:
                     if item['objectID'] == id:
-                        print "found", id
+                        print "  adding ", id
                         if type == 'Unit':
                             self.timePeriods[period].addUnit(item)
                         if type == 'Building':
                             self.timePeriods[period].addBuilding(item)
                         if type == 'Terrain':
                             self.timePeriods[period].addTerrain(item)
+                            
+        self.updateScreen()
                         
     ## remove(self, id)
     #  iterates through TimePeriods, calling each period's remove method

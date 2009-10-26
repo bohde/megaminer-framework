@@ -59,7 +59,7 @@ class statusParser:
                 print "Category not present: ", cat
                 self.messageDict[cat] = None
         print "Sorting according to time periods..."
-        self.messageDict = self.sortByPeriod()
+        #self.messageDict = self.sortByPeriod()
                         
         
     #changes a whole status string into smaller categories (Terrain, Unit, etc)
@@ -94,9 +94,9 @@ class statusParser:
 
         
         while not done:
-            #print "Index", index, " Paren: ", parens[index], " Status: ", self.message[parens[index]]
+            #print "Index", index, " Paren: ", parenlist[index], " Status: ", self.message[parenlist[index]]
             #print "   Paren List: ", parenlist[index]
-            #print "   Mes#sage at index: ", message[parenlist[index]]
+            #print "   Message at index: ", message[parenlist[index]]
             temp = message[parenlist[index]]
             
             
@@ -109,7 +109,7 @@ class statusParser:
             
             if parenCount == 0:
                 retList.append(message[parenlist[start]:parenlist[stop]+1])
-                #print "Message: ", message[parenlist[start]:parenlist[stop]+1]
+                print "   Message: ", message[parenlist[start]:parenlist[stop]+1]
             
             index +=1
             
@@ -161,52 +161,63 @@ class statusParser:
                     listofValues.append(item)
             
             listofLists.append(listofValues)
+            #print "List of Lists: ", listofLists
+
             
         if categoryName == "Terrain":
             for item in listofLists:
-                retDict['objectID'] = listofValues[0]
-                retDict['location'] = (listofValues[1], listofValues[2])
-                retDict['period'] = timePeriodConversion[listofValues[3]]
-                retDict['blockMove'] = listofValues[4]
-                retDict['blockBuild'] = listofValues[5]
+                retDict['objectID'] = item[0]
+                retDict['location'] = (item[1], item[2])
+                retDict['period'] = timePeriodConversion[item[3]]
+                retDict['blockMove'] = item[4]
+                retDict['blockBuild'] = item[5]
                 retList.append(retDict)
+                #print "retDict: ", retDict
+
 
         if categoryName == "Portal":
             for item in listofLists:
-                retDict['objectID'] = listofValues[0]
-                retDict['location'] = (listofValues[1], listofValues[2])
-                retDict['period'] = timePeriodConversion[listofValues[3]]
-                retDict['direction'] = listofValues[4]
-                retDict['fee'] = listofValues[5]
+                retDict['objectID'] = item[0]
+                retDict['location'] = (item[1], item[2])
+                retDict['period'] = timePeriodConversion[item[3]]
+                retDict['direction'] = item[4]
+                retDict['fee'] = item[5]
                 retList.append(retDict)
+                #print "retDict: ", retDict
+
                 
         if categoryName == "Unit":
             for item in listofLists:
-                retDict['objectID'] = listofValues[0]
-                retDict['location'] = (listofValues[1], listofValues[2])
-                retDict['period'] = timePeriodConversion[listofValues[3]]
-                retDict['hp'] = listofValues[4]
-                retDict['level'] = listofValues[5]
-                retDict['unitType'] = listofValues[6]
-                retDict['ownderIndex'] = listofValues[7]
-                retDict['actions'] = listofValues[8]
-                retDict['moves'] = listofValues[9]                
+                retDict['objectID'] = item[0]
+                retDict['location'] = (item[1], item[2])
+                retDict['period'] = timePeriodConversion[item[3]]
+                retDict['hp'] = item[4]
+                retDict['level'] = item[5]
+                retDict['unitType'] = item[6]
+                retDict['ownderIndex'] = item[7]
+                retDict['actions'] = item[8]
+                retDict['moves'] = item[9]                
                 retList.append(retDict)
+                #print "retDict: ", retDict
+
                 
         if categoryName == "Building":
             for item in listofLists:
-                retDict['objectID'] = listofValues[0]
-                retDict['location'] = (listofValues[1], listofValues[2])
-                retDict['period'] = timePeriodConversion[listofValues[3]]
-                retDict['hp'] = listofValues[4]
-                retDict['level'] = listofValues[5]
-                retDict['buildingType'] = listofValues[6]
-                retDict['ownderIndex'] = listofValues[7]
-                retDict['inTraining'] = listofValues[8]
-                retDict['progress'] = listofValues[9]
-                retDict['linked'] = listofValues[10]
-                retDict['complete'] = listofValues[11]                
+                retDict['objectID'] = item[0]
+                retDict['location'] = (item[1], item[2])
+                retDict['period'] = timePeriodConversion[item[3]]
+                retDict['hp'] = item[4]
+                retDict['level'] = item[5]
+                retDict['buildingType'] = item[6]
+                retDict['ownderIndex'] = item[7]
+                retDict['inTraining'] = item[8]
+                retDict['progress'] = item[9]
+                retDict['linked'] = item[10]
+                retDict['complete'] = item[11]                
                 retList.append(retDict)
+                #print "retDict: ", retDict
+        for item in retList:
+            print "retList's objID: ", item['objectID']
 
         return retList
     
