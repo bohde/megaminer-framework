@@ -144,7 +144,7 @@ DLLEXPORT void getStatus()
 % for model in models:
 % for func in model.functions.keys():
 
-DLLEXPORT bool ${model.name.lower()}${func.capitalize()}(${conversions[model]} ${model.key}\
+DLLEXPORT bool ${model.name.lower()}${func.capitalize()}(${conversions[model]} object\
 % for arg in model.functions[func]:
 , \
 ${conversions[arg[1]]} ${arg[0]}\
@@ -152,9 +152,13 @@ ${conversions[arg[1]]} ${arg[0]}\
 )
 {
   stringstream expr;
-  expr << "(game-${func} " << ${model.key}
+  expr << "(game-${func} " << object->${model.key}
 % for arg in model.functions[func]:
+% if isinstance(arg[1], Model):
+      << " " << ${arg[0]}->${arg[1].key}
+% else:
        << " " << ${arg[0]}
+% endif
 % endfor
        << ")";
   send_string(socket, expr.str().c_str());
