@@ -2,13 +2,16 @@
 #  This is the TimePeriod class, it creates a TimePeriod, which handles most
 #   of the action for the visualizer
 
-import pygame
+import pygame, sys
 from pygame.locals import *
 from spriteClasses import Building, Unit, Terrain, loadAllImages
 
 ##  coordinates's keys are tuples for positions of the gameboard, and the values
 #    correspond to the pixel position.
 coordinates = {}
+
+typeConversion = {0:'cav', 1:'art', 2:'artil', 3:'pig', 4:'spear', 5:'civE', 6:'farm', 7:'bar', 8:'school', 9:'gallery', 10:'bunk'}
+
 
 ## TimePeriod class
 #   Each is a subview of the whole window
@@ -81,35 +84,41 @@ class TimePeriod(object):
     def move(self, unitID, targetX, targetY):
         for unit in self.units.sprites():
             if unit.objectID == unitID:
+                print "  TYPE: ", unit.unitType
                 unit.stepping = False
                 unit.faceRight = True
                 self.units.update()
-                unit.rect.midbottom = coordinates[(targetX, targetY)]
+                unit.rect.midbottom = coordinates[(targetX+10, targetY+10)]
                 self.updateTimePeriod()
                 self.spaceOccupation[unit.rect.midbottom]+=1
                 print "The space count is %i" %self.spaceOccupation[unit.rect.midbottom]
 
     ## adds a unit to the Unit sprite group
     def addUnit(self, statusDict):
-        print "adding new unit..."
-        self.spaceOccupation[coordinates[statusDict['location']]]+=1
-        newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]], statusDict['hp'],
-                                  statusDict['level'], statusDict['unitType'], statusDict['ownerIndex'],
+        print "adding new unit...", statusDict['objectID']
+        try:
+            self.spaceOccupation[coordinates[(statusDict['location'][0]+10, statusDict['location'][1]+10)]]+=1
+        except:
+            sys.exit("HotDogDanceParty")
+        newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['hp'],
+                                  statusDict['level'], typeConversion[statusDict['unitType']], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])
         self.units.add(newUnit)
+            
 
     ## adds a building to the building sprite group
     def addBuilding(self, statusDict):
         print "adding new building..."
-        newBuilding = Building(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]],
-                                statusDict['hp'], statusDict['level'], statusDict['buildingType'], statusDict['ownerIndex'],
+        newBuilding = Building(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10],
+                                statusDict['hp'], statusDict['level'], typeConversion[statusDict['buildingType']], statusDict['ownerIndex'],
                                 statusDict['inTraining'], statusDict['progress'], statusDict['linked'], statusDict['complete'])
+
         self.buildings.add(newBuilding)
 
     ## adds terrain to the terrain sprite group
     def addTerrain(self, statusDict):
         print "adding new terrain..."
-        newTerrain = Terrain(statusDict['objectID'], coordinates[statusDict['location'][0], statusDict['location'][1]], statusDict['blockMove'], statusDict['blockBuild'])
+        newTerrain = Terrain(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['blockMove'], statusDict['blockBuild'])
         self.terrain.add(newTerrain)
         
     ## applies damage to an object
@@ -161,22 +170,17 @@ class TimePeriod(object):
                 print "removing terrain..."
                 self.terrain.remove(terrain)
 
-    ## sets a blank unit to animate training and sets unit type
-    def train(self, id, unitName):
-        for unit in self.units.sprites():
-            if unit.objectid == id:
-                if unit.unitType != 'blank':
-                    raise Exception("*****You tried training a not-blank unit")
-                unit.working = True
-                unit.unitType = unitName
+    ## sets a building to animate training
+    def train(self, id):
+        for building in self.buildings.sprites():
+            if building.objectid == id:
+                building.training = True
                 
     ## stops animating training and sets unitType images
     def stopTrain(self, id):
-        for unit in self.units.sprites():
-            if unit.objectid == id:
-                if unit.working:
-                    unit.working = False
-                    unit.changeType(unit.unitType)
+        for building in self.buildingss.sprites():
+            if building.objectid == id:
+                building.training = False
 
     ## sets up coordinate dictionary for easier map->pixel coordinate conversions
     def setUp(self, mapDim, pixelDim):
@@ -192,23 +196,19 @@ class TimePeriod(object):
 
             origin[0] = origin[0] + xChange/2
             origin[1] = origin[1] + yChange/2
+        '''
+        for xCoord in range(-10,11,1):
+            i = 0
+            for yCoord in range(-10,11,1):
+                j = 0
+                coordinates[(xCoord,yCoord)] = tempCoords[(i,j)]
+        '''
+        
+        print "Coordinates: "
+        for key, value in coordinates.iteritems():
+            print "  Map: ", key, " Pixel: ", value
     
         print "xChange %(1)i ... yChange %(2)i" %{'1':xChange, '2':yChange}
         
         loadAllImages((xChange,yChange))
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         

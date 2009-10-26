@@ -20,11 +20,8 @@ periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
 periodDimensions = (20,20)
 
-#Converts integer UnitID to string
-unitTypeConversion = {0:'blank', 1:'civE', 2:'art', 3:'spear', 4:'artil', 5:'cav', 6:'pig'}
-
 #Delay time between frams. In milliseconds
-delaytime = 10
+delaytime = 0
 
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
@@ -32,6 +29,7 @@ delaytime = 10
 class Window(object):
     ## sets up Window object
     def __init__(self):
+        pygame.init()
         self.status = {}
         self.views = {}
         self.timePeriods = {}
@@ -84,20 +82,26 @@ class Window(object):
         pygame.time.delay(delaytime)
         pygame.display.update()
 
+
     ## iterates through the status to find the requested id, and it to the
     #  appropriate sprite group and TimePeriod
     # @param id- an objectID (int)
     def add(self, id):  
+        print "looking for ", id
         for period, dictionary in self.status.iteritems():
             for type, list in dictionary.iteritems():
                 for item in list:
                     if item['objectID'] == id:
+                        print "  adding ", id
                         if type == 'Unit':
                             self.timePeriods[period].addUnit(item)
                         if type == 'Building':
                             self.timePeriods[period].addBuilding(item)
                         if type == 'Terrain':
                             self.timePeriods[period].addTerrain(item)
+                            
+        self.updateScreen()
+                        
     ## remove(self, id)
     #  iterates through TimePeriods, calling each period's remove method
     #  to remove the requested object
@@ -108,13 +112,12 @@ class Window(object):
     ## moves the object with objectID "id" to the requested x,y coordinate
     #  @param id- an objectID; targeX/Y- target coords. (all are ints)
     def move(self, id, targetX, targetY):
-        print "moving unit..."
-        if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
-            raise Exception("**********Tried moving outside of range")
+        print "moving unit to ", "(", targetX, ",", targetY,")..."
+#        if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
+#            raise Exception("**********Tried moving outside of range")
         for name, period in self.timePeriods.iteritems():
             period.takeStep(id)
             self.updateScreen()
-            #pygame.time.delay(250)
             period.move(id, targetX, targetY)
             self.updateScreen()
     
@@ -146,9 +149,9 @@ class Window(object):
     # @param
     def train(self, id, newUnitTypeID):
         for name, period in self.timePeriods.iteritems():
-            period.train(id, unitTypeConversion[newUnitTypeID])
+            period.train(id)
     
     ## replaces old status dictionary with newStatus
     # @param newStatus- a status dictionary.
     def updateStatus(self, newStatus):
-        self.status = newStatus
+        self.status.update(newStatus)
