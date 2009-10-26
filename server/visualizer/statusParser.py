@@ -1,6 +1,6 @@
 
 
-categories = ["Terrain", "Portal", "Unit", "Building", "UnitType", "BuildingType"]
+categories = ["Terrain", "Portal", "Unit", "Building"]#, "UnitType", "BuildingType"]
 
 timePeriodConversion = {0:"farPast", 1:"past", 2:"present"}
 
@@ -48,23 +48,19 @@ class statusParser:
         
         for cat in categories:
             if indices[cat] != -1:
-                #print "Parsing Category: ", cat
+                print "Parsing Category: ", cat
                 self.messageDict[cat] = self.parseCategory(self.message, parens, indices[cat])
-                #print "Parsing InfoList for: ", cat
+                print "Parsing InfoList for: ", cat
                 self.messageDict[cat] = self.parseInfoList(self.messageDict[cat], self.parenthesize(self.messageDict[cat]))
+                print "Parsing Lists to Dictionaries for: ", cat
+                self.messageDict[cat] = self.parseStringtoDict(cat, self.messageDict[cat])
+
             else:
-                #print "Category not present: ", cat
+                print "Category not present: ", cat
                 self.messageDict[cat] = None
-                
-                
-        self.messageDict["Terrain"] = self.parseStringtoDict("Terrain", self.messageDict["Terrain"])
-        #self.messageDict["Unit"] = self.parseStringtoDict("Unit", self.messageDict["Unit"])
-        #self.messageDict["Building"] = self.parseStringtoDict("Building", self.messageDict["Building"])
-
-            
-        #for cat in categories:
-            #print "\n", cat, " has the following status message: \n ", self.messageDict[cat]
-
+        print "Sorting according to time periods..."
+        self.messageDict = self.sortByPeriod()
+                        
         
     #changes a whole status string into smaller categories (Terrain, Unit, etc)
     def parseCategory(self, message, parenlist, startIndex):
@@ -211,22 +207,31 @@ class statusParser:
                 retDict['linked'] = listofValues[10]
                 retDict['complete'] = listofValues[11]                
                 retList.append(retDict)
-        '''        
-        if categoryName == "UnitType":
-            for item in listofLists:
-                retDict['objectID'] = listofValues[0]
-                retDict['location'] = (listofValues[1], listofValues[2])
-                retDict['period'] = timePeriodConversion[listofValues[3]]
-                retDict['hp'] = listofValues[4]
-                retDict['level'] = listofValues[5]
-                retDict['unitType'] = listofValues[6]
-                retDict['ownderIndex'] = listofValues[7]
-                retDict['actions'] = listofValues[8]
-                retDict['moves'] = listofValues[9]                
-                retList.append(retDict)
-        '''
+
         return retList
     
-    def sortByPeriod():
+    def sortByPeriod(self):
+        farPastDict = {}
+        pastDict = {}
+        presentDict = {}
+        
+        for key in self.messageDict.keys():
+            farPastDict[key]=[]
+            pastDict[key]=[]
+            presentDict[key] = []
+        
         for key, list in self.messageDict.iteritems():
-            pass
+            for dict in list:
+                if dict['period']=="farPast":
+                    farPastDict[key].append(dict)
+                if dict['period'] == "past":
+                    pastDict[key].append(dict)
+                if dict['period'] == "present":
+                    presentDict[key].append(dict)
+        
+        return {"farPast":farPastDict, "past":pastDict, "present":presentDict}
+            
+            
+            
+            
+            
