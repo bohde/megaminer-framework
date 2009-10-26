@@ -29,6 +29,7 @@ delaytime = 10
 class Window(object):
     ## sets up Window object
     def __init__(self):
+        pygame.init()
         self.status = {}
         self.views = {}
         self.timePeriods = {}
@@ -85,16 +86,19 @@ class Window(object):
     #  appropriate sprite group and TimePeriod
     # @param id- an objectID (int)
     def add(self, id):  
+        print "looking for ", id
         for period, dictionary in self.status.iteritems():
             for type, list in dictionary.iteritems():
                 for item in list:
                     if item['objectID'] == id:
+                        print "found", id
                         if type == 'Unit':
                             self.timePeriods[period].addUnit(item)
                         if type == 'Building':
                             self.timePeriods[period].addBuilding(item)
                         if type == 'Terrain':
                             self.timePeriods[period].addTerrain(item)
+                        
     ## remove(self, id)
     #  iterates through TimePeriods, calling each period's remove method
     #  to remove the requested object
@@ -106,8 +110,8 @@ class Window(object):
     #  @param id- an objectID; targeX/Y- target coords. (all are ints)
     def move(self, id, targetX, targetY):
         print "moving unit..."
-        if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
-            raise Exception("**********Tried moving outside of range")
+#        if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
+#            raise Exception("**********Tried moving outside of range")
         for name, period in self.timePeriods.iteritems():
             period.takeStep(id)
             self.updateScreen()
@@ -147,4 +151,4 @@ class Window(object):
     ## replaces old status dictionary with newStatus
     # @param newStatus- a status dictionary.
     def updateStatus(self, newStatus):
-        self.status = newStatus
+        self.status.update(newStatus)

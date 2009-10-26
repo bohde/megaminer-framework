@@ -21,10 +21,16 @@ from filters.LogicFilter import SexprHandlerMixin
 from statements.StatementUtils import require_login, require_length, dict_wrapper 
 from window import Window
 import sexpr.sexpr as sexpr
-
+import traceback
 
 def MalformedAnimation(Exception):
     pass
+
+def saveConvert(x):
+    try:
+        return int(x)
+    except:
+        return x
 
 def animation_defs():
     anims = {}
@@ -33,37 +39,37 @@ def animation_defs():
     @anim_mapper("add")
     @require_length(2)
     def add(self, expr):
-        self.window.add(expr[1])
+        self.window.add(saveConvert(expr[1]))
 
     @anim_mapper("remove")
     @require_length(2)
     def remove(self, expr):
-        self.window.remove(expr[1])
+        self.window.remove(saveConvert(expr[1]))
 
     @anim_mapper("move")
     @require_length(4)
     def move(self, expr):
-        self.window.move(*expr[1:])
+        self.window.move(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("attack")
     @require_length(4)
     def attack(self, expr):
-        self.window.attack(*expr[1:])
+        self.window.move(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("hurt")
     @require_length(3)
     def hurt(self, expr):
-        self.window.hurt(*expr[1:])
+        self.window.move(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("build")
     @require_length(4)
     def build(self, expr):
-        self.window.build(*expr[1:])
+        self.window.move(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("train")
     @require_length(3)
     def train(self, expr):
-        self.window.train(*expr[1:])
+        self.window.move(*[saveConvert(x) for x in expr[1:]])
 
     return anims
 
@@ -82,14 +88,14 @@ def status_defs():
             """
             timemap = {"farPast":[], "past":[], "present":[]}
             def base(l):
-                ret =  {"objectID" : l[0],
-                        "location" : l[1:3],
+                ret =  {"objectID" : int(l[0]),
+                        "location" : [int(x) for x in l[1:3]],
                         "period" : ["farPast", "past", "present"][int(l[3])]}
                 ret.update(convert(l))
                 return ret
             for x in expr[1:]:
-                val = base(x)
-                timemap[val["period"]] = val
+                val = base([saveConvert(y) for y in x])
+                timemap[val["period"]].append(val)
             return timemap
         return inner
 
@@ -161,19 +167,20 @@ def protocol():
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
-            #       self.window.updateStatus(st)
         print st
+        self.window.updateStatus(st)
+        
 
     @mapper("animations")
     def animations(self, expr):
         for i in expr[1:]:
             try:
                 pass
-#                anim_defs[i[0]](self, i)
-            except Exception, e:
-                print e
-                raise Exception("Unhandled exception!")
-
+                #anim_defs[i[0]](self, i)
+            except Exception as e:
+                raise e
+        self.window.updateScreen()
+        
     return statements
 
 class VisualizerClient(Client, SexprHandlerMixin):
@@ -189,7 +196,7 @@ class VisualizerClient(Client, SexprHandlerMixin):
 class FileVisualizer(SexprHandlerMixin):
      def __init__(self, filename):
          self.statements = protocol()
-#         self.window = Window()
+         self.window = Window()
          self.filename = filename
 
      def mainloop(self):

@@ -151,7 +151,7 @@ def loadAllImages(tileSize):
         
 
 def loadImage(name, size, ownerIndex = "", option = "", key = True):
-    path = os.path.join("sprites", ownerIndex+name+option+".png")
+    path = os.path.join("visualizer/sprites", ownerIndex+name+option+".png")
     try:
         image = pygame.image.load(path)
     except pygame.error, message:
