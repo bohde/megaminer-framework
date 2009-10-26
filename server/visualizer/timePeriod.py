@@ -10,6 +10,9 @@ from spriteClasses import Building, Unit, Terrain, loadAllImages
 #    correspond to the pixel position.
 coordinates = {}
 
+typeConversion = {0:'cav', 1:'art', 2:'artil', 3:'pig', 4:'spear', 5:'civE', 6:'farm', 7:'bar', 8:'school', 9:'gallery', 10:'bunk'}
+
+
 ## TimePeriod class
 #   Each is a subview of the whole window
 class TimePeriod(object):
@@ -94,7 +97,7 @@ class TimePeriod(object):
         print "adding new unit..."
         self.spaceOccupation[coordinates[statusDict['location']]]+=1
         newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['hp'],
-                                  statusDict['level'], statusDict['unitType'], statusDict['ownerIndex'],
+                                  statusDict['level'], typeConversion[statusDict['unitType']], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])
         self.units.add(newUnit)
             
@@ -102,9 +105,8 @@ class TimePeriod(object):
     ## adds a building to the building sprite group
     def addBuilding(self, statusDict):
         print "adding new building..."
-        
         newBuilding = Building(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10],
-                                statusDict['hp'], statusDict['level'], statusDict['buildingType'], statusDict['ownerIndex'],
+                                statusDict['hp'], statusDict['level'], typeConversion[statusDict['buildingType']], statusDict['ownerIndex'],
                                 statusDict['inTraining'], statusDict['progress'], statusDict['linked'], statusDict['complete'])
 
         self.buildings.add(newBuilding)

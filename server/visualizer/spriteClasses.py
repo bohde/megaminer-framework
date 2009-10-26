@@ -149,7 +149,7 @@ def loadAllImages(tileSize):
         for name, players in buildingImages.iteritems():
             for index, images in players.iteritems():
                 print "Loading: ", name, " ", index, "..."
-                size = (tileSize[0]*2, tileSize[1]*2)
+                size = (tileSize[0], tileSize[1])
                 images.append(loadImage(name, size, index,"Construction"))
                 images.append(loadImage(name, size, index, "Done"))
                 images.append(loadImage(name, size, index, "Train"))
