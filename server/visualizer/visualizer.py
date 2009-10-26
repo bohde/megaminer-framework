@@ -86,6 +86,7 @@ def status_defs():
                         "location" : l[1:3],
                         "period" : ["farPast", "past", "present"][int(l[3])]}
                 ret.update(convert(l))
+                return ret
             for x in expr[1:]:
                 val = base(x)
                 timemap[val["period"]] = val
@@ -160,13 +161,15 @@ def protocol():
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
-        self.window.updateStatus(st)
+            #       self.window.updateStatus(st)
+        print st
 
     @mapper("animations")
     def animations(self, expr):
         for i in expr[1:]:
             try:
-                anim_defs[i[0]](self, i)
+                pass
+#                anim_defs[i[0]](self, i)
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
@@ -186,7 +189,7 @@ class VisualizerClient(Client, SexprHandlerMixin):
 class FileVisualizer(SexprHandlerMixin):
      def __init__(self, filename):
          self.statements = protocol()
-         self.window = Window()
+#         self.window = Window()
          self.filename = filename
 
      def mainloop(self):
