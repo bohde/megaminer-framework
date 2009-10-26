@@ -2,7 +2,7 @@
 #  This is the TimePeriod class, it creates a TimePeriod, which handles most
 #   of the action for the visualizer
 
-import pygame
+import pygame, sys
 from pygame.locals import *
 from spriteClasses import Building, Unit, Terrain, loadAllImages
 
@@ -84,6 +84,7 @@ class TimePeriod(object):
     def move(self, unitID, targetX, targetY):
         for unit in self.units.sprites():
             if unit.objectID == unitID:
+                print "  TYPE: ", unit.unitType
                 unit.stepping = False
                 unit.faceRight = True
                 self.units.update()
@@ -94,8 +95,11 @@ class TimePeriod(object):
 
     ## adds a unit to the Unit sprite group
     def addUnit(self, statusDict):
-        print "adding new unit..."
-        self.spaceOccupation[coordinates[statusDict['location']]]+=1
+        print "adding new unit...", statusDict['objectID']
+        try:
+            self.spaceOccupation[coordinates[(statusDict['location'][0]+10, statusDict['location'][1]+10)]]+=1
+        except:
+            sys.exit("HotDogDanceParty")
         newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['hp'],
                                   statusDict['level'], typeConversion[statusDict['unitType']], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])

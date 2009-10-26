@@ -21,7 +21,7 @@ periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
 periodDimensions = (20,20)
 
 #Delay time between frams. In milliseconds
-delaytime = 250
+delaytime = 0
 
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
@@ -112,7 +112,7 @@ class Window(object):
     ## moves the object with objectID "id" to the requested x,y coordinate
     #  @param id- an objectID; targeX/Y- target coords. (all are ints)
     def move(self, id, targetX, targetY):
-        print "moving unit..."
+        print "moving unit to ", "(", targetX, ",", targetY,")..."
 #        if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
 #            raise Exception("**********Tried moving outside of range")
         for name, period in self.timePeriods.iteritems():
