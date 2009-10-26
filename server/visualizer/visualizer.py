@@ -95,6 +95,7 @@ def status_defs():
                 return ret
             for x in expr[1:]:
                 val = base([saveConvert(y) for y in x])
+#                if not "buildingType" in val or val["buildingType"] != 8:
                 timemap[val["period"]].append(val)
             return timemap
         return inner
@@ -176,7 +177,7 @@ def protocol():
         for i in expr[1:]:
             try:
                 pass
-                #anim_defs[i[0]](self, i)
+                anim_defs[i[0]](self, i)
             except Exception as e:
                 raise e
         self.window.updateScreen()
