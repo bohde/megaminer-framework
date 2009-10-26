@@ -36,4 +36,12 @@ ${conversions[arg[1]]} ${arg[0]}\
 
 %   endfor
 
+std::ostream& operator<<(std::ostream& stream,${model.name} ob)
+{
+%   for key in model.data.keys():
+  stream << "${key}: " << ob.ptr->${key}  <<'\n';
+%   endfor
+  return stream;
+}
+
 % endfor

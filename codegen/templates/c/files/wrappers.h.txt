@@ -3,6 +3,7 @@
 #ifndef WRAPPERS_H
 #define WRAPPERS_H
 
+#include <iostream>
 #include <cstdlib>
 #include "structures.h"
 
@@ -24,14 +25,16 @@ class ${model.name} {
   // Actions
   % for func in model.functions.keys():
   bool ${func}(\
-% for arg in model.functions[func]:
-% if model.functions[func][0] != arg:
+    % for arg in model.functions[func]:
+      % if model.functions[func][0] != arg:
 , \
-% endif
+      % endif
 ${conversions[arg[1]]} ${arg[0]}\
-% endfor
+    % endfor
 );
   % endfor
+
+  friend std::ostream& operator<<(std::ostream& stream, ${model.name} ob);
 };
 
 % endfor
