@@ -54,22 +54,27 @@ def animation_defs():
     @anim_mapper("attack")
     @require_length(4)
     def attack(self, expr):
-        self.window.move(*[saveConvert(x) for x in expr[1:]])
+        self.window.attack(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("hurt")
     @require_length(3)
     def hurt(self, expr):
-        self.window.move(*[saveConvert(x) for x in expr[1:]])
+        self.window.hurt(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("build")
     @require_length(4)
     def build(self, expr):
-        self.window.move(*[saveConvert(x) for x in expr[1:]])
+        self.window.build(*[saveConvert(x) for x in expr[1:]])
+    
+    @anim_mapper("paint")
+    @require_length(4)
+    def build(self, expr):
+        self.window.paint(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("train")
     @require_length(3)
     def train(self, expr):
-        self.window.move(*[saveConvert(x) for x in expr[1:]])
+        self.window.train(*[saveConvert(x) for x in expr[1:]])
 
     return anims
 

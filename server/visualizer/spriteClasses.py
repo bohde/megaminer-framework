@@ -11,6 +11,8 @@ buildingImages = {"school":{'0':[], '1':[]}, "gallery":{'0':[], '1':[]}, "farm":
 
 terrainImages = {"rock":[], "sand":[], "tree":[], "grass":[]}
 
+portalImage = {'forward':[], 'backward':[]}
+
 class Unit(pygame.sprite.Sprite):
     def __init__(self, objectID, location, hp, level, unitType, ownerIndex, actions, moves):
         pygame.sprite.Sprite.__init__(self)
@@ -20,7 +22,6 @@ class Unit(pygame.sprite.Sprite):
         self.rect = self.stand.get_rect()
         self.rect.midbottom = location
         self.image = self.stand
-        self.health = pygame.Surface((5,self.rect.height))
         self.working = False
         self.stepping = False
         self.attacking = False
@@ -46,20 +47,19 @@ class Unit(pygame.sprite.Sprite):
             tempImage = self.action
             self.attacking = False
         elif self.working:
-            if self.image == self.stand:
-                tempImage = self.action
-            else:
-                tempImage = self.stand
+            tempImage = self.action
+            self.working = False
         else:
             tempImage = self.stand
+        
+        pygame.draw.rect(tempImage, [0,0,0], pygame.Rect(0,0,5,self.rect.height))
         
         if self.hp > self.maxHp/2:
             pygame.draw.rect(tempImage, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
         elif self.hp <= self.maxHp/2 and self.hp >= self.maxHp/4:
-            self.health.fill([0,0,0])
             pygame.draw.rect(tempImage, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
-            self.health.fill([0,0,0])
+            #self.health.fill([0,0,0])
             pygame.draw.rect(tempImage, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
                  
         if self.rect.midbottom[0] > 1280/2:
@@ -77,7 +77,6 @@ class Building(pygame.sprite.Sprite):
         self.rect = self.construction.get_rect()
         self.rect.midbottom = location
         self.image = self.construction
-        self.health = self.image.subsurface(pygame.Rect(0,0,5,self.rect.height))
         self.training = False
         self.objectID = objectID
         self.buildingType = buildingType
@@ -93,19 +92,25 @@ class Building(pygame.sprite.Sprite):
     def update(self):
         if self.training:
             if self.image == self.done:
-                self.image = self.train
+                tempImage = self.train
                 self.training = False;
         elif self.complete:
-            self.image = self.done
+            tempImage = self.done
+        
+        pygame.draw.rect(tempImage, [0,0,0], pygame.Rect(0,0,5,self.rect.height))
         
         if self.hp > self.maxHp/2:
-            pygame.draw.rect(self.health, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
+            pygame.draw.rect(tempImage, [0,250,0], pygame.Rect(0,0,5,self.rect.height))
         elif self.hp <= self.maxHp/2 and self.hp >= self.maxHp/4:
-            self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
+            pygame.draw.rect(tempImage, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
-            self.health.fill([0,0,0])
-            pygame.draw.rect(self.health, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
+            pygame.draw.rect(tempImage, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
+                 
+        if self.rect.midbottom[0] > 1280/2:
+            tempImage = pygame.transform.flip(tempImage, True, False)
+            
+        self.image = tempImage
+        
 
 
 
@@ -132,6 +137,18 @@ class Terrain(pygame.sprite.Sprite):
     
 
         
+class Portal(pygame.sprite.Sprite):
+    def __init__(self, objectID, location, direction):
+        pygame.sprite.Sprite.__init__(self)
+        if direction == -1:
+                self.direction = 'backward'
+        else:
+            self.direction = 'forward'
+        self.image = portalImage[self.direction][0].copy()
+        self.rect = self.image.get_rect()
+        self.rect.center = location
+        self.objectID = objectID
+
 def loadAllImages(tileSize):
     spriteSize = (tileSize[1], tileSize[1])
     if not terrainImages['rock']:
@@ -149,10 +166,14 @@ def loadAllImages(tileSize):
         for name, players in buildingImages.iteritems():
             for index, images in players.iteritems():
                 print "Loading: ", name, " ", index, "..."
-                size = (tileSize[0], tileSize[1])
+                size = (tileSize[0], tileSize[0])
                 images.append(loadImage(name, size, index,"Construction"))
                 images.append(loadImage(name, size, index, "Done"))
                 images.append(loadImage(name, size, index, "Train"))
+    if not portalImage['forward']:
+        for name, images in portalImage.iteritems():
+            print "Loading: ", name
+            images.append(loadImage(name, spriteSize))
         
 
 def loadImage(name, size, ownerIndex = "", option = "", key = True):

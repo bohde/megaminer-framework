@@ -4,7 +4,7 @@
 
 import pygame, sys
 from pygame.locals import *
-from spriteClasses import Building, Unit, Terrain, loadAllImages
+from spriteClasses import Building, Unit, Terrain, Portal, loadAllImages
 
 ##  coordinates's keys are tuples for positions of the gameboard, and the values
 #    correspond to the pixel position.
@@ -38,6 +38,7 @@ class TimePeriod(object):
         self.units = pygame.sprite.Group()
         self.terrain = pygame.sprite.Group()
         self.buildings = pygame.sprite.Group()
+        self.portals = pygame.sprite.Group()
         self.presentView = ''
         self.drawGrass()
     
@@ -55,6 +56,7 @@ class TimePeriod(object):
         self.units.clear(self.unitLayer, self.baseLayer)
         self.buildings.clear(self.buildingLayer, self.baseLayer)
         self.terrain.clear(self.terrainLayer, self.baseLayer)
+        self.portals.clear(self.terrainLayer, self.baseLayer)
       
     ## redraws each subsurface and updates all sprites 
     def updateTimePeriod(self):
@@ -63,6 +65,7 @@ class TimePeriod(object):
         self.units.update()
         self.buildings.update()
         self.terrain.draw(self.terrainLayer)
+        self.portals.draw(self.terrainLayer)
         self.buildings.draw(self.buildingLayer)
         self.units.draw(self.unitLayer)
         for key, count in self.spaceOccupation.iteritems():
@@ -96,10 +99,7 @@ class TimePeriod(object):
     ## adds a unit to the Unit sprite group
     def addUnit(self, statusDict):
         print "adding new unit...", statusDict['objectID']
-        try:
-            self.spaceOccupation[coordinates[(statusDict['location'][0]+10, statusDict['location'][1]+10)]]+=1
-        except:
-            sys.exit("HotDogDanceParty")
+        self.spaceOccupation[coordinates[(statusDict['location'][0]+10, statusDict['location'][1]+10)]]+=1
         newUnit = Unit(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['hp'],
                                   statusDict['level'], typeConversion[statusDict['unitType']], statusDict['ownerIndex'],
                                   statusDict['actions'], statusDict['moves'])
@@ -120,6 +120,12 @@ class TimePeriod(object):
         print "adding new terrain..."
         newTerrain = Terrain(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['blockMove'], statusDict['blockBuild'])
         self.terrain.add(newTerrain)
+    
+    def addPortal(self, statusDict):
+        print "adding new terrain..."
+        newPortal = Portal(statusDict['objectID'], coordinates[statusDict['location'][0]+10, statusDict['location'][1]+10], statusDict['direction'])
+        self.portals.add(newPortal)
+    
         
     ## applies damage to an object
     def hurt(self, id, changeHP):
@@ -150,9 +156,17 @@ class TimePeriod(object):
                 if unit.working == False:
                     unit.working = True
                     print "unit has begun building..."
-                else:
-                    unit.working = False
-                    print "unit has stopped building..."
+
+    
+    def paint(self, id, targetX, targetY):
+        for unit in self.units.sprites():
+            if unit.objectID == id:
+                if unit.unitType != 'art':
+                    raise Exception("*****Tried to paint with a non-artist!")
+                if unit.working == False:
+                    unit.working = True
+                    print "unit has begun painting..."
+
         
     ## removes an object entirely
     def remove(self, id):
@@ -169,6 +183,10 @@ class TimePeriod(object):
             if terrain.objectID == id:
                 print "removing terrain..."
                 self.terrain.remove(terrain)
+        for portal in self.portals.sprites():
+            if portal.objectID == id:
+                print "removing portal..."
+                self.portals.remove(portal)
 
     ## sets a building to animate training
     def train(self, id):

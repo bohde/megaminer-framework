@@ -1,13 +1,13 @@
 ## @package Window
 #  This is the window class, it creates a window and mainains all its contents
 
-import pygame, os
+import pygame, os, sys
 from pygame.locals import *
 from spriteClasses import Unit
 from timePeriod import TimePeriod
 
 ## Global variables for Window
-windowDimensions = (1280,1024)
+windowDimensions = (1280,1050)
 
 #Dimensions of Subviews
 viewDimensions={"l":{"dimensions":(1280, 640), "upperLeftCorner":(0, 0)},
@@ -15,7 +15,7 @@ viewDimensions={"l":{"dimensions":(1280, 640), "upperLeftCorner":(0, 0)},
                 "s2":{"dimensions":(608, 342), "upperLeftCorner":(672, 682)}}
 
 #Period names as well as default background colors
-periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]}
+periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]} # red, blue, green
 
 #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
 periodDimensions = (20,20)
@@ -99,6 +99,8 @@ class Window(object):
                             self.timePeriods[period].addBuilding(item)
                         if type == 'Terrain':
                             self.timePeriods[period].addTerrain(item)
+                        if type == 'Portal':
+                            self.timePeriods[period].addPortal(item)                            
                             
         self.updateScreen()
                         
@@ -144,6 +146,10 @@ class Window(object):
     def build(self, id, targetX, targetY):
         for name, period in self.timePeriods.iteritems():
             period.build(id, targetX, targetY)
+            
+    def paint(self, id, targetX, targetY):
+        for name, period in self.timePeriods.iteritems():
+            period.paint(id, targetX, targetY)
     
     ## trains a unit to be a certain type of unit
     # @param
