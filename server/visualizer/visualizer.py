@@ -22,6 +22,7 @@ from statements.StatementUtils import require_login, require_length, dict_wrappe
 from window import Window
 import sexpr.sexpr as sexpr
 
+
 def MalformedAnimation(Exception):
     pass
 
@@ -37,32 +38,32 @@ def animation_defs():
     @anim_mapper("remove")
     @require_length(2)
     def remove(self, expr):
-        self.window.remove(self, expr[1])
+        self.window.remove(expr[1])
 
     @anim_mapper("move")
     @require_length(4)
     def move(self, expr):
-        self.window.move(self, *expr[1:])
+        self.window.move(*expr[1:])
 
     @anim_mapper("attack")
     @require_length(4)
     def attack(self, expr):
-        self.window.attack(self, *expr[1:])
+        self.window.attack(*expr[1:])
 
     @anim_mapper("hurt")
     @require_length(3)
     def hurt(self, expr):
-        self.window.hurt(self, *expr[1:])
+        self.window.hurt(*expr[1:])
 
     @anim_mapper("build")
     @require_length(4)
     def build(self, expr):
-        self.window.build(self, *expr[1:])
+        self.window.build(*expr[1:])
 
     @anim_mapper("train")
     @require_length(3)
     def train(self, expr):
-        self.window.train(self, *expr[1:])
+        self.window.train(*expr[1:])
 
     return anims
 
@@ -76,23 +77,26 @@ def status_defs():
 
     def base_dict(convert):
         def inner(self, expr):
+            """
+            convenience function for common elements
+            """
+            timemap = {"farPast":[], "past":[], "present":[]}
             def base(l):
                 ret =  {"objectID" : l[0],
-                        "location" : l[1:2],
+                        "location" : l[1:3],
                         "period" : ["farPast", "past", "present"][int(l[3])]}
                 ret.update(convert(l))
-                return ret
-            return [convert(x) for x in expr[1:]]
+            for x in expr[1:]:
+                val = base(x)
+                timemap[val["period"]] = val
+            return timemap
         return inner
 
-    @status_mapper("game")
-    @require_length(4)
-    def game(self, expr):
-        return expr[1:]
-
-    @status_mapper("UnitType")
-    def unitType(self, expr):
-        return expr[1:]
+    @status_mapper("Terrain")
+    def terrain(self, expr):
+        def convert(l):
+            return { "blockMove" : l[4],"blockBuild" : l[5] }
+        return base_dict(convert)(self, expr)
 
     @status_mapper("Portal")
     def portal(self, expr):
@@ -110,17 +114,6 @@ def status_defs():
                      l[4:]))
         return base_dict(convert)(self, expr)
 
-    
-    @status_mapper("Terrain")
-    def terrain(self, expr):
-        def convert(l):
-            return { "blockMove" : l[4],"blockBuild" : l[5] }
-        return base_dict(convert)(self, expr)
-            
-    @status_mapper("BuildingType")
-    def buildingType(self, expr):
-        return expr[1:]
-
     @status_mapper("Building")
     def building(self, expr):
         def convert(l):
@@ -128,6 +121,22 @@ def status_defs():
                           "linked", "complete"),
                      l[4:]))
         return base_dict(convert)(self, expr)
+
+    @status_mapper("game")
+    @require_length(4)
+    def game(self, expr):
+        #return expr[1:]
+        return dict()
+
+    @status_mapper("BuildingType")
+    def buildingType(self, expr):
+        #return expr[1:]
+        return dict()
+
+    @status_mapper("UnitType")
+    def unitType(self, expr):
+        #return expr[1:]
+        return dict()
 
 
     return statii
@@ -141,24 +150,23 @@ def protocol():
 
     @mapper("changed")
     def status(self, expr):
-        st = {}
+        st = {"farPast":{}, "past":{}, "present":{}}
         for i in expr[1:]:
             if type(i) != list:
                 raise Exception("Not a list!")
             try:
-                st[i[0]] = status_d[i[0]](self, i)
+                for k,v in status_d[i[0]](self, i).iteritems():
+                    st[k][i[0]] = v 
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
-        print st
-        #self.window.updateStatus(st)
+        self.window.updateStatus(st)
 
     @mapper("animations")
     def animations(self, expr):
         for i in expr[1:]:
             try:
-                pass
-               # anim_defs[i[0]](self, i)
+                anim_defs[i[0]](self, i)
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
@@ -178,7 +186,7 @@ class VisualizerClient(Client, SexprHandlerMixin):
 class FileVisualizer(SexprHandlerMixin):
      def __init__(self, filename):
          self.statements = protocol()
-#         self.window = Window()
+         self.window = Window()
          self.filename = filename
 
      def mainloop(self):
