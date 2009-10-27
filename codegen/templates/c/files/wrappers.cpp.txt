@@ -27,7 +27,7 @@ ${conversions[arg[1]]} ${arg[0]}\
 %     endfor
 )
 {
-  return ${model.name.lower()}${func.capitalize()}(ptr\
+  return ${model.name.lower()}${capitalize(func)}(ptr\
 %     for arg in model.functions[func]:
 , ${arg[0]}\
 %     endfor

@@ -144,7 +144,7 @@ DLLEXPORT void getStatus()
 % for model in models:
 % for func in model.functions.keys():
 
-DLLEXPORT bool ${model.name.lower()}${func.capitalize()}(${conversions[model]} object\
+DLLEXPORT bool ${model.name.lower()}${capitalize(func)}(${conversions[model]} object\
 % for arg in model.functions[func]:
 , \
 ${conversions[arg[1]]} ${arg[0]}\

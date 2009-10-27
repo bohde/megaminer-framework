@@ -23,24 +23,23 @@ public class Main
 
         if(args.length < 2)
         {
-          Client.INSTANCE.createGame();
+          socket = Client.INSTANCE.createGame();
         }
         else
         {
           Client.INSTANCE.joinGame(Integer.parseInt(args[1]));
         }
-        while(Client.INSTANCE.networkLoop(socket, practice) != 0)
+        while(Client.INSTANCE.networkLoop(socket) != 0)
         {
-            if(ai.startTurn() && !(ai.turnNum() == 1 && !Client.INSTANCE.isHuman()))
+            if(ai.startTurn())
             {
               Client.INSTANCE.endTurn();
             }
-            else if(!(ai.turnNum() == 1 && !Client.INSTANCE.isHuman()))
+            else
             {
               Client.INSTANCE.getStatus();
             }
         }
-
         return;
     }
 }

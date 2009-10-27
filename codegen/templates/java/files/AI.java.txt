@@ -9,12 +9,7 @@ class AI extends BaseAI
   {
     return "password";
   }
-  public boolean runHuman()
-  {
-    return true;
-  }
-
-  public boolean runZombie()
+  public boolean run()
   {
     return true;
   }

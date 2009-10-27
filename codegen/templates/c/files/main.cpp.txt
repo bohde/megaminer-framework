@@ -21,8 +21,6 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  const char* message;
-  sexp_t* expression;
   AI ai;
   int socket = open_server_connection(argv[1], "19000");
   if(socket == -1)
