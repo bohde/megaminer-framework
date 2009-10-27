@@ -1,6 +1,6 @@
 sources = $(wildcard *.cpp)
-objects = $(sources:.cpp=.o)
-deps = $(sources:.cpp=.d)
+objects = $(sources:%.cpp=%.o)
+deps = $(sources:%.cpp=%.d)
 CPPFLAGS = -DSHOW_NETWORK -g
 
 CPPFLAGS += -I. -Isexp
@@ -15,6 +15,10 @@ all: client libclient.so
 
 .PHONY: clean all
 
+libclient_%.o: CXXFLAGS += -fPIC
+libclient_%.o: %.cpp
+	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+
 clean:
 	rm -f $(objects) $(deps) client libclient.so
 	$(MAKE) -C sexp clean
@@ -22,10 +26,10 @@ clean:
 client: $(objects) sexp/sexp.a
 	$(CXX) $(LDFLAGS) $(LOADLIBES) $(LDLIBS) $^ -g -o client
 
-libclient.so: network.o game.o getters.o util.o sexp/sexp.a
-	g++ -shared -Wl,-soname,libclient.so -o libclient.so network.o game.o getters.o util.o sexp/sexp.a
+libclient.so: libclient_network.o libclient_game.o libclient_getters.o libclient_util.o sexp/libclient_sexp.a
+	$(CXX) -shared -Wl,-soname,libclient.so $(LDFLAGS) $(LOADLIBES) $(LDLIBS) $^ -o libclient.so
 
-sexp/sexp.a:
+sexp/sexp.a sexp/libclient_sexp.a:
 	$(MAKE) -C sexp
 
 -include $(deps)
