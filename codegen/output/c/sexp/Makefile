@@ -15,7 +15,7 @@ clean:
 	rm -f $@.$$$$
 
 libclient_%.o: CFLAGS += -fPIC
-libclient_%.o: %.c
+libclient_%.o: %.c %.d
 	$(CC) -c $(CPPFLAGS) $(CFLAGS)   $< -o $@
 
 

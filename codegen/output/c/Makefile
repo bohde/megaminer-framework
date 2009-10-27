@@ -16,7 +16,7 @@ all: client libclient.so
 .PHONY: clean all
 
 libclient_%.o: CXXFLAGS += -fPIC
-libclient_%.o: %.cpp
+libclient_%.o: %.cpp %.d
 	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 clean:
