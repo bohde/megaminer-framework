@@ -1,46 +1,64 @@
 ## @package Window
 #  This is the window class, it creates a window and mainains all its contents
-
 import pygame, os, sys
 from pygame.locals import *
 from spriteClasses import Unit
 from timePeriod import TimePeriod
 
-## Global variables for Window
-windowDimensions = (1280,1050)
-
-#Dimensions of Subviews
-viewDimensions={"l":{"dimensions":(1280, 640), "upperLeftCorner":(0, 0)},
-                "s1":{"dimensions":(608, 342), "upperLeftCorner":(0, 682 )},
-                "s2":{"dimensions":(608, 342), "upperLeftCorner":(672, 682)}}
-
-#Period names as well as default background colors
-periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]} # red, blue, green
-
-#Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
-periodDimensions = (20,20)
-
-#Delay time between frams. In milliseconds
-delaytime = 0
-
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
 # visualizer
 class Window(object):
+    ## Global variables for Window
+    windowDimensions = [1280,1050]
+
+    #Dimensions of Subviews
+    viewDimensions={"l":{"dimensions":(1280, 640), "upperLeftCorner":(0, 0)},
+                    "s1":{"dimensions":(608, 342), "upperLeftCorner":(0, 682 )},
+                    "s2":{"dimensions":(608, 342), "upperLeftCorner":(672, 682)}}
+    
+    #Period names as well as default background colors
+    periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]} # red, blue, green
+
+    #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
+    periodDimensions = (20,20)
+
+    #Delay time between frams. In milliseconds
+    delaytime = 0
+
     ## sets up Window object
-    def __init__(self):
+    def __init__(self, config={}):
         pygame.init()
         self.status = {}
         self.views = {}
         self.timePeriods = {}
-        self.display = pygame.display.set_mode(windowDimensions)
+        windim = Window.windowDimensions
+        try:
+            windim[0] = config["width"]
+        except:
+            pass
+        try:
+            windim[1] = config["height"]
+        except:
+            print config
+        Window.viewDimensions={"l":{"dimensions":(windim[0], int(windim[1] * .6)),
+                                    "upperLeftCorner":(0,0)},
+                               "s1":{"dimensions":(int(windim[0] * .475)
+                                                   ,int(windim[1] * .325)),
+                                     "upperLeftCorner":(0,int(windim[1] * .65))},
+                               "s2":{"dimensions":(int(windim[0] * .475)
+                                                   ,int(windim[1] * .325)), 
+                                     "upperLeftCorner":(int(windim[0] * .52),int(windim[1] * .65))}}
+
+        self.display = pygame.display.set_mode(windim)
         self.setUpTimePeriods()
+        self.animations = False
         pygame.display.update()
         
     ## initializes 3 TimePeriod objects and gives them their initial subview name
     def setUpTimePeriods(self):
-        for name, color in periodNames.iteritems():
-            self.timePeriods[name] = TimePeriod(name, viewDimensions['l']['dimensions'], periodDimensions, color)
+        for name, color in Window.periodNames.iteritems():
+            self.timePeriods[name] = TimePeriod(name, self.viewDimensions['l']['dimensions'], Window.periodDimensions, color)
         self.timePeriods['farPast'].presentView = 's1'
         self.timePeriods['past'].presentView = 'l'
         self.timePeriods['present'].presentView = 's2'
@@ -48,7 +66,7 @@ class Window(object):
     
     ## creates subviews on the display for the TimePeriods to be drawn in
     def createSubViews(self):
-        for name, dict in viewDimensions.iteritems():
+        for name, dict in self.viewDimensions.iteritems():
             rectangle = pygame.Rect(dict["upperLeftCorner"], dict["dimensions"])
             self.views[name] = self.display.subsurface(rectangle)
         self.updateScreen()
@@ -71,15 +89,16 @@ class Window(object):
                 print "*found large view"
                 period.presentView = oldView
                 self.timePeriods[focusPeriod].presentView = 'l'
-        self.updateScreen()
+        if self.animations:
+            self.updateScreen()
 
     ## instead of calling pygame.display.update(), call this to update all
     #  TimePeriods and their subviews
     def updateScreen(self):
         for name, period in self.timePeriods.iteritems():
             period.updateTimePeriod()
-            pygame.transform.scale(period.baseLayer, viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
-        pygame.time.delay(delaytime)
+            pygame.transform.scale(period.baseLayer, self.viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
+        pygame.time.delay(Window.delaytime)
         pygame.display.update()
 
 
@@ -102,7 +121,8 @@ class Window(object):
                         if type == 'Portal':
                             self.timePeriods[period].addPortal(item)                            
                             
-        self.updateScreen()
+        if self.animations:
+            self.updateScreen()
                         
     ## remove(self, id)
     #  iterates through TimePeriods, calling each period's remove method
@@ -114,14 +134,19 @@ class Window(object):
     ## moves the object with objectID "id" to the requested x,y coordinate
     #  @param id- an objectID; targeX/Y- target coords. (all are ints)
     def move(self, id, targetX, targetY):
-        print "moving unit to ", "(", targetX, ",", targetY,")..."
-#        if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
-#            raise Exception("**********Tried moving outside of range")
-        for name, period in self.timePeriods.iteritems():
+         """
+         Game Logic should handle this
+         print "moving unit to ", "(", targetX, ",", targetY,")..."
+         if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
+         raise Exception("**********Tried moving outside of range")
+         """
+         for name, period in self.timePeriods.iteritems():
             period.takeStep(id)
-            self.updateScreen()
+            if self.animations:
+                self.updateScreen()
             period.move(id, targetX, targetY)
-            self.updateScreen()
+            if self.animations:
+                self.updateScreen()
     
     ## calls attack and reset for the requested ID to each TimePeriod
     #  this causes the object to strike in the direction of the target, but
@@ -131,7 +156,8 @@ class Window(object):
         print "attacking...."
         for name, period in self.timePeriods.iteritems():
             period.attack(attackerID, targetX, targetY)
-            self.updateScreen()
+            if self.animations:
+                self.updateScreen()
     
     ## calls hurt on each TimePeriod for id, "id's" hp is then decremented
     #  by changeHP

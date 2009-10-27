@@ -173,7 +173,6 @@ def protocol():
             except Exception, e:
                 print e
                 raise Exception("Unhandled exception!")
-        print st
         self.window.updateStatus(st)
         
 
@@ -200,9 +199,9 @@ class VisualizerClient(Client, SexprHandlerMixin):
     
     
 class FileVisualizer(SexprHandlerMixin):
-     def __init__(self, filename):
+     def __init__(self, filename, config={}):
          self.statements = protocol()
-         self.window = Window()
+         self.window = Window(config)
          self.filename = filename
 
      def mainloop(self):
