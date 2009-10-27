@@ -1,0 +1,53 @@
+
+///BaseAI
+public abstract class BaseAI
+{
+% for model in models:
+    static ${model.name}[] ${lowercase(model.name)}s;
+% endfor
+    static int iteration;
+    
+    ///
+    ///Make this your username, which should be provided.
+    public abstract String username();
+    ///
+    ///Make this your password, which should be provided.
+    public abstract String password();
+    ///
+    ///This is run on turn 1 before run
+    public abstract void init();
+    ///
+    ///This is run every turn . Return true to end the turn, return false
+    ///to request a status update from the server and then immediately rerun this function with the
+    ///latest game status.
+    public abstract boolean run();
+
+    public boolean startTurn()
+    {
+        int count = 0;
+% for model in models:
+        count = Client.INSTANCE.get${model.name}Count();
+	${lowercase(model.name)}s = new ${model.name}[count];
+	for(int i = 0; i < count; i++)
+	{
+            ${lowercase(model.name)}s[i] = new ${model.name}(Client.INSTANCE.get${model.name}s(i));
+	}
+% endfor
+
+        iteration++;
+
+        if(turnNum() == 1)
+        {
+          init();
+        }
+        return run();
+    }
+
+
+% for datum in globals:
+    ${conversions[datum.type]} ${datum.name}()
+    {
+        return Client.INSTANCE.get${capitalize(datum.name)}();
+    }
+% endfor
+}

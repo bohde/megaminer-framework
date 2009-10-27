@@ -1,0 +1,23 @@
+///AI
+class AI extends BaseAI
+{
+  public String username()
+  {
+    return "Shell AI";
+  }
+  public String password()
+  {
+    return "password";
+  }
+  public boolean runHuman()
+  {
+    return true;
+  }
+
+  public boolean runZombie()
+  {
+    return true;
+  }
+
+  public void init() {}
+}

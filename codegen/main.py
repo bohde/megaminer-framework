@@ -23,3 +23,7 @@ if __name__ == '__main__':
   objects = parseData()
   import writeC
   writeC.write(objects)
+
+  import writeJava
+  writeJava.write(objects)
+

@@ -18,7 +18,7 @@ class BaseAI
 {
 protected:
 % for model in models:
-  std::vector<${model.name}> ${model.name.lower()}s;
+  std::vector<${model.name}> ${lowercase(model.name)}s;
 % endfor
 public:
 % for datum in globals:
