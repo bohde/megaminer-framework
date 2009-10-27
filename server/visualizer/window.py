@@ -4,7 +4,7 @@ import pygame, os, sys
 from pygame.locals import *
 from spriteClasses import Unit
 from timePeriod import TimePeriod
-
+import threading
 ##This class defines the window object. Visualizer protocol
 # calls methods on the window object to change the state of the
 # visualizer
@@ -54,6 +54,26 @@ class Window(object):
         self.setUpTimePeriods()
         self.animations = False
         pygame.display.update()
+        self.handleEvents()
+
+    def handleEvents(self):
+        def inner():
+            presentFocus = False
+            while True:
+                event = pygame.event.wait()
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit(0)
+                    if event.key == K_SPACE:
+                        if not presentFocus:
+                            self.focusOn('present')
+                            presentFocus = True
+                        else:
+                            self.focusOn('past')
+                            presentFocus = False
+        threading.Thread(target=inner).start()
+
         
     ## initializes 3 TimePeriod objects and gives them their initial subview name
     def setUpTimePeriods(self):
