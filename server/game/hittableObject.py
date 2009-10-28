@@ -26,13 +26,13 @@ class HittableObject(MappableObject):
             destroyed = True
         return destroyed
 
-    def takeDamage(self, damage, ignoreArmor=False):
+    def takeDamage(self, damage, ignoreArmor=False, quiet=False):
         if (ignoreArmor):
             dmgTaken = int(damage)
         else:
             dmgTaken = max(damage - self.type.effArmor(self.level), 1)
         self.hp -= dmgTaken
-        if (dmgTaken != 0):
+        if (dmgTaken != 0 and not quiet):
             #Removed so that changed list only reflects new units
             #self.changed = True
             self.game.animations += [["hurt", self.id, self.hp]]

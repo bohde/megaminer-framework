@@ -106,14 +106,16 @@ class Match(DefaultGameWorld):
         for obj in self.objects.values():
             obj.nextTurn()
 
-        self.sendStatus(self.players)
+        self.checkWinner()
+
+        if not (self.winner is None):
+            self.sendStatus(self.players)
         self.sendChanged(self.spectators)
 
         self.writeToLog()
         for obj in self.objects.values():
             obj.changed = False
         self.animations = ["animations"]
-        self.checkWinner()
 
     def checkWinner(self):
         for p in self.players:
@@ -125,7 +127,7 @@ class Match(DefaultGameWorld):
             self.declareWinner(self.players[1])
         if (self.players[1].hasBuilding == False):
             self.declareWinner(self.players[0])
-        if (self.turnNum > self.turnLimit):
+        if (self.turnNum >= self.turnLimit):
             if (self.netWorth(self.players[0]) > \
               self.netWorth(self.players[1])):
                 self.declareWinner(self.players[0])
@@ -143,9 +145,17 @@ class Match(DefaultGameWorld):
     def declareWinner(self, winner):
         self.winner = winner
         self.turn = None
+        winnerIndex = 1
+        if winner == self.players[0]:
+            winnerIndex = 0
+        msg = ["game-over", self.id, self.winner.user, winnerIndex]
         for p in self.players:
-            p.writeSExpr(["game-winner", self.id, self.winner.user])
-        
+            p.writeSExpr(msg)
+        for p in self.spectators:
+            p.writeSExpr(msg)
+        log = open(self.logPath(), "a")
+        log.write(sexpr2str(msg))
+        log.write('\n')
 
     def logPath(self):
         return "logs/" + str(self.id) + ".gamelog"
@@ -297,15 +307,25 @@ class Match(DefaultGameWorld):
         for obj in self.objects.values():
             if (isinstance(obj, Building)):
                 if (obj.owner == self.turn and obj.complete):
-                    totalHunger[obj.z] -= obj.type.food * \
-                                          obj.type.foodExp**obj.level
+                    totalHunger[obj.z] -= int(obj.type.food * \
+                                          obj.type.foodExp**obj.level)
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
                     totalHunger[obj.z] += obj.type.hunger
+
+        for z in xrange(3):
+            if totalHunger[z] > 0:
+                if self.turn == self.players[0]:
+                    curPlayer = 0
+                else:
+                    curPlayer = 1
+                self.animations += [["hungerDamage", curPlayer, z,
+                                     totalHunger[z]]]
+                
         for obj in self.objects.values():
             if (isinstance(obj, Unit)):
                 if (obj.owner == self.turn):
-                    obj.takeDamage(max(0,totalHunger[obj.z]), True)
+                    obj.takeDamage(max(0,totalHunger[obj.z]), True, True)
 
     def chat(self, player, message):
         for i in self.players:
