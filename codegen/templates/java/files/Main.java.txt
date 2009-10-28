@@ -27,7 +27,7 @@ public class Main
         }
         else
         {
-          Client.INSTANCE.joinGame(Integer.parseInt(args[1]));
+          socket = Client.INSTANCE.joinGame(Integer.parseInt(args[1]));
         }
         while(Client.INSTANCE.networkLoop(socket) != 0)
         {

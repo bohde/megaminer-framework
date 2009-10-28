@@ -91,6 +91,9 @@ DLLEXPORT int createGame()
   expression = extract_sexpr(rec_string(socket));
   expression = expression->list->next;
   gameNum = atoi(expression->val);
+  
+  std::cout << "Creating game " << gameNum << endl;
+  
   expression = expression->next->list->next->next;
 
   socket = open_server_connection(expression->val, "19001");

@@ -27,11 +27,11 @@ public abstract class BaseAI
         int count = 0;
 % for model in models:
         count = Client.INSTANCE.get${model.name}Count();
-    ${lowercase(model.name)}s = new ${model.name}[count];
-    for(int i = 0; i < count; i++)
-    {
+        ${lowercase(model.name)}s = new ${model.name}[count];
+        for(int i = 0; i < count; i++)
+        {
             ${lowercase(model.name)}s[i] = new ${model.name}(Client.INSTANCE.get${model.name}(i));
-    }
+        }
 % endfor
 
         iteration++;
