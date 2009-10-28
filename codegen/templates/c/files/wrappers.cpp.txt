@@ -23,13 +23,21 @@ bool ${model.name}::${func}(\
 %       if model.functions[func][0] != arg:
 , \
 %       endif
+%       if isinstance(arg[1], Model):
+${arg[1].name}& ${arg[0]}\
+%       else:
 ${conversions[arg[1]]} ${arg[0]}\
+%       endif
 %     endfor
 )
 {
   return ${model.name.lower()}${capitalize(func)}(ptr\
 %     for arg in model.functions[func]:
+%       if isinstance(arg[1], Model):
+, ${arg[0]}.ptr\
+%       else:
 , ${arg[0]}\
+%       endif
 %     endfor
 );
 }
