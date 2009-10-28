@@ -38,7 +38,9 @@ class UnitType(GameObject):
         list.extend([self.name, self.price, self.hunger, self.trainTime,
                      self.hp, self.armor, self.moves, self.actions,
                      self.attackCost, self.damage, self.minRange,
-                     self.maxRange, trainerID, self.canPaint])
+                     self.maxRange, trainerID, self.canPaint, self.armorExp,
+                     self.hpExp, self.priceExp, self.damageExp, 
+                     self.paintBase, self.paintLinear])
         return list
 
     def effArmor(self, level):

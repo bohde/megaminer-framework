@@ -34,7 +34,8 @@ class BuildingType(GameObject):
         list.extend([self.name, self.price, self.food, self.buildTime[0],
                      self.buildTime[1], self.buildTime[2], self.hp,
                      self.armor, builderID, self.allowPaint, self.width,
-                     self.height, self.spawnX, self.spawnY])
+                     self.height, self.spawnX, self.spawnY, self.armorExp,
+                     self.hpExp, self.priceExp, self.foodExp])
         return list
 
     def effArmor(self, level):
