@@ -325,7 +325,7 @@ class TestActions(unittest.TestCase):
        self.assertEqual(self.game.winner, self.players[0])
 
     def test_win_turn_limit(self):
-        for t in xrange(self.game.turnLimit):
+        for t in xrange(self.game.turnLimit-1):
             self.game.nextTurn()
         self.assertEqual(self.game.winner, None)
         self.game.nextTurn()

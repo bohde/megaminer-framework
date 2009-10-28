@@ -110,3 +110,11 @@ def leaveGame(self, expression):
     self.type = None
     self.game = None
 
+@wrapper('request-log')
+@require_length(2)
+def requestLog(self, expression):
+    logID = str(expression[1])
+    infile = open("logs/" + logID + ".gamelog")
+    self.writeSExpr(['log', logID, infile.read()])
+
+
