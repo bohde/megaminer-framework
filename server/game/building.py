@@ -76,7 +76,8 @@ class Building(HittableObject):
         if (self.training is not None):
             if (self.game.turn == self.owner):
                 self.progress += 1
-                self.changed = True
+                #Removed so that changed list only reflects new units
+                #self.changed = True
             if (self.progress >= self.training.trainTime):
                 newUnit = unit.Unit(self.game, self.x + self.type.spawnX,
                                self.y + self.type.spawnY, self.z, \
@@ -93,7 +94,8 @@ class Building(HittableObject):
         self.hp += math.ceil(self.type.effHP(self.level) * 
                      (1.0 / self.type.buildTime[self.z]))
         self.hp = int(min(self.hp, self.type.effHP(self.level)))
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         if (not self.complete and self.hp == self.type.effHP(self.level)):
             self.bringToCompletion()
 
@@ -115,7 +117,8 @@ class Building(HittableObject):
         self.training = newUnitType
         self.progress = 0
         self.owner.gold[self.z] -= newUnitType.effPrice(self.level)
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         return True
 
     def cancel(self):

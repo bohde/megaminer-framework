@@ -29,13 +29,16 @@ class Portal(MappableObject):
         oldFee = int(self.fee)
         self.fee = int(math.floor(self.fee * Portal.feeMultiplier))
         if (oldFee != self.fee):
-            self.changed = True
+            pass
+            #Removed so that changed list only reflects new units
+            #self.changed = True
 
     def chargeToll(self, player):
         if (player.gold[self.z] < self.fee):
             return "You can not afford the portal fee"
         player.gold[self.z] -= self.fee
         self.fee += Portal.feeIncr
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         return True
 

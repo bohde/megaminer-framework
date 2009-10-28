@@ -27,7 +27,8 @@ class Unit(HittableObject):
         if (self.owner == self.game.turn):
             self.actions = self.type.actions
             self.moves = self.type.moves
-            changed = True
+            #Removed so that changed list only reflects new units
+            #changed = True
 
     def move(self, targetX, targetY):
         dis = self.game.distance(self.x, self.y, targetX, targetY)
@@ -51,7 +52,8 @@ class Unit(HittableObject):
         self.y = targetY
         self.moves -= 1
         self.game.animations += [["move", self.id, targetX, targetY]]
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         self.addToMap()
         return True
 
@@ -71,7 +73,8 @@ class Unit(HittableObject):
         squatters = self.game.getEnemies(self.x, self.y, self.z)
         for obj in squatters:
             obj.takeDamage(obj.hp, True)
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         self.addToMap()
         return True
 
@@ -106,7 +109,8 @@ class Unit(HittableObject):
                 target.takeDamage(self.type.effDamage(self.level))
         self.actions -= 1
         self.moves -= self.type.attackCost
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         return True
 
 
@@ -132,7 +136,8 @@ class Unit(HittableObject):
         artWorth = self.type.artWorth(self.level, gallery.level)
         self.owner.gold[self.z] += artWorth
         self.actions -= 1
-        self.changed = True
+        #Removed so that changed list only reflects new units
+        #self.changed = True
         return True
 
     def build(self, targetX, targetY, buildingType=None):
