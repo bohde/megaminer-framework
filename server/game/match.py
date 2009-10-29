@@ -216,7 +216,8 @@ class Match(DefaultGameWorld):
             msg = ["changed"]
 
         msg.append(["game", self.turnNum, self.players[0].gold,
-                    self.players[1].gold])
+                    self.players[1].gold, self.periods[0].area.max_x,
+                     self.periods[0].area.max_y])
         typeLists = defaultdict(list)
         for obj in self.objects.values():
             if (fullList == True or obj.changed == True):
