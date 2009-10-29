@@ -18,7 +18,13 @@ UnitType = structures.Model('UnitType', key='objectID',
     ('minrange', int),
     ('maxrange', int),
     ('trainerID', int),
-    ('canpaint', int))
+    ('canpaint', int),
+    ('armorExp', float),
+    ('hpExp', float),
+    ('priceExp', float),
+    ('damageExp', float),
+    ('paintBase', int),
+    ('paintLinear', int))
   )
 
 BuildingType = structures.Model('BuildingType', key='objectID',
@@ -36,7 +42,11 @@ BuildingType = structures.Model('BuildingType', key='objectID',
     ('width', int),
     ('height', int),
     ('spawnX', int),
-    ('spawnY', int))
+    ('spawnY', int),
+    ('armorExp', float),
+    ('hpExp', float),
+    ('priceExp', float),
+    ('foodExp', float))
   )
 
 Unit = structures.Model('Unit', key='objectID',

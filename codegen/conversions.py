@@ -4,9 +4,9 @@ import structures
 
 import data
 
-c = {int:'int', str:'char*'}
-java = {int:'int', str:'String'}
-python = {int:'c_int', str:'c_char_p'}
+c = {int:'int', str:'char*', float:'float'}
+java = {int:'int', str:'String', float:'float'}
+python = {int:'c_int', str:'c_char_p', float:'c_float'}
 
 for i in members(data):
     if isinstance(i, structures.Model):

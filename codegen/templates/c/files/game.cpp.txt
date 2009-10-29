@@ -180,8 +180,9 @@ void parse${model.name}(_${model.name}* object, sexp_t* expression)
   % for key in model.data.keys():
   %if model.data[key] == int:
   object->${key} = atoi(sub->val);
+  %elif model.data[key] == float:
+  object->${key} = atof(sub->val);
   %elif model.data[key] == str:
-  ##FIXME: This is such a memory leak.
   object->${key} = new char[strlen(sub->val)+1];
   strncpy(object->${key}, sub->val, strlen(sub->val));
   object->${key}[strlen(sub->val)] = 0;
