@@ -21,7 +21,8 @@ class Portal(MappableObject):
 
     def toList(self):
         list = MappableObject.toList(self)
-        list.extend([self.direction, self.fee])
+        list.extend([self.direction, self.fee, Portal.feeIncr, 
+                     Portal.feeMultiplier])
         return list
 
     def nextTurn(self):
