@@ -108,7 +108,7 @@ class Match(DefaultGameWorld):
 
         self.checkWinner()
 
-        if not (self.winner is None):
+        if self.winner is None:
             self.sendStatus(self.players)
         self.sendChanged(self.spectators)
 
