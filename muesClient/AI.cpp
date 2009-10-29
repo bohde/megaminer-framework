@@ -34,7 +34,7 @@ bool AI::run()
 
   for (int i = 0; i < buildings.size(); i++)
   {
-    if (rand()%100 < 10 && (!buildings[i].complete() || 
+    if (rand()%100 < 2 && (!buildings[i].complete() || 
         buildings[i].inTraining() != -1) && 
         buildings[i].ownerID() == playerID())
     {
@@ -96,13 +96,17 @@ void AI::trainUnits(Building& b)
   }
   else if (strcmp(unitTypes[newTypeIndex].name(), "Pig") == 0)
   {
-    chance = 2;
+    chance = 1;
   }
   else if (strcmp(unitTypes[newTypeIndex].name(), "Artist") == 0)
   {
-    chance = 100;
+    chance = 20;
   }
 
+  if (expectedHunger(b.z()) > -5)
+  {
+    chance = 0;
+  }
 
 
   if (unitTypes[newTypeIndex].trainerID()==getType(b).objectID()
@@ -158,7 +162,7 @@ void AI::doEngineer(Unit& u)
   }
   else if (strcmp(buildingTypes[typeIndex].name(),"Farm") == 0)
   {
-    chance = 30;
+    chance = 100;
   }
   else if (strcmp(buildingTypes[typeIndex].name(),"Bunker") == 0)
   {
@@ -461,5 +465,34 @@ int AI::getPortalIndex(Portal p)
 int AI::getPortalFee(Portal p)
 {
   return portalFees[getPortalIndex(p)];
+}
+
+//Amount of food produced by this building
+int AI::effFood(Building b)
+{
+  BuildingType bt = getType(b);
+  return static_cast<int>(bt.food() * pow(bt.foodExp(), b.level()));
+}
+
+int AI::expectedHunger(int z)
+{
+  int hunger = 0;
+  for (int i = 0; i < buildings.size(); i++)
+  {
+    if (buildings[i].z() == z)
+    {
+      hunger -= effFood(buildings[i]);
+    }
+  }
+
+  for (int i = 0; i < units.size(); i++)
+  {
+    if (units[i].z() == z)
+    {
+      UnitType ut = getType(units[i]);
+      hunger += ut.hunger();
+    }
+  }
+  return hunger;
 }
 

@@ -46,6 +46,9 @@ public:
   int getPortalIndex(Portal p);
   int getPortalFee(Portal p);
 
+  int expectedHunger(int z);
+  int effFood(Building b);
+
 };
 
 
