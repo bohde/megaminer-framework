@@ -1,6 +1,6 @@
 #-*-python-*-
 from BaseAI import BaseAI
-from GameObjects import *
+from GameObject import *
 
 class AI(BaseAI):
     @staticmethod
