@@ -164,7 +164,7 @@ def gameTrain(self, expression):
 @wrapper('game-paint')
 @require_length(4)
 @require_game
-def gameTrain(self, expression):
+def gamePaint(self, expression):
     if games[self.game].turn != self:
         self.writeSExpr(['game-paint-denied', 'not your turn'])
         return False
@@ -185,7 +185,7 @@ def gameTrain(self, expression):
 @wrapper('game-cancel')
 @require_length(2)
 @require_game
-def gameTrain(self, expression):
+def gameCancel(self, expression):
     if games[self.game].turn != self:
         self.writeSExpr(['game-cancel-denied', 'not your turn'])
         return False
@@ -204,7 +204,7 @@ def gameTrain(self, expression):
 @wrapper('game-warp')
 @require_length(2)
 @require_game
-def gameTrain(self, expression):
+def gameWarp(self, expression):
     if games[self.game].turn != self:
         self.writeSExpr(['game-warp-denied', 'not your turn'])
         return False
