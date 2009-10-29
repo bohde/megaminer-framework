@@ -92,12 +92,17 @@ void AI::trainUnits(Building& b)
 
   if ( strcmp(unitTypes[newTypeIndex].name(), "Engineer") == 0)
   {
-    chance = 20;
+    chance = 10;
   }
   else if (strcmp(unitTypes[newTypeIndex].name(), "Pig") == 0)
   {
-    chance = 5;
+    chance = 2;
   }
+  else if (strcmp(unitTypes[newTypeIndex].name(), "Artist") == 0)
+  {
+    chance = 100;
+  }
+
 
 
   if (unitTypes[newTypeIndex].trainerID()==getType(b).objectID()
