@@ -294,9 +294,9 @@ class TestActions(unittest.TestCase):
         self.assertEqual(21, self.units[0].hp)
         self.game.removeObject(self.home)
         self.game.nextTurn()
-        self.assertEqual(16, self.units[0].hp)
+        self.assertEqual(21 - self.game.hungerDamage * 5, self.units[0].hp)
         self.game.nextTurn()
-        self.assertEqual(16, self.units[0].hp)
+        self.assertEqual(21 - self.game.hungerDamage * 5, self.units[0].hp)
 
     def test_paint(self):
         attemptPaint = lambda: self.game.paint(self.units[0].id, 4, 7)

@@ -216,7 +216,8 @@ class Match(DefaultGameWorld):
             msg = ["changed"]
 
         msg.append(["game", self.turnNum, self.players[0].gold,
-                    self.players[1].gold])
+                    self.players[1].gold, self.periods[0].area.max_x,
+                     self.periods[0].area.max_y, self.hungerDamage])
         typeLists = defaultdict(list)
         for obj in self.objects.values():
             if (fullList == True or obj.changed == True):
@@ -314,6 +315,7 @@ class Match(DefaultGameWorld):
                     totalHunger[obj.z] += obj.type.hunger
 
         for z in xrange(3):
+            totalHunger[z] *= self.hungerDamage
             if totalHunger[z] > 0:
                 if self.turn == self.players[0]:
                     curPlayer = 0
