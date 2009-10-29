@@ -95,6 +95,7 @@ void AI::doArtist(Unit& u)
 {
   Building* gallery = getBuilding(u.x(), u.y(), u.z());
   BuildingType bt;
+
   if (gallery == NULL)
   {
     randomWalk(u, u.moves());
@@ -102,7 +103,7 @@ void AI::doArtist(Unit& u)
   else
   {
     bt = getType(*gallery);
-    if (strcmp(bt.name(), "Gallery")==0)
+    if (strcmp(bt.name(), "Gallery")==0 && u.actions() > 1)
     {
       u.paint(u.x(), u.y());
     }
