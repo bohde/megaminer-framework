@@ -3,22 +3,24 @@
 from library import library
 
 class BaseAI:
+    iteration = 0
 %for model in models:
     ${lowercase(model.name)}s = []
 %endfor
 
     def startTurn(self):
 %for model in models:
-        from GameObjects import ${model.name}
+        from GameObject import ${model.name}
 %endfor
 
 %for model in models:
-        BaseAI.${lowercase(model.name)}s = [${model.name}(library.get${model.name}s(i)) for i in xrange(library.get${model.name}Count())]
+        BaseAI.${lowercase(model.name)}s = [${model.name}(library.get${model.name}(i)) for i in xrange(library.get${model.name}Count())]
 %endfor
 
-        if self.turnNum() == 1:
+        if self.turnNumber() == 1:
             self.init()
-        self.run()
+        BaseAI.iteration += 1;
+        return self.run()
     
 %for datum in globals:
     @staticmethod

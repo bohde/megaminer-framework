@@ -9,13 +9,15 @@ class GameObject(object):
     from BaseAI import BaseAI
     self.ptr = ptr
     self.iteration = BaseAI.iteration
-    #the following is a bit of metaprogramming
-    #inheriting classes probably want to override all of this
-    #self.n is this class' name
-    c = `self.__class__`
-    self.n = c[c.rfind('.')+1:c.rfind("'")]
-    #guess the function to get the ID for this class
-    self.ID = library.__getattribute__(self.n.lower() + 'GetID')(ptr)
+
+%for model in models:
+class ${model.name}(GameObject):
+  def __init__(self, ptr):
+    from BaseAI import BaseAI
+    self.ptr = ptr
+    self.iteration = BaseAI.iteration
+    
+    self.ID = library.${lowercase(model.name)}Get${capitalize(model.key)}(ptr)
   
   def validify(self):
     from BaseAI import BaseAI
@@ -23,16 +25,12 @@ class GameObject(object):
     #somewhere else in memory now
     if self.iteration == BaseAI.iteration:
       return True
-    #guess where BaseAI stores these objects
-    for i in BaseAI.__getattribute__(self.n.lower() + 's'):
+    for i in BaseAI.${lowercase(model.name)}s:
       if i.ID == self.ID:
         self.ptr = i.ptr
         self.iteration = BaseAI.iteration
         return True
     raise ExistentialError()
-
-%for model in models:
-class ${model.name}(GameObject):
 %  for func in model.functions.keys():
   def ${func}(self\
 %    for arg in model.functions[func]:
