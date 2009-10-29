@@ -152,7 +152,7 @@ class Unit(HittableObject):
         if (self.game.getEnemies(targetX, targetY, self.z)):
             return str(self.id) + " can not build on enemy units or buildings"
         existingBuilding = self.game.getBuilding(targetX, targetY, self.z)
-        if (buildingType is None):
+        if (buildingType is None or existingBuilding is not None):
             if (not (self.x,self.y) in existingBuilding.adjArea()):
                 return str(self.id) + " is not adjacent to that building"
             if (existingBuilding is None):

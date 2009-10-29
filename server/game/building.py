@@ -128,16 +128,18 @@ class Building(HittableObject):
         """
         if (not self.game.turn == self.owner):
             return str(self.id) + " is not your building"
-        if (self.complete):
+        if (self.complete == True):
             if (self.training is None):
                 return str(self.id) + " is complete not training anything."
             #Cancel training
             self.progress = 0
             self.owner.gold[self.z] += self.training.effPrice(self.level)
             self.training = None
+            self.game.animations += [["stopTrain", self.id]]
         else:
             #Cancel construction of this building
             self.owner.gold[self.z] += self.type.effPrice(self.level)
+            self.game.animations += [["cancel", self.id]]
             self.game.removeObject(self)
         return True
 
