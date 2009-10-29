@@ -20,15 +20,21 @@ bool AI::run()
   cout << "Buildings on map : " << buildings.size() << endl;
   cout << "Units on map : " << units.size() << endl;
   UnitType myType;
+  int count = 0;
 
   for (int i = 0; i < 6; i++)
   {
     goldSpent[i] = 0;
   }
 
+  for (int i = 0; i<portals.size(); i++)
+  {
+    portalFees[i] = portals[i].fee();
+  }
+
   for (int i = 0; i < buildings.size(); i++)
   {
-    if (rand()%100 < 20 && (!buildings[i].complete() || 
+    if (rand()%100 < 10 && (!buildings[i].complete() || 
         buildings[i].inTraining() != -1) && 
         buildings[i].ownerID() == playerID())
     {
@@ -63,9 +69,11 @@ bool AI::run()
       else
       {
         doCombatUnit(units[i]);
+        count += 1;
       }
     }
   }
+  cout << "Combat Units : " << count << endl;
   return true;
 }
 
@@ -73,7 +81,8 @@ void AI::trainUnits(Building& b)
 {
   int newTypeIndex;
   int tries = 0;
-  
+  int chance = 80;
+    
   do
   {
     newTypeIndex = rand()%unitTypes.size();
@@ -81,8 +90,18 @@ void AI::trainUnits(Building& b)
   } while (tries < 6 &&
             unitTypes[newTypeIndex].trainerID()!=getType(b).objectID());
 
+  if ( strcmp(unitTypes[newTypeIndex].name(), "Engineer") == 0)
+  {
+    chance = 20;
+  }
+  else if (strcmp(unitTypes[newTypeIndex].name(), "Pig") == 0)
+  {
+    chance = 5;
+  }
+
+
   if (unitTypes[newTypeIndex].trainerID()==getType(b).objectID()
-       && rand()% 100 < 20 && b.complete() && b.inTraining() == -1
+       && rand()% 100 < chance && b.complete() && b.inTraining() == -1
        && getGold(playerID(), b.z()) 
           > effPrice(unitTypes[newTypeIndex], b.level()))
   {
@@ -103,7 +122,7 @@ void AI::doArtist(Unit& u)
   else
   {
     bt = getType(*gallery);
-    if (strcmp(bt.name(), "Gallery")==0 && u.actions() > 1)
+    if (strcmp(bt.name(), "Gallery")==0 && u.actions() > 0)
     {
       u.paint(u.x(), u.y());
     }
@@ -117,11 +136,36 @@ void AI::doArtist(Unit& u)
 void AI::doEngineer(Unit& u)
 {
   int typeIndex = rand()%buildingTypes.size();
-  Building* thisBuilding = getBuilding(u.x(), u.y(), u.z());
+  BuildingType bt = buildingTypes[typeIndex];
+  int chance = 100;
 
+  if (strcmp(buildingTypes[typeIndex].name(),"Barracks") == 0)
+  {
+    chance = 100;
+  }
+  else if (strcmp(buildingTypes[typeIndex].name(),"Gallery") == 0)
+  {
+    chance = 10;
+  }
+  else if (strcmp(buildingTypes[typeIndex].name(),"School") == 0)
+  {
+    chance = 5;
+  }
+  else if (strcmp(buildingTypes[typeIndex].name(),"Farm") == 0)
+  {
+    chance = 30;
+  }
+  else if (strcmp(buildingTypes[typeIndex].name(),"Bunker") == 0)
+  {
+    chance = 5;
+  }
+  
+  Building* thisBuilding = getBuilding(u.x(), u.y(), u.z());
+  
   if (areaClear(u.x(), u.y(), u.z(), typeIndex) 
       && getGold(playerID(), u.z()) 
-        > effPrice(buildingTypes[typeIndex], u.level()))
+        > effPrice(buildingTypes[typeIndex], u.level())
+      && rand()%100 < chance)
   {
     u.build(u.x(), u.y(), buildingTypes[typeIndex]);
     spendGold(playerID(), u.z(), effPrice(buildingTypes[typeIndex], u.level()));
@@ -294,10 +338,11 @@ void AI::randomWalk(Unit& u, int moves)
     myPortal = getPortalAt(curX, curY, curZ);
     if (myPortal != NULL)
     {
-      if (rand()%100 < 30 && getGold(playerID(), curZ) > myPortal->fee())
+      if (rand()%100 < 10 && getGold(playerID(), curZ)>getPortalFee(*myPortal))
       {
         u.warp();
-        spendGold(playerID(), curZ, myPortal->fee());
+        spendGold(playerID(), curZ, getPortalFee(*myPortal));
+        portalFees[getPortalIndex(*myPortal)] += 10;
         curZ += myPortal->direction();
       }
     }
@@ -395,4 +440,21 @@ void AI::spendGold(int playerNum, int z, int gold)
   goldSpent[3*playerNum+z] += gold;
 }
 
+int AI::getPortalIndex(Portal p)
+{
+  int index = 0;
+  for (int i = 0; i < portals.size(); i++)
+  {
+    if (p.objectID() == portals[i].objectID())
+    {
+      index = i;
+    }
+  }
+  return index;
+}
+
+int AI::getPortalFee(Portal p)
+{
+  return portalFees[getPortalIndex(p)];
+}
 

@@ -38,11 +38,14 @@ public:
   int distance(Unit& a, Building& b);
 
   int goldSpent[6];
+  int portalFees[100];
   int getGold(int playerNum, int z);
   int effPrice(BuildingType bt, int level);
   int effPrice(UnitType ut, int level);
   void spendGold(int playerNum, int z, int gold);
-  
+  int getPortalIndex(Portal p);
+  int getPortalFee(Portal p);
+
 };
 
 
