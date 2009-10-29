@@ -106,7 +106,8 @@ class Unit(HittableObject):
             shelter.takeDamage(self.type.effDamage(self.level))
         else:
             for target in self.game.periods[self.z].area[(targetX, targetY)]:
-                target.takeDamage(self.type.effDamage(self.level))
+                if isinstance(target, HittableObject):
+                    target.takeDamage(self.type.effDamage(self.level))
         self.actions -= 1
         self.moves -= self.type.attackCost
         #Removed so that changed list only reflects new units
@@ -166,14 +167,14 @@ class Unit(HittableObject):
                 return str(self.id) + " tried to build on top of a building"
             if (not(self.x, self.y)in buildingType.adjArea(targetX, targetY)):
                 return str(self.id) + "is not adjacent to new building"
-            for coord in buildingType.adjArea(targetX, targetY):
+            for coord in buildingType.coveredArea(targetX, targetY):
                 terrain = self.game.getTerrain(coord[0], coord[1], self.z)
                 if (terrain is not None and terrain.blockBuild):
                     return str(self.id) + " can not build on a mountain"
                 portal = self.game.getPortal(coord[0], coord[1], self.z)
                 if (portal is not None):
                     return str(self.id) + " can not build on a portal"
-            for coord in buildingType.adjArea(targetX, targetY):
+            for coord in buildingType.coveredArea(targetX, targetY):
                 if not self.game.periods[self.z].area.inBounds(coord[0], 
                                                                 coord[1]):
                     return str(self.id) + " can not build out of bounds"
