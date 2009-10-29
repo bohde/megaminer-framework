@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     cerr << "Unable to connect to server" << endl;
     return 1;
   }
-  if(!login(socket, ai.username(), ai.password()))
+  if(!serverLogin(socket, ai.username(), ai.password()))
   {
     return 1;
   }

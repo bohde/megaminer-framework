@@ -19,7 +19,7 @@ def main():
     sys.stderr.write("Unable to connect to server\n")
     exit(1)
   
-  if not library.login(socket, ai.username(), ai.password()):
+  if not library.serverLogin(socket, ai.username(), ai.password()):
     exit(1)
   
   if len(sys.argv) < 3:

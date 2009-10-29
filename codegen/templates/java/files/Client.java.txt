@@ -6,7 +6,7 @@ public interface Client extends Library {
     Client INSTANCE = (Client)Native.loadLibrary("client", Client.class);
     int open_server_connection(String host, String port);
 
-    boolean login(int socket, String username, String password);
+    boolean serverLogin(int socket, String username, String password);
     int createGame();
     int joinGame(int id);
 

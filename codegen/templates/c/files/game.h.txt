@@ -17,7 +17,7 @@
 extern "C"
 {
 #endif
-  DLLEXPORT bool login(int socket, const char* username, const char* password);
+  DLLEXPORT bool serverLogin(int socket, const char* username, const char* password);
   DLLEXPORT int createGame();
   DLLEXPORT int joinGame(int id);
 

@@ -16,6 +16,24 @@ except OSError:
 
 # commands
 
+library.serverLogin.restype = c_bool
+library.serverLogin.argtypes = [c_int, c_char_p, c_char_p]
+
+library.createGame.restype = c_int
+library.createGame.argtypes = []
+
+library.joinGame.restype = c_int
+library.joinGame.argtypes = [c_int]
+
+library.endTurn.restype = None
+library.endTurn.argtypes = []
+
+library.getStatus.restype = None
+library.getStatus.argtypes = []
+
+library.networkLoop.restype = c_int
+library.networkLoop.argtypes = [c_int]
+
 %for model in models:
 %  for func in model.functions.keys():
 library.${model.name.lower()}${capitalize(func)}.restype = c_bool

@@ -53,7 +53,7 @@ static char* last_username = NULL;
 static char* last_password = NULL;
 
 
-DLLEXPORT bool login(int s, const char* username, const char* password)
+DLLEXPORT bool serverLogin(int s, const char* username, const char* password)
 {
   socket = s;
   
@@ -97,7 +97,7 @@ DLLEXPORT int createGame()
   expression = expression->next->list->next->next;
 
   socket = open_server_connection(expression->val, "19001");
-  login(socket, last_username, last_password);
+  serverLogin(socket, last_username, last_password);
 
   stringstream expr;
   expr << "(create-game " << gameNum << ")";
@@ -125,7 +125,7 @@ DLLEXPORT int joinGame(int gameNum)
   expression = expression->list->next->next;
   
   socket = open_server_connection(expression->val, "19001");
-  login(socket, last_username, last_password);
+  serverLogin(socket, last_username, last_password);
   
   //join and start the game
   send_string(socket, expr.str().c_str());
