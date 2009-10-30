@@ -42,6 +42,9 @@ class Building(HittableObject):
                     enemies = self.game.getEnemies(coord[0],coord[1],self.z+1)
                     for e in enemies:
                         e.takeDamage(self.hp, True)
+                    building = self.game.getBuilding(coord[0],coord[1],self.z+1)
+                    if building is not None:
+                        building.takeDamage(self.hp, True)
                 newBuilding = Building(self.game, self.x, self.y, self.z + 1,\
                                    self.owner, self.type, self.level + 1)
                 self.game.addObject(newBuilding)
