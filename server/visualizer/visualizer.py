@@ -60,6 +60,11 @@ def animation_defs():
     @require_length(3)
     def hurt(self, expr):
         self.window.hurt(*[saveConvert(x) for x in expr[1:]])
+    
+    @anim_mapper("hungerDamage")
+    @require_length(4)
+    def hurt(self, expr):
+        self.window.hungerDamage(*[saveConvert(x) for x in expr[1:]])
 
     @anim_mapper("build")
     @require_length(4)

@@ -186,6 +186,10 @@ class Window(object):
         for name, period in self.timePeriods.iteritems():
             period.hurt(id, changeHP)
     
+    def hungerDamage(self, player, period, damage):
+        print "************************HUNGER DAMAGE TO PERIOD", period
+        self.timePeriods[period].hungerDamage(player, damage)
+    
     ## causes a civil engineer "id" to swing its pickaxe in the direction
     #  of target.
     # @param id- object id (int); targetX/targetY- requested coords (ints)

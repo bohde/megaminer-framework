@@ -138,6 +138,11 @@ class TimePeriod(object):
                 print "hurting building..."
                 building.hp -= changHP
 
+    def hungerDamage(self, player, damage):
+        for unit in self.units.sprites():
+            if unit.ownerIndex == player:
+                print "hunger damage applied to player", unit.ownerIndex+1
+                unit.hp -= damage
 
     ## animates an object and causes it to attack
     def attack(self, attackerID, targetX, targetY):
