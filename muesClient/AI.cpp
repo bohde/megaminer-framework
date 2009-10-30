@@ -479,7 +479,7 @@ int AI::expectedHunger(int z)
   int hunger = 0;
   for (int i = 0; i < buildings.size(); i++)
   {
-    if (buildings[i].z() == z)
+    if (buildings[i].z() == z && buildings[i].ownerID() == playerID())
     {
       hunger -= effFood(buildings[i]);
     }
@@ -487,7 +487,7 @@ int AI::expectedHunger(int z)
 
   for (int i = 0; i < units.size(); i++)
   {
-    if (units[i].z() == z)
+    if (units[i].z() == z && units[i].ownerID() == playerID())
     {
       UnitType ut = getType(units[i]);
       hunger += ut.hunger();
