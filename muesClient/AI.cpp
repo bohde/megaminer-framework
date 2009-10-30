@@ -81,7 +81,8 @@ void AI::trainUnits(Building& b)
 {
   int newTypeIndex;
   int tries = 0;
-  int chance = 80;
+  //Focus combat training in present
+  int chance = 10 + 30*b.z();
     
   do
   {
@@ -168,6 +169,9 @@ void AI::doEngineer(Unit& u)
   {
     chance = 5;
   }
+
+  //Focus construction in the past
+  chance = chance / (u.z() + 1);
   
   Building* thisBuilding = getBuilding(u.x(), u.y(), u.z());
   
@@ -347,7 +351,8 @@ void AI::randomWalk(Unit& u, int moves)
     myPortal = getPortalAt(curX, curY, curZ);
     if (myPortal != NULL)
     {
-      if (rand()%100 < 10 && getGold(playerID(), curZ)>getPortalFee(*myPortal))
+      if (expectedHunger(curZ) > expectedHunger(curZ + myPortal->direction())
+          && getGold(playerID(), curZ)>getPortalFee(*myPortal))
       {
         u.warp();
         spendGold(playerID(), curZ, getPortalFee(*myPortal));
@@ -479,7 +484,8 @@ int AI::expectedHunger(int z)
   int hunger = 0;
   for (int i = 0; i < buildings.size(); i++)
   {
-    if (buildings[i].z() == z && buildings[i].ownerID() == playerID())
+    if (buildings[i].z() == z && buildings[i].ownerID() == playerID()
+        && buildings[i].complete() == 1)
     {
       hunger -= effFood(buildings[i]);
     }
