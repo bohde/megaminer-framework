@@ -100,7 +100,9 @@ Portal = structures.Model('Portal', key='objectID',
     ('y', int),
     ('z', int),
     ('direction', int),
-    ('fee', int))
+    ('fee', int),
+    ('feeIncr', int),
+    ('feeMultiplier', float))
   )
 
 turnNumber = structures.Global('turnNumber', int)
@@ -111,3 +113,6 @@ player1Gold0 = structures.Global('player1Gold0', int)
 player1Gold1 = structures.Global('player1Gold1', int)
 player1Gold2 = structures.Global('player1Gold2', int)
 playerID = structures.Global('playerID', int)
+maxX = structures.Global('maxX', int)
+maxY = structures.Global('maxY', int)
+

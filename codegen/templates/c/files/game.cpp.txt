@@ -262,6 +262,10 @@ DLLEXPORT int networkLoop(int socket)
           player1Gold1 = atoi(subsub->val);
           subsub = subsub->next;
           player1Gold2 = atoi(subsub->val);
+          sub = sub->next;
+          
+          maxX = atoi(sub->val);
+          maxY = atoi(sub->val);
         }
         % for model in models:
         else if(string(sub->val) == "${model.name}")
