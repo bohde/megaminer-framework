@@ -89,6 +89,9 @@ class Unit(HittableObject):
         """
         if (not self.owner == self.game.turn):
             return str(self.id) + " does not belong to you"
+        myPeriod = self.game.periods[self.z]
+        if (not myPeriod.area.inBounds(targetX, targetY)):
+            return str(self.id) + " can not attack off the map"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
         if (self.moves < self.type.attackCost):
