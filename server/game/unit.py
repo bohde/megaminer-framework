@@ -89,6 +89,9 @@ class Unit(HittableObject):
         """
         if (not self.owner == self.game.turn):
             return str(self.id) + " does not belong to you"
+        myPeriod = self.game.periods[self.z]
+        if (not myPeriod.area.inBounds(targetX, targetY)):
+            return str(self.id) + " can not attack off the map"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
         if (self.moves < self.type.attackCost):
@@ -123,6 +126,9 @@ class Unit(HittableObject):
             return str(self.id) + " does not belong to you"
         if (self.actions < 1):
             return str(self.id) + " is out of actions"
+        myPeriod = self.game.periods[self.z]
+        if (not myPeriod.area.inBounds(targetX, targetY)):
+            return str(self.id) + " can not paint off the map"
         dis = self.game.distance(self.x, self.y, targetX, targetY)
         if (dis > 1):
             return str(self.id) + " is not adjacent to target gallery"
@@ -168,16 +174,16 @@ class Unit(HittableObject):
             if (not(self.x, self.y)in buildingType.adjArea(targetX, targetY)):
                 return str(self.id) + "is not adjacent to new building"
             for coord in buildingType.coveredArea(targetX, targetY):
+                if not self.game.periods[self.z].area.inBounds(coord[0],
+                                                                coord[1]):
+                    return str(self.id) + " can not build out of bounds"
+            for coord in buildingType.coveredArea(targetX, targetY):
                 terrain = self.game.getTerrain(coord[0], coord[1], self.z)
                 if (terrain is not None and terrain.blockBuild):
                     return str(self.id) + " can not build on a mountain"
                 portal = self.game.getPortal(coord[0], coord[1], self.z)
                 if (portal is not None):
                     return str(self.id) + " can not build on a portal"
-            for coord in buildingType.coveredArea(targetX, targetY):
-                if not self.game.periods[self.z].area.inBounds(coord[0], 
-                                                                coord[1]):
-                    return str(self.id) + " can not build out of bounds"
             if (buildingType.builtBy != self.type):
                 return str(self.id) + " can not construct that type"
             if (self.owner.gold[self.z] < buildingType.price):

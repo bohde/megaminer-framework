@@ -12,6 +12,7 @@ from portal import *
 from config.config import *
 from collections import defaultdict
 from sexpr.sexpr import *
+import bz2
 import os
 
 def loadClassDefaults(cfgFile = "config/defaults.cfg"):
@@ -106,13 +107,12 @@ class Match(DefaultGameWorld):
         for obj in self.objects.values():
             obj.nextTurn()
 
+        self.writeToLog()
+        self.sendChanged(self.spectators)
         self.checkWinner()
-
         if self.winner is None:
             self.sendStatus(self.players)
-        self.sendChanged(self.spectators)
 
-        self.writeToLog()
         for obj in self.objects.values():
             obj.changed = False
         self.animations = ["animations"]
@@ -149,13 +149,19 @@ class Match(DefaultGameWorld):
         if winner == self.players[0]:
             winnerIndex = 0
         msg = ["game-over", self.id, self.winner.user, winnerIndex]
+        log = open(self.logPath(), "a")
+        log.write(sexpr2str(msg))
+        log.write('\n')
+        log.close()
+        log = open(self.logPath(), "r")
+        bzlog = bz2.BZ2File(self.logPath()+".bz2", "w")
+        bzlog.write(log.read())
+        log.close()
+        os.remove(self.logPath())
         for p in self.players:
             p.writeSExpr(msg)
         for p in self.spectators:
             p.writeSExpr(msg)
-        log = open(self.logPath(), "a")
-        log.write(sexpr2str(msg))
-        log.write('\n')
 
     def logPath(self):
         return "logs/" + str(self.id) + ".gamelog"

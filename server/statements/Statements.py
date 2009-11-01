@@ -24,6 +24,7 @@ import math
 from game.match import Match
 from StatementUtils import dict_wrapper, require_length, require_game, \
                            require_login
+import bz2
 
 games = {}
 id = 0
@@ -114,7 +115,7 @@ def leaveGame(self, expression):
 @require_length(2)
 def requestLog(self, expression):
     logID = str(expression[1])
-    infile = open("logs/" + logID + ".gamelog")
+    infile = bz2.BZ2File("logs/" + logID + ".gamelog.bz2", "r")
     self.writeSExpr(['log', logID, infile.read()])
 
 
