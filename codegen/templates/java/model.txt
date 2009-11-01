@@ -30,9 +30,11 @@ class ${model.name}
     //commands
     
 % for func in model.functions.keys():
-      boolean ${func}(${conversions[model]} object\
+    boolean ${func}(\
 %   for arg in model.functions[func]:
+%     if model.functions[func][0] != arg:
 , \
+%     endif
 %     if isinstance(arg[1], Model):
 ${arg[1].name} ${arg[0]}\
 %     else:
