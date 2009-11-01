@@ -227,6 +227,8 @@ bool AI::areaClear(int x, int y, int z, int typeIndex)
 //Returns true if I can build on this square
 bool AI::isClear(int x, int y, int z)
 {
+  if (abs(x) > 10 || abs(y) > 10)
+    return false;
   for (int i = 0; i < portals.size(); i++)
   {
     if (portals[i].x() == x && portals[i].y() == y &&
