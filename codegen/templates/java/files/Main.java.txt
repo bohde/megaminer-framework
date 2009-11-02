@@ -40,6 +40,8 @@ public class Main
               Client.INSTANCE.getStatus();
             }
         }
+        //request the log file
+        while(Client.INSTANCE.networkLoop(socket) != 0)
         return;
     }
 }

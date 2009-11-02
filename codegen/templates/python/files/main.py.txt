@@ -31,6 +31,10 @@ def main():
       library.endTurn()
     else:
       library.getStatus()
+  
+  #request the log file
+  while library.networkLoop(socket, 0):
+    pass
   exit(0)
 
 
