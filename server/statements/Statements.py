@@ -25,6 +25,8 @@ from game.match import Match
 from StatementUtils import dict_wrapper, require_length, require_game, \
                            require_login
 import bz2
+import time
+import threading
 
 games = {}
 id = 0
@@ -61,6 +63,7 @@ def createGame(self, expression):
         self.writeSExpr(['create-game-denied', 'game number already exists'])
 
     games[game] = Match(game)
+    threading.Thread(target=checkTime,args=(games[game],)).start()
 
     return True
 
@@ -117,5 +120,58 @@ def requestLog(self, expression):
     logID = str(expression[1])
     infile = bz2.BZ2File("logs/" + logID + ".gamelog.bz2", "r")
     self.writeSExpr(['log', logID, infile.read()])
+
+
+#Ensure that the game continues to progress and eventually dies
+def checkTime(game):
+    prevTurnNum = -1
+    #Check the game status every 5 seconds
+    sleepTime = 5
+    #Allow players 30 seconds to set up the game
+    setupTimeRemaining = 60
+    #Allow players about 30 seconds for each turn
+    turnTime = 60
+    turnTimeRemaining = int(turnTime)
+    #Destory this game and all its objects about 30 seconds after
+    # the game is over
+    gameOverTime = 60
+
+    #Wait for the game to start
+    while (game.turn is None and setupTimeRemaining > 0):
+        setupTimeRemaining -= sleepTime
+        time.sleep(sleepTime)
+    if setupTimeRemaining <= 0:
+        for p in game.players:
+            p.game = None
+            p.type = None
+        for s in game.spectators:
+            s.game = None
+            s.type = None
+        del games[game.id]
+
+    #Make sure the game continues to progress
+    while (games.has_key(game.id) and game.winner is None):
+        with game.turnLock:
+            turnTimeRemaining -= sleepTime
+            if prevTurnNum == game.turnNum and turnTimeRemaining <= 0:
+                if game.turn == game.players[0]:
+                    game.declareWinner(game.players[1])
+                else:
+                    game.declareWinner(game.players[0])
+            elif prevTurnNum != game.turnNum:
+                turnTimeRemaining = int(turnTime)
+            prevTurnNum = int(game.turnNum)
+        time.sleep(sleepTime)
+
+    #Ensure the game is destoyed eventually
+    time.sleep(gameOverTime)
+    if games.has_key(game.id):
+        for p in game.players:
+            p.game = None
+            p.type = None
+        for s in game.spectators:
+            s.game = None
+            s.type = None
+        del games[game.id]
 
 
