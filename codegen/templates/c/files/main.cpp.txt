@@ -53,7 +53,6 @@ int main(int argc, char** argv)
     }
   }
   //Wait for log
-  //Except the server doesn't presently send logs.
-  //while (networkLoop(socket)){}
+  while (networkLoop(socket)){}
   return 0;
 }
