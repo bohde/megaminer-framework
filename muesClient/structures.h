@@ -49,6 +49,8 @@ struct _Portal
   int z;
   int direction;
   int fee;
+  int feeIncr;
+  float feeMultiplier;
 };
 struct _Terrain
 {

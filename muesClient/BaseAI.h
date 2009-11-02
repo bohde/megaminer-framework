@@ -24,6 +24,8 @@ protected:
   std::vector<Unit> units;
   std::vector<UnitType> unitTypes;
 public:
+  int maxX();
+  int maxY();
   int player0Gold0();
   int player0Gold1();
   int player0Gold2();

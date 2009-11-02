@@ -33,6 +33,8 @@ namespace Windows
 
 using namespace std;
 
+static int maxX = 0;
+static int maxY = 0;
 static int player0Gold0 = 0;
 static int player0Gold1 = 0;
 static int player0Gold2 = 0;
@@ -330,6 +332,10 @@ void parsePortal(_Portal* object, sexp_t* expression)
   sub = sub->next;
   object->fee = atoi(sub->val);
   sub = sub->next;
+  object->feeIncr = atoi(sub->val);
+  sub = sub->next;
+  object->feeMultiplier = atof(sub->val);
+  sub = sub->next;
   
 }
 void parseTerrain(_Terrain* object, sexp_t* expression)
@@ -501,6 +507,10 @@ DLLEXPORT int networkLoop(int socket)
           player1Gold1 = atoi(subsub->val);
           subsub = subsub->next;
           player1Gold2 = atoi(subsub->val);
+          sub = sub->next;
+          
+          maxX = atoi(sub->val);
+          maxY = atoi(sub->val);
         }
         else if(string(sub->val) == "Building")
         {
@@ -649,6 +659,14 @@ DLLEXPORT int getUnitTypeCount()
 }
 
 
+DLLEXPORT int getMaxX()
+{
+  return maxX;
+}
+DLLEXPORT int getMaxY()
+{
+  return maxY;
+}
 DLLEXPORT int getPlayer0Gold0()
 {
   return player0Gold0;

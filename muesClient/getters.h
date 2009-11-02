@@ -43,6 +43,8 @@ int portalGetY(_Portal* ptr);
 int portalGetZ(_Portal* ptr);
 int portalGetDirection(_Portal* ptr);
 int portalGetFee(_Portal* ptr);
+int portalGetFeeIncr(_Portal* ptr);
+float portalGetFeeMultiplier(_Portal* ptr);
 int terrainGetObjectID(_Terrain* ptr);
 int terrainGetX(_Terrain* ptr);
 int terrainGetY(_Terrain* ptr);

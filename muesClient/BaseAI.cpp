@@ -5,6 +5,14 @@
 #include "BaseAI.h"
 #include "game.h"
 
+int BaseAI::maxX()
+{
+  return getMaxX();
+}
+int BaseAI::maxY()
+{
+  return getMaxY();
+}
 int BaseAI::player0Gold0()
 {
   return getPlayer0Gold0();

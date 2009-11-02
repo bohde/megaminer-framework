@@ -258,6 +258,16 @@ int Portal::fee()
   return ptr->fee;
 }
 
+int Portal::feeIncr()
+{
+  return ptr->feeIncr;
+}
+
+float Portal::feeMultiplier()
+{
+  return ptr->feeMultiplier;
+}
+
 
 
 std::ostream& operator<<(std::ostream& stream,Portal ob)
@@ -268,6 +278,8 @@ std::ostream& operator<<(std::ostream& stream,Portal ob)
   stream << "z: " << ob.ptr->z  <<'\n';
   stream << "direction: " << ob.ptr->direction  <<'\n';
   stream << "fee: " << ob.ptr->fee  <<'\n';
+  stream << "feeIncr: " << ob.ptr->feeIncr  <<'\n';
+  stream << "feeMultiplier: " << ob.ptr->feeMultiplier  <<'\n';
   return stream;
 }
 

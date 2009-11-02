@@ -148,6 +148,14 @@ int portalGetFee(_Portal* ptr)
 {
   return ptr->fee;
 }
+int portalGetFeeIncr(_Portal* ptr)
+{
+  return ptr->feeIncr;
+}
+float portalGetFeeMultiplier(_Portal* ptr)
+{
+  return ptr->feeMultiplier;
+}
 int terrainGetObjectID(_Terrain* ptr)
 {
   return ptr->objectID;

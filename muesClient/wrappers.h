@@ -83,6 +83,8 @@ class Portal {
   int z();
   int direction();
   int fee();
+  int feeIncr();
+  float feeMultiplier();
 
   // Actions
 

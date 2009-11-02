@@ -37,6 +37,8 @@ extern "C"
 
 //accessors
 
+DLLEXPORT int getMaxX();
+DLLEXPORT int getMaxY();
 DLLEXPORT int getPlayer0Gold0();
 DLLEXPORT int getPlayer0Gold1();
 DLLEXPORT int getPlayer0Gold2();
