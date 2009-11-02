@@ -98,24 +98,25 @@ class Match(DefaultGameWorld):
         return True
 
     def nextTurn(self):
-        self.turnNum += 1
-        if (self.turn == self.players[0]):
-            self.turn = self.players[1]
-        else:
-            self.turn = self.players[0]
-        self.dealHungerDamage()
-        for obj in self.objects.values():
-            obj.nextTurn()
+        with self.turnLock:
+            self.turnNum += 1
+            if (self.turn == self.players[0]):
+                self.turn = self.players[1]
+            else:
+                self.turn = self.players[0]
+            self.dealHungerDamage()
+            for obj in self.objects.values():
+                obj.nextTurn()
 
-        self.writeToLog()
-        self.sendChanged(self.spectators)
-        self.checkWinner()
-        if self.winner is None:
-            self.sendStatus(self.players)
-
-        for obj in self.objects.values():
-            obj.changed = False
-        self.animations = ["animations"]
+            self.writeToLog()
+            self.sendChanged(self.spectators)
+            self.checkWinner()
+            if self.winner is None:
+                self.sendStatus(self.players)
+   
+            for obj in self.objects.values():
+                obj.changed = False
+            self.animations = ["animations"]
 
     def checkWinner(self):
         for p in self.players:

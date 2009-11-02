@@ -6,6 +6,7 @@ from portal import *
 from terrain import *
 from unit import *
 from building import *
+import threading
 
 class RectangularArea(collections.defaultdict):
     """
@@ -183,6 +184,7 @@ class GameWorld(object):
 
         self.far_past, self.past, self.present = generator()
         self.periods = [self.far_past, self.past, self.present]
+        self.turnLock = threading.Lock()
 
     def addObject(self, newObject):
         self.animations += [["add", newObject.id]]
