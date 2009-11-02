@@ -71,8 +71,8 @@ class TimePeriod(object):
         for key, count in self.spaceOccupation.iteritems():
             if count > 1:
                 print "period %s" %self.name
-                font = pygame.font.Font(None, 24)
-                text = font.render("2", 1, (250,250,250))
+                font = pygame.font.Font(None, 32)
+                text = font.render("2", 1, (238,44,44))
                 textloc = text.get_rect()
                 textloc.midbottom = key
                 self.countLayer.blit(text, textloc)

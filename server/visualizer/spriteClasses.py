@@ -3,11 +3,10 @@ from pygame.locals import *
 from math import hypot
 
 
-unitImages = {"civE":{'0':[], '1':[]}, "art":{'0':[], '1':[]},"spear":{'0':[], '1':[]}, "artil":{'0':[], '1':[]}, "blank":{'0':[], '1':[]},"pig":{'0':[], '1':[]}}
-    #"cav":{'0':[], '1':[]}, }}
+unitImages = {"civE":{'0':[], '1':[]}, "art":{'0':[], '1':[]},"spear":{'0':[], '1':[]}, "artil":{'0':[], '1':[]}, "blank":{'0':[], '1':[]},"pig":{'0':[], '1':[]}, "cav":{'0':[], '1':[]}}
 
 buildingImages = {"school":{'0':[], '1':[]}, "gallery":{'0':[], '1':[]}, "farm":{'0':[], '1':[]},
-    "warFac":{'0':[], '1':[]}}  # ,"bunker":{'0':[], '1':[]}}
+    "warFac":{'0':[], '1':[]}, "bunker":{'0':[], '1':[]}}
 
 terrainImages = {"rock":[], "sand":[], "tree":[], "grass":[]}
 
