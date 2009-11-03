@@ -53,6 +53,11 @@ def createGame(self, expression):
         self.writeSExpr(['create-game-denied', 'invalid game number'])
         return False
 
+    print "Creating game " + str(game)
+
+    if games.get(game, None) is not None:
+        self.writeSExpr(['create-game-denied', 'game number already exists'])
+
     games[game] = Match(game)
 
     return True
