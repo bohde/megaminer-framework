@@ -14,7 +14,7 @@ clean:
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-libclient_%.o: CFLAGS += -fPIC
+libclient_%.o: override CFLAGS += -fPIC
 libclient_%.o: %.c %.d
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 

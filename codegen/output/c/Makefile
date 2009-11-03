@@ -5,7 +5,7 @@ CFLAGS += -g
 CXXFLAGS += -g
 
 CPPFLAGS = -DSHOW_NETWORK
-CPPFLAGS += -Isexp
+override CPPFLAGS += -Isexp
 
 all: client libclient.so
 
@@ -17,7 +17,7 @@ all: client libclient.so
 
 .PHONY: clean all subdirs
 
-libclient_%.o: CXXFLAGS += -fPIC
+libclient_%.o: override CXXFLAGS += -fPIC
 libclient_%.o: %.cpp %.d
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
