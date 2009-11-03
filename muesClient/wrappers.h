@@ -14,6 +14,7 @@ class Terrain;
 class Unit;
 class UnitType;
 
+///A building to shelter, feed, and/or create units.
 class Building {
   public:
   _Building* ptr;
@@ -40,6 +41,7 @@ class Building {
   friend std::ostream& operator<<(std::ostream& stream, Building ob);
 };
 
+///This defines the attributes of a kind of building.
 class BuildingType {
   public:
   _BuildingType* ptr;
@@ -71,6 +73,7 @@ class BuildingType {
   friend std::ostream& operator<<(std::ostream& stream, BuildingType ob);
 };
 
+///A connection between two adjacent times.
 class Portal {
   public:
   _Portal* ptr;
@@ -91,6 +94,7 @@ class Portal {
   friend std::ostream& operator<<(std::ostream& stream, Portal ob);
 };
 
+///The attributes of a specific tile of the world.
 class Terrain {
   public:
   _Terrain* ptr;
@@ -109,6 +113,7 @@ class Terrain {
   friend std::ostream& operator<<(std::ostream& stream, Terrain ob);
 };
 
+///An entitiy that can move around the game and act.
 class Unit {
   public:
   _Unit* ptr;
@@ -136,6 +141,7 @@ class Unit {
   friend std::ostream& operator<<(std::ostream& stream, Unit ob);
 };
 
+///This defines the attributes of a kind of unit.
 class UnitType {
   public:
   _UnitType* ptr;

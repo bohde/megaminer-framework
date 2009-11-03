@@ -15,6 +15,11 @@ void AI::init(){}
 
 bool AI::run()
 {
+  for (int i = 0; i < unitTypes.size(); i++)
+  {
+    cout << i << " : " << unitTypes[i].name() << endl;
+  }
+
   printMap(2);
   cout << "Starting turn " << turnNumber() << endl;
   cout << "Player0Gold0 " << player0Gold0() << endl;
@@ -157,8 +162,6 @@ bool AI::perHasUnitAtLeastLvl(char typeName[100], int z, int level)
 {
   bool hasOne = false;
 
-  //If I already have a barracks of my level or higher in this
-  // time period, don't make another.
   for (int i = 0; i < units.size(); i++)
   {
     if (units[i].ownerID() == playerID()
@@ -182,8 +185,6 @@ bool AI::perHasBuildAtLeastLvl(char typeName[100], int z, int level)
   
   bool hasOne = false;
 
-  //If I already have a barracks of my level or higher in this
-  // time period, don't make another.
   for (int i = 0; i < buildings.size(); i++)
   {
     if (buildings[i].ownerID() == playerID()
@@ -678,6 +679,7 @@ void AI::printMap(int z)
           {
             output[c] = 'b';
           }
+          output[c] = '0' + buildings[i].level();
         }
       }
     }
@@ -687,7 +689,8 @@ void AI::printMap(int z)
     if (units[i].z() == z)
     {
       c = units[i].x() + 10 + (-1*units[i].y() + 10) * 22;
-      output[c] = '0' + units[i].unitTypeID();
+      //output[c] = '0' + units[i].unitTypeID();
+      output[c] = '0' + units[i].level();
     }
   }
   cout << output;

@@ -26,12 +26,19 @@ protected:
 public:
   int maxX();
   int maxY();
+  ///Player 0's past gold
   int player0Gold0();
+  ///Player 0's present gold
   int player0Gold1();
+  ///Player 0's future gold
   int player0Gold2();
+  ///Player 1's past gold
   int player1Gold0();
+  ///Player 1's present gold
   int player1Gold1();
+  ///Player 1's future gold
   int player1Gold2();
+  ///Player Number; either 0 or 2
   int playerID();
   int turnNumber();
   
