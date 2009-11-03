@@ -1,5 +1,9 @@
 
-///BaseAI
+/// \brief A basic AI interface.
+
+///This class implements most the code an AI would need to interface with the lower-level game code.
+///AIs should extend this class to get a lot of builer-plate code out of the way
+///The provided AI class does just that.
 public abstract class BaseAI
 {
 % for model in models:
@@ -45,6 +49,9 @@ public abstract class BaseAI
 
 
 % for datum in globals:
+%   if datum.doc:
+    ///${datum.doc}
+%   endif
     ${conversions[datum.type]} ${datum.name}()
     {
         return Client.INSTANCE.get${capitalize(datum.name)}();

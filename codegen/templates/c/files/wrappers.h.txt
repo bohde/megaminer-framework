@@ -12,6 +12,9 @@ class ${model.name};
 % endfor
 
 % for model in models:
+% if model.doc:
+///${model.doc}
+% endif
 class ${model.name} {
   public:
   _${model.name}* ptr;

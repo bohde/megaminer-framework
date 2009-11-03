@@ -22,6 +22,9 @@ protected:
 % endfor
 public:
 % for datum in globals:
+%   if datum.doc:
+  ///${datum.doc}
+%   endif
   ${conversions[datum.type]} ${datum.name}();
 % endfor
   

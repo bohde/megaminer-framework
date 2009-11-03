@@ -24,7 +24,8 @@ UnitType = structures.Model('UnitType', key='objectID',
     ('priceExp', float),
     ('damageExp', float),
     ('paintBase', int),
-    ('paintLinear', int))
+    ('paintLinear', int)),
+  doc = 'This defines the attributes of a kind of unit.'
   )
 
 BuildingType = structures.Model('BuildingType', key='objectID',
@@ -46,7 +47,8 @@ BuildingType = structures.Model('BuildingType', key='objectID',
     ('armorExp', float),
     ('hpExp', float),
     ('priceExp', float),
-    ('foodExp', float))
+    ('foodExp', float)),
+  doc = 'This defines the attributes of a kind of building.'
   )
 
 Unit = structures.Model('Unit', key='objectID',
@@ -64,7 +66,8 @@ Unit = structures.Model('Unit', key='objectID',
     ('build', ( ('x', int), ('y', int), ('type', BuildingType) ) ),
     ('paint', ( ('x', int), ('y', int)) ),
     ('move', ( ('x', int), ('y', int)) ),
-    ('warp', () ) )
+    ('warp', () ) ),
+  doc = 'An entitiy that can move around the game and act.'
   )
 
 
@@ -82,7 +85,8 @@ Building = structures.Model('Building', key='objectID',
     ('linked', int),
     ('complete', int)),
   functions = ( ('train', ( ('unit', UnitType), ) ),
-    ('cancel', () ) )
+    ('cancel', () ) ),
+  doc = 'A building to shelter, feed, and/or create units.'
   )
 
 Terrain = structures.Model('Terrain', key='objectID',
@@ -91,7 +95,8 @@ Terrain = structures.Model('Terrain', key='objectID',
     ('y', int),
     ('z', int),
     ('blockmove', int),
-    ('blockbuild', int))
+    ('blockbuild', int)),
+  doc = 'The attributes of a specific tile of the world.'
   )
 
 Portal = structures.Model('Portal', key='objectID',
@@ -102,17 +107,18 @@ Portal = structures.Model('Portal', key='objectID',
     ('direction', int),
     ('fee', int),
     ('feeIncr', int),
-    ('feeMultiplier', float))
+    ('feeMultiplier', float)),
+  doc = 'A connection between two adjacent times.'
   )
 
 turnNumber = structures.Global('turnNumber', int)
-player0Gold0 = structures.Global('player0Gold0', int)
-player0Gold1 = structures.Global('player0Gold1', int)
-player0Gold2 = structures.Global('player0Gold2', int)
-player1Gold0 = structures.Global('player1Gold0', int)
-player1Gold1 = structures.Global('player1Gold1', int)
-player1Gold2 = structures.Global('player1Gold2', int)
-playerID = structures.Global('playerID', int)
+player0Gold0 = structures.Global('player0Gold0', int, 'Player 0\'s past gold')
+player0Gold1 = structures.Global('player0Gold1', int, 'Player 0\'s present gold')
+player0Gold2 = structures.Global('player0Gold2', int, 'Player 0\'s future gold')
+player1Gold0 = structures.Global('player1Gold0', int, 'Player 1\'s past gold')
+player1Gold1 = structures.Global('player1Gold1', int, 'Player 1\'s present gold')
+player1Gold2 = structures.Global('player1Gold2', int, 'Player 1\'s future gold')
+playerID = structures.Global('playerID', int, 'Player Number; either 0 or 2')
 maxX = structures.Global('maxX', int)
 maxY = structures.Global('maxY', int)
 
