@@ -11,7 +11,12 @@ class GameObject(object):
     self.iteration = BaseAI.iteration
 
 %for model in models:
+
 class ${model.name}(GameObject):
+%  if model.doc:
+  """${model.doc}
+  """
+%  endif
   def __init__(self, ptr):
     from BaseAI import BaseAI
     self.ptr = ptr

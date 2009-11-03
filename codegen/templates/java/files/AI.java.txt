@@ -1,4 +1,4 @@
-///AI
+///The class implementing gameplay logic.
 class AI extends BaseAI
 {
   public String username()

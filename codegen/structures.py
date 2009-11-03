@@ -32,6 +32,8 @@ class Model(object):
         self.functions[key] = value
     if 'key' in kwargs:
       self.key = kwargs['key']
+    if 'doc' in kwargs:
+      self.doc = kwargs['doc']
 
 class Global(object):
   name = ''

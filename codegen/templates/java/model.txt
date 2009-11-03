@@ -1,5 +1,8 @@
 import com.sun.jna.Pointer;
 
+% if model.doc:
+///${model.doc}
+% endif
 class ${model.name}
 {
     Pointer ptr;
