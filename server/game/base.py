@@ -66,7 +66,7 @@ def initialSetup(game):
 
     # Units for player 0
     for z in xrange(3):
-        game.addObject(Unit(game, x, y, z, game.players[0], engineerType, 0))
+        game.addObject(Unit(game, x, y, z, game.players[0], engineerType, z))
         game.addObject(Unit(game, x, y + schoolType.height, z, game.players[0], artistType, z))
 
     x = -x - w + 1
@@ -81,7 +81,7 @@ def initialSetup(game):
     # Units for player 1
     for z in xrange(3):
         game.addObject(Unit(game, x, y + farmType.height + galleryType.height,
-                       z, game.players[1], engineerType, 0))
+                       z, game.players[1], engineerType, z))
         game.addObject(Unit(game, x, y + schoolType.height, z, game.players[1], artistType, z))
 
 
