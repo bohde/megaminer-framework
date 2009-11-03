@@ -15,7 +15,7 @@ void AI::init(){}
 
 bool AI::run()
 {
-  printMap(0);
+  printMap(2);
   cout << "Starting turn " << turnNumber() << endl;
   cout << "Player0Gold0 " << player0Gold0() << endl;
   cout << "Buildings on map : " << buildings.size() << endl;
@@ -444,7 +444,7 @@ void AI::randomWalk(Unit& u, int moves)
     
     //Drift towards enemy
     if ( ((playerID() == 1) == (xOffset + yOffset < 0))
-         && rand() % 5 == 0)
+         && rand() % 10 == 0)
     {
       xOffset *= -1;
       yOffset *= -1;
@@ -687,7 +687,7 @@ void AI::printMap(int z)
     if (units[i].z() == z)
     {
       c = units[i].x() + 10 + (-1*units[i].y() + 10) * 22;
-      output[c] = 'U';
+      output[c] = '0' + units[i].unitTypeID();
     }
   }
   cout << output;
