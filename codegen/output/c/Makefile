@@ -13,11 +13,11 @@ all: client libclient.so
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-.PHONY: clean all
+.PHONY: clean all subdirs
 
 libclient_%.o: CXXFLAGS += -fPIC
 libclient_%.o: %.cpp %.d
-	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -c -o $@
 
 clean:
 	rm -f $(objects) $(deps) client libclient.so
@@ -30,6 +30,6 @@ libclient.so: libclient_network.o libclient_game.o libclient_getters.o libclient
 	$(CXX) -shared -Wl,-soname,libclient.so $(LDFLAGS) $(LOADLIBES) $(LDLIBS) $^ -o libclient.so
 
 sexp/sexp.a sexp/libclient_sexp.a:
-	$(MAKE) -C sexp
+	$(MAKE) -C $(dir $@) $(notdir $@)
 
 -include $(deps)

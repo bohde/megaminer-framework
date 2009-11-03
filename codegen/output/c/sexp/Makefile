@@ -16,21 +16,18 @@ clean:
 
 libclient_%.o: CFLAGS += -fPIC
 libclient_%.o: %.c %.d
-	$(CC) -c $(CPPFLAGS) $(CFLAGS)   $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< -c -o $@
 
 
-.PHONY: sexp.a(PHONY) clean all
+.PHONY: clean all
 
-sexp.a(${objects}) sexp.a(PHONY): ${objects}
-	ar cr sexp.a $^
-	ranlib sexp.a
+libclient_sexp.a: ${libclient_objects}
+	ar cr $@ $^
+	ranlib $@
 
-libclient_sexp.a(${libclient_objects}) libclient_sexp.a(PHONY): ${libclient_objects}
-	ar cr libclient_sexp.a $^
-	ranlib libclient_sexp.a
-
-sexp.a: sexp.a(PHONY)
-libclient_sexp.a: libclient_sexp.a(PHONY)
+sexp.a: ${objects}
+	ar cr $@ $^
+	ranlib $@
 
 -include $(deps)
 
