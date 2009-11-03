@@ -1,9 +1,11 @@
 sources = $(wildcard *.cpp)
 objects = $(sources:%.cpp=%.o)
 deps = $(sources:%.cpp=%.d)
-CPPFLAGS = -DSHOW_NETWORK -g
+CFLAGS += -g
+CXXFLAGS += -g
 
-CPPFLAGS += -I. -Isexp
+CPPFLAGS = -DSHOW_NETWORK
+CPPFLAGS += -Isexp
 
 all: client libclient.so
 
@@ -17,7 +19,7 @@ all: client libclient.so
 
 libclient_%.o: CXXFLAGS += -fPIC
 libclient_%.o: %.cpp %.d
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -c -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(objects) $(deps) client libclient.so

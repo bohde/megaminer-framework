@@ -16,8 +16,7 @@ clean:
 
 libclient_%.o: CFLAGS += -fPIC
 libclient_%.o: %.c %.d
-	$(CC) $(CPPFLAGS) $(CFLAGS) $< -c -o $@
-
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 .PHONY: clean all
 
