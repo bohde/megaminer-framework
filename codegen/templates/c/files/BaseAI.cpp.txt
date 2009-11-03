@@ -14,6 +14,7 @@ ${conversions[datum.type]} BaseAI::${datum.name}()
 
 bool BaseAI::startTurn()
 {
+  static bool initialized = false;
   int count = 0;
   % for model in models:
   count = get${model.name}Count();
@@ -24,5 +25,10 @@ bool BaseAI::startTurn()
     ${lowercase(model.name)}s[i] = ${model.name}(get${model.name}(i));
   }
   % endfor
+  if(!initialized)
+  {
+    initialized = true;
+    init();
+  }
   run();
 }
