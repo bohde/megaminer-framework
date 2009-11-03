@@ -209,6 +209,18 @@ DLLEXPORT int networkLoop(int socket)
     expression = expression->list;
     if(expression->val != NULL && strcmp(expression->val, "game-over") == 0)
     {
+      expression = expression->next->next;
+      char* winnerName = expression->val;
+      expression = expression->next;
+      int winnerID = atoi(expression->val);
+      if(winnerID == playerID)
+      {
+        cout << "You win!" << endl;
+      }
+      else
+      {
+        cout << "You lose. :(" << endl;
+      }
       stringstream expr;
       expr << "(request-log " << gameName << ")";
       send_string(socket, expr.str().c_str());
