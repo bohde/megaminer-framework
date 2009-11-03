@@ -69,6 +69,7 @@ static int socket;
 //These two are needed to save the login credentials for repeated internal use
 static char* last_username = NULL;
 static char* last_password = NULL;
+static string gameName;
 
 
 DLLEXPORT bool serverLogin(int s, const char* username, const char* password)
@@ -125,6 +126,10 @@ DLLEXPORT int createGame()
   expr << "(join-game " << gameNum << ")";
   send_string(socket, expr.str().c_str());
   
+  stringstream name;
+  name << gameNum;
+  gameName = name.str();
+  
   return socket;
 
 }
@@ -148,6 +153,10 @@ DLLEXPORT int joinGame(int gameNum)
   //join and start the game
   send_string(socket, expr.str().c_str());
   send_string(socket, "(game-start)");
+  
+  stringstream name;
+  name << gameNum;
+  gameName = name.str();
   
   return socket;
 }
@@ -445,6 +454,9 @@ DLLEXPORT int networkLoop(int socket)
     expression = expression->list;
     if(expression->val != NULL && strcmp(expression->val, "game-over") == 0)
     {
+      stringstream expr;
+      expr << "(request-log " << gameName << ")";
+      send_string(socket, expr.str().c_str());
       return 0;
     }
     else if(expression->val != NULL && strcmp(expression->val, "log") == 0)

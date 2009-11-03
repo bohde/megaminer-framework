@@ -15,6 +15,7 @@ void AI::init(){}
 
 bool AI::run()
 {
+  printMap(0);
   cout << "Starting turn " << turnNumber() << endl;
   cout << "Player0Gold0 " << player0Gold0() << endl;
   cout << "Buildings on map : " << buildings.size() << endl;
@@ -34,12 +35,14 @@ bool AI::run()
 
   for (int i = 0; i < buildings.size(); i++)
   {
+    /*
     if (rand()%100 < 2 && (!buildings[i].complete() || 
         buildings[i].inTraining() != -1) && 
         buildings[i].ownerID() == playerID())
     {
       buildings[i].cancel();
     }
+    */
 
     if (buildings[i].ownerID() == playerID())
     {
@@ -93,7 +96,12 @@ void AI::trainUnits(Building& b)
 
   if ( strcmp(unitTypes[newTypeIndex].name(), "Engineer") == 0)
   {
-    chance = 10;
+    chance = 20;
+    if (getGold(playerID(), b.z()) < END_THRIFT && 
+        perHasUnitAtLeastLvl("Engineer", b.z(), b.level()))
+    {
+      chance = 0;
+    }
   }
   else if (strcmp(unitTypes[newTypeIndex].name(), "Pig") == 0)
   {
@@ -143,11 +151,74 @@ void AI::doArtist(Unit& u)
   }
 }
 
+//If I already have a unit of this type of my level or higher in this
+// time period, return true
+bool AI::perHasUnitAtLeastLvl(char typeName[100], int z, int level)
+{
+  bool hasOne = false;
+
+  //If I already have a barracks of my level or higher in this
+  // time period, don't make another.
+  for (int i = 0; i < units.size(); i++)
+  {
+    if (units[i].ownerID() == playerID()
+        && strcmp(getType(units[i]).name(), typeName) == 0
+        && units[i].level() >= level
+        && units[i].z() == z)
+    {
+      hasOne = true;
+      break;
+    }
+  }
+
+  return hasOne;
+}
+
+
+//If I already have a building of this type of my level or higher in this
+// time period, return true
+bool AI::perHasBuildAtLeastLvl(char typeName[100], int z, int level)
+{
+  
+  bool hasOne = false;
+
+  //If I already have a barracks of my level or higher in this
+  // time period, don't make another.
+  for (int i = 0; i < buildings.size(); i++)
+  {
+    if (buildings[i].ownerID() == playerID()
+        && strcmp(getType(buildings[i]).name(), typeName) == 0
+        && buildings[i].level() >= level
+        && buildings[i].z() == z
+        && buildings[i].complete() == 1)
+    {
+      hasOne = true;
+      break;
+    }
+  }
+
+  return hasOne;
+}
+
 void AI::doEngineer(Unit& u)
 {
   int typeIndex = rand()%buildingTypes.size();
   BuildingType bt = buildingTypes[typeIndex];
   int chance = 100;
+
+  bool hasBarracks = perHasBuildAtLeastLvl("Barracks", u.z(), u.level());
+  bool hasGallery = perHasBuildAtLeastLvl("Gallery", u.z(), u.level());
+  bool hasSchool = perHasBuildAtLeastLvl("School", u.z(), u.level());
+  
+  while (getGold(playerID(), u.z()) < END_THRIFT
+      && ((hasBarracks && strcmp(bt.name(), "Barracks")==0)
+       ||(hasGallery && strcmp(bt.name(), "Gallery")==0)
+       ||(hasSchool && strcmp(bt.name(), "School") == 0))) 
+  {
+    typeIndex = rand()%buildingTypes.size();
+    bt = buildingTypes[typeIndex];
+  }
+
 
   if (strcmp(buildingTypes[typeIndex].name(),"Barracks") == 0)
   {
@@ -302,14 +373,27 @@ Building* AI::getBuilding(int x, int y, int z)
 void AI::doCombatUnit(Unit& u)
 {
   int remainingMoves = u.moves();
+  int remainingActions = u.actions();
 
-  //for (int i = 0; i < u.actions(); i++)
-  for (int i = 0; i < 1; i++)
+  for (int i = 0; i < u.actions(); i++)
   {
+    //attack any units in your range
     Unit* target = anyInRange(u);
     if (target != NULL)
     {
       u.attack(target->x(), target->y());
+      remainingMoves -= getType(u).attackcost();
+      remainingActions -= 1;
+    }
+  }
+    
+  for (int i = 0; i < remainingActions; i++)
+  {
+    //attack any buildings in your range
+    Building* targetB = anyBuildInRange(u);
+    if (targetB != NULL)
+    {
+      u.attack(targetB->x(), targetB->y());
       remainingMoves -= getType(u).attackcost();
     }
   }
@@ -332,6 +416,22 @@ Unit* AI::anyInRange(Unit& u)
   return NULL;
 }
 
+Building* AI::anyBuildInRange(Unit& u)
+{
+  UnitType ut = getType(u);
+  for (int i = 0; i < buildings.size(); i++)
+  {
+    if (buildings[i].ownerID() != playerID()
+    &&    distance(u, buildings[i]) <= ut.maxrange() &&
+        distance(u, buildings[i]) >= ut.minrange())
+    {
+      return &buildings[i];
+    }
+  }
+  return NULL;
+
+}
+
 void AI::randomWalk(Unit& u, int moves)
 {
   int curX = u.x(), curY = u.y(), curZ = u.z();
@@ -340,7 +440,16 @@ void AI::randomWalk(Unit& u, int moves)
   {
     myPortal = NULL;
     int yOffset = rand()%3 -1;
-    int xOffset = (abs(yOffset) - 1) * (rand()%3 - 1);
+    int xOffset = (abs(yOffset) - 1) * (2*(rand()%2) - 1);
+    
+    //Drift towards enemy
+    if ( ((playerID() == 1) == (xOffset + yOffset < 0))
+         && rand() % 5 == 0)
+    {
+      xOffset *= -1;
+      yOffset *= -1;
+    }
+
     if (abs(xOffset + yOffset) > 0 && 
         abs(xOffset+curX) <= 10 &&
         abs(yOffset+curY) <= 10 && 
@@ -353,7 +462,7 @@ void AI::randomWalk(Unit& u, int moves)
     myPortal = getPortalAt(curX, curY, curZ);
     if (myPortal != NULL)
     {
-      if (expectedHunger(curZ) > expectedHunger(curZ + myPortal->direction())
+      if (expectedHunger(curZ) > 5+expectedHunger(curZ + myPortal->direction())
           && getGold(playerID(), curZ)>getPortalFee(*myPortal))
       {
         u.warp();
@@ -504,3 +613,82 @@ int AI::expectedHunger(int z)
   return hunger;
 }
 
+BuildingType AI::getBuildingType(char typeName[500])
+{
+  for (int i = 0; i < buildingTypes.size(); i++)
+  {
+    if (strcmp(buildingTypes[i].name(), typeName)==0)
+    {
+      return buildingTypes[i];
+    }
+  }
+}
+
+void AI::printMap(int z)
+{
+  cout << "=====================" << endl;
+
+  char output[463];
+  int c;
+  output[462] = '\0';
+
+  //newlines and empty
+  for (c = 0; c < 462; c+=1)
+  {
+    output[c] = ' ';
+    if (c%22==21)
+    {
+      output[c] = '\n';
+    }
+  }
+
+  for (int i = 0; i < portals.size(); i++)
+  {
+    if (portals[i].z() == z)
+    {
+      c = portals[i].x() + 10 + (-1*portals[i].y() + 10) * 22;
+      output[c] = 'P';
+    }
+  }
+
+  for (int i = 0; i < terrains.size(); i++)
+  {
+    if (terrains[i].z() == z)
+    {
+      c = terrains[i].x() + 10 + (-1*terrains[i].y() + 10) * 22;
+      output[c] = 'T';
+    }
+  }
+
+
+  for (int i = 0; i < buildings.size(); i++)
+  {
+    if (buildings[i].z() == z)
+    {
+      for (int x = buildings[i].x(); x < buildings[i].x() + 2; x++)
+      {
+        for (int y = buildings[i].y(); y < buildings[i].y() + 2; y++)
+        {
+          c = x + 10 + (-1*y + 10) * 22;
+          if (buildings[i].complete() == 1)
+          {
+            output[c] = 'B';
+          }
+          else
+          {
+            output[c] = 'b';
+          }
+        }
+      }
+    }
+  }
+  for (int i = 0; i < units.size(); i++)
+  {
+    if (units[i].z() == z)
+    {
+      c = units[i].x() + 10 + (-1*units[i].y() + 10) * 22;
+      output[c] = 'U';
+    }
+  }
+  cout << output;
+}

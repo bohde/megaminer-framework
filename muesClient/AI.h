@@ -25,13 +25,17 @@ public:
   Building* getBuilding(int x, int y, int z);
   void doCombatUnit(Unit& u);
   Unit* anyInRange(Unit& u);
+  Building* anyBuildInRange(Unit& u);
 
   void randomWalk(Unit& u, int moves);
   Portal* getPortalAt(int x, int y, int z);
   bool canWalk(int x, int y, int z);
+  bool perHasBuildAtLeastLvl(char typeName[100], int z, int level);
+  bool perHasUnitAtLeastLvl(char typeName[100], int z, int level);
 
   UnitType getType(Unit& u);
   BuildingType getType(Building& b);
+  BuildingType getBuildingType(char typeName[500]);
   int distance(int x1, int y1, int z1, int x2, int y2, int z2);
   int distance(Unit& a, Unit& b);
   int distance(Unit& a, Portal& b);
@@ -48,6 +52,12 @@ public:
 
   int expectedHunger(int z);
   int effFood(Building b);
+
+  //If you have more than this much gold, don't be thrifty, spend
+  // it all!
+  static const int END_THRIFT = 600;
+
+  void printMap(int z);
 
 };
 
