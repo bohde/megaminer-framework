@@ -76,7 +76,7 @@ class TimePeriod(object):
                 textloc = text.get_rect()
                 textloc.midbottom = key
                 self.countLayer.blit(text, textloc)
-                pygame.display.update()
+                #pygame.display.update()
 
     ## takeStep and move are called in order to make a unit move animated-ly
     def takeStep(self, unitID):

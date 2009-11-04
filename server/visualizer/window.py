@@ -21,7 +21,7 @@ class Window(object):
     periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]} # red, blue, green
 
     #Period dimensions, in terms of map, a 10 by 10 map would be (10,10)
-    periodDimensions = (20,20)
+    periodDimensions = (21,21)
 
     #Delay time between frams. In milliseconds
     delaytime = 0
@@ -32,6 +32,8 @@ class Window(object):
         self.status = {}
         self.views = {}
         self.timePeriods = {}
+        self.playerNames = []
+        self.nameLayer = None
         windim = Window.windowDimensions
         try:
             windim[0] = config["width"]
@@ -49,8 +51,9 @@ class Window(object):
                                "s2":{"dimensions":(int(windim[0] * .475)
                                                    ,int(windim[1] * .325)), 
                                      "upperLeftCorner":(int(windim[0] * .52),int(windim[1] * .65))}}
-
+        
         self.display = pygame.display.set_mode(windim)
+        self.addPlayers("HOTDOG", "DANCEPARTY!")
         self.setUpTimePeriods()
         self.animations = False
         pygame.display.update()
@@ -75,6 +78,20 @@ class Window(object):
         threading.Thread(target=inner).start()
 
         
+    def addPlayers(self, username1, username2):
+        font = pygame.font.Font(os.path.join('visualizer/fonts', 'game_over.ttf') , 100)
+        displayRect = self.display.get_rect()
+        displayWidth = displayRect.width
+        print "**************HOLY SHIT DISPLAY WIDTH IS ", displayWidth
+        self.playerNames.append({'image':font.render(username1, 1, [250,0,0]), 'rect': None})
+        self.playerNames[0]['rect'] = self.playerNames[0]['image'].get_rect(topleft = (10, 10))
+        self.playerNames.append({'image':font.render(username2, 1, [0,0,250]), 'rect': None})
+        self.playerNames[1]['rect'] = self.playerNames[1]['image'].get_rect(topright = (displayWidth-10,10))
+        
+    def drawNames(self):
+        self.nameLayer.blit(self.playerNames[0]['image'], self.playerNames[0]['rect'])
+        self.nameLayer.blit(self.playerNames[1]['image'], self.playerNames[1]['rect'])
+    
     ## initializes 3 TimePeriod objects and gives them their initial subview name
     def setUpTimePeriods(self):
         for name, color in Window.periodNames.iteritems():
@@ -86,6 +103,7 @@ class Window(object):
     
     ## creates subviews on the display for the TimePeriods to be drawn in
     def createSubViews(self):
+        self.nameLayer = self.display.subsurface(self.display.get_rect())
         for name, dict in self.viewDimensions.iteritems():
             rectangle = pygame.Rect(dict["upperLeftCorner"], dict["dimensions"])
             self.views[name] = self.display.subsurface(rectangle)
@@ -118,6 +136,7 @@ class Window(object):
         for name, period in self.timePeriods.iteritems():
             period.updateTimePeriod()
             pygame.transform.scale(period.baseLayer, self.viewDimensions[period.presentView]['dimensions'], self.views[period.presentView])
+        self.drawNames()
         pygame.time.delay(Window.delaytime)
         pygame.display.update()
 
