@@ -71,23 +71,10 @@ def joinGame(self, expression):
     except:
         self.writeSExpr(['join-game-denied', ['invalid-number', expression[1]]])
     
-@mapper('end-game')
-@require_length(2)
-@require_login
-def endGame(self, expression):
-    try:
-        if self.deleteGame(int(expression[1])):
-            self.writeSExpr(['game-ended', int(expression[1])])
-            return
-    except:
-        pass
-    self.writeSExpr(['end-game-denied', ['invalid-number', expression[1]]])
-
-
 @mapper('game-over')
 @require_length(4)
 @require_login
-def gameOver(self, expression):
+def endGame(self, expression):
     if cmp(self.user, "slave") != 0:
         print self.user
         print "game-over message received from a user"
@@ -95,9 +82,11 @@ def gameOver(self, expression):
     try:
         gameID = int(expression[1])
         winnerUser = str(expression[2])
+        if self.deleteGame(gameID):
+            self.writeSExpr(['game-ended', gameID])
+            #print "%s just won game %d!" % (winnerUser, gameID)
+            return
     except:
-        print "Invalid game-over message"
-        return
-
-    print "%s just won game %d!" % (winnerUser, gameID)
+        pass
+    self.writeSExpr(['end-game-denied', ['invalid-number', expression[1]]])
 
