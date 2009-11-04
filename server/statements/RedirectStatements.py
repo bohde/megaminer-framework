@@ -84,3 +84,20 @@ def endGame(self, expression):
     self.writeSExpr(['end-game-denied', ['invalid-number', expression[1]]])
 
 
+@mapper('game-over')
+@require_length(4)
+@require_login
+def gameOver(self, expression):
+    if cmp(self.user, "slave") != 0:
+        print self.user
+        print "game-over message received from a user"
+        return
+    try:
+        gameID = int(expression[1])
+        winnerUser = str(expression[2])
+    except:
+        print "Invalid game-over message"
+        return
+
+    print "%s just won game %d!" % (winnerUser, gameID)
+

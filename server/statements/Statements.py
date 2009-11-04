@@ -62,7 +62,7 @@ def createGame(self, expression):
     if games.get(game, None) is not None:
         self.writeSExpr(['create-game-denied', 'game number already exists'])
 
-    games[game] = Match(game)
+    games[game] = Match(game, self.controller)
     threading.Thread(target=checkTime,args=(games[game],)).start()
 
     return True
