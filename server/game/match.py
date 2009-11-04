@@ -96,6 +96,7 @@ class Match(DefaultGameWorld):
         self.turnNum = -1
         log = open(self.logPath(), "a")
         log.write(sexpr2str(self.identList()))
+        log.write('\n')
         log.close()
         self.nextTurn()
         return True
