@@ -20,7 +20,7 @@ bool AI::run()
     cout << i << " : " << unitTypes[i].name() << endl;
   }
 
-  printMap(2);
+  printMap(1);
   cout << "Starting turn " << turnNumber() << endl;
   cout << "Player0Gold0 " << player0Gold0() << endl;
   cout << "Buildings on map : " << buildings.size() << endl;
@@ -463,8 +463,10 @@ void AI::randomWalk(Unit& u, int moves)
     myPortal = getPortalAt(curX, curY, curZ);
     if (myPortal != NULL)
     {
-      if (expectedHunger(curZ) > 5+expectedHunger(curZ + myPortal->direction())
+      if ((expectedHunger(curZ) > 5+expectedHunger(curZ + myPortal->direction())
           && getGold(playerID(), curZ)>getPortalFee(*myPortal))
+         || (strcmp(getType(u).name(), "Engineer") == 0
+             && !perHasUnitAtLeastLvl("Engineer",u.z()+myPortal->direction(),u.level())))
       {
         u.warp();
         spendGold(playerID(), curZ, getPortalFee(*myPortal));
