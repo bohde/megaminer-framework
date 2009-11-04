@@ -40,14 +40,12 @@ bool AI::run()
 
   for (int i = 0; i < buildings.size(); i++)
   {
-    /*
     if (rand()%100 < 2 && (!buildings[i].complete() || 
         buildings[i].inTraining() != -1) && 
         buildings[i].ownerID() == playerID())
     {
       buildings[i].cancel();
     }
-    */
 
     if (buildings[i].ownerID() == playerID())
     {
