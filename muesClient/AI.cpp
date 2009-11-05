@@ -156,7 +156,7 @@ void AI::doArtist(Unit& u)
 
 //If I already have a unit of this type of my level or higher in this
 // time period, return true
-bool AI::perHasUnitAtLeastLvl(char typeName[100], int z, int level)
+bool AI::perHasUnitAtLeastLvl(const char typeName[100], int z, int level)
 {
   bool hasOne = false;
 
@@ -178,7 +178,7 @@ bool AI::perHasUnitAtLeastLvl(char typeName[100], int z, int level)
 
 //If I already have a building of this type of my level or higher in this
 // time period, return true
-bool AI::perHasBuildAtLeastLvl(char typeName[100], int z, int level)
+bool AI::perHasBuildAtLeastLvl(const char typeName[100], int z, int level)
 {
   
   bool hasOne = false;
@@ -268,6 +268,7 @@ void AI::doEngineer(Unit& u)
   }
 }
 
+/*
 int AI::effPrice(BuildingType bt, int level)
 {
   return static_cast<int>(bt.price() * pow(bt.priceExp(), level));
@@ -278,13 +279,16 @@ int AI::effPrice(UnitType ut, int level)
   return static_cast<int>(ut.price() * pow(ut.priceExp(), level));
 }
 
+*/
+
+
 bool AI::areaClear(int x, int y, int z, int typeIndex)
 {
   for (int j = x; j < x + buildingTypes[typeIndex].width(); j++)
   {
     for (int k = y; k < y + buildingTypes[typeIndex].height(); k++)
     {
-      if (!isClear(j, k, z))
+      if (!canBuild(j, k, z))
       {
         return false;
       }
@@ -295,6 +299,7 @@ bool AI::areaClear(int x, int y, int z, int typeIndex)
 
 
 //Returns true if I can build on this square
+/*
 bool AI::isClear(int x, int y, int z)
 {
   if (abs(x) > 10 || abs(y) > 10)
@@ -328,7 +333,9 @@ bool AI::isClear(int x, int y, int z)
   }
   return true;
 }
+*/
 
+/*
 bool AI::canWalk(int x, int y, int z)
 {
   for (int i = 0; i < terrains.size(); i++)
@@ -355,6 +362,7 @@ bool AI::canWalk(int x, int y, int z)
   }
   return true;
 }
+*/
 
 Building* AI::getBuilding(int x, int y, int z)
 {
@@ -452,7 +460,7 @@ void AI::randomWalk(Unit& u, int moves)
     if (abs(xOffset + yOffset) > 0 && 
         abs(xOffset+curX) <= 10 &&
         abs(yOffset+curY) <= 10 && 
-        canWalk(xOffset+curX,yOffset+curY, curZ))
+        canMove(xOffset+curX,yOffset+curY, curZ))
     {
       u.move(curX+xOffset, curY+yOffset);
       curX += xOffset;
@@ -486,6 +494,7 @@ Portal* AI::getPortalAt(int x, int y, int z)
   return NULL;
 }
 
+/*
 UnitType AI::getType(Unit& u)
 {
   for (int i = 0; i < unitTypes.size(); i++)
@@ -497,7 +506,9 @@ UnitType AI::getType(Unit& u)
   }
   return NULL;
 }
+*/
 
+/*
 BuildingType AI::getType(Building& b)
 {
   for (int i = 0; i < buildingTypes.size(); i++)
@@ -509,7 +520,10 @@ BuildingType AI::getType(Building& b)
   }
   return NULL;
 }
+*/
 
+
+/*
 int AI::distance(int x1, int y1, int z1, int x2, int y2, int z2)
 {
   if (z1 == z2)
@@ -533,30 +547,11 @@ int AI::distance(Unit& a, Building& b)
   return distance(a.x(), a.y(), a.z(), b.x(), b.y(), b.z());
 }
 
+*/
+
 int AI::getGold(int playerNum, int z)
 {
-  int gold = 0;
-  switch (3*playerNum+z)
-  {
-    case 0:
-      gold = player0Gold0();
-      break;
-    case 1:
-      gold = player0Gold1();
-      break;
-    case 2:
-      gold = player0Gold2();
-      break;
-    case 3:
-      gold = player1Gold0();
-      break;
-    case 4:
-      gold = player1Gold1();
-      break;
-    case 5:
-      gold = player1Gold2();
-      break;
-  }
+  int gold = BaseAI::getGold(playerNum, z);
   return gold - goldSpent[3*playerNum+z];
 }
 
@@ -588,8 +583,9 @@ int AI::getPortalFee(Portal p)
 int AI::effFood(Building b)
 {
   BuildingType bt = getType(b);
-  return static_cast<int>(bt.food() * pow(bt.foodExp(), b.level()));
+  return BaseAI::effFood(bt, b.level());
 }
+
 
 int AI::expectedHunger(int z)
 {
@@ -614,7 +610,7 @@ int AI::expectedHunger(int z)
   return hunger;
 }
 
-BuildingType AI::getBuildingType(char typeName[500])
+BuildingType AI::getBuildingType(const char typeName[500])
 {
   for (int i = 0; i < buildingTypes.size(); i++)
   {
@@ -624,6 +620,14 @@ BuildingType AI::getBuildingType(char typeName[500])
     }
   }
 }
+
+/*
+void AI::plotPoint(char * output, int x, int y, int z, 
+                   char label, int fg, int bg)
+{
+  int index = (x + 10) + ((-1*y) + 10) *  + z 
+}
+*/
 
 void AI::printMap(int z)
 {

@@ -30,22 +30,22 @@ public:
   void randomWalk(Unit& u, int moves);
   Portal* getPortalAt(int x, int y, int z);
   bool canWalk(int x, int y, int z);
-  bool perHasBuildAtLeastLvl(char typeName[100], int z, int level);
-  bool perHasUnitAtLeastLvl(char typeName[100], int z, int level);
+  bool perHasBuildAtLeastLvl(const char typeName[100], int z, int level);
+  bool perHasUnitAtLeastLvl(const char typeName[100], int z, int level);
 
-  UnitType getType(Unit& u);
-  BuildingType getType(Building& b);
-  BuildingType getBuildingType(char typeName[500]);
-  int distance(int x1, int y1, int z1, int x2, int y2, int z2);
-  int distance(Unit& a, Unit& b);
-  int distance(Unit& a, Portal& b);
-  int distance(Unit& a, Building& b);
+  //UnitType getType(Unit& u);
+  //BuildingType getType(Building& b);
+  BuildingType getBuildingType(const char typeName[500]);
+  //int distance(int x1, int y1, int z1, int x2, int y2, int z2);
+  //int distance(Unit& a, Unit& b);
+  //int distance(Unit& a, Portal& b);
+  //int distance(Unit& a, Building& b);
 
   int goldSpent[6];
   int portalFees[100];
   int getGold(int playerNum, int z);
-  int effPrice(BuildingType bt, int level);
-  int effPrice(UnitType ut, int level);
+  //int effPrice(BuildingType bt, int level);
+  //int effPrice(UnitType ut, int level);
   void spendGold(int playerNum, int z, int gold);
   int getPortalIndex(Portal p);
   int getPortalFee(Portal p);
