@@ -103,6 +103,7 @@ class AI extends BaseAI
 
   // Returns the location of the closest enemy biulding of the specified type  
   // Returns null if there arne't any enemy buildings in the time period
+  // TODO: Use new building detection function
   public Point closestEnemyBuilding(String type, int x, int y, int z) {
     Point point = new Point();
     boolean found = false;
@@ -155,6 +156,7 @@ class AI extends BaseAI
 
   // Returns point that unit should move to toward goal square
   // Returns null if the points aren't in the same time period
+  // TODO: Go around blocking terrain, use new building detection functions
   public Point moveToward(int curr_x, int curr_y, int curr_z, int x, int y, int z) {
     if (curr_z != z)
       return null;
@@ -164,7 +166,7 @@ class AI extends BaseAI
     int diff_y = curr_y - y;
 
     if (Math.abs(diff_x) > Math.abs(diff_y)) {
-      if (diff_x > 0) {
+      if (diff_x > 0 {
         point.x = curr_x - 1;
         point.y = curr_y;
       }
@@ -187,16 +189,47 @@ class AI extends BaseAI
     return point;
   }
 
-  // Returns true if a unit can move to the supplied point
-  public boolean canMove(int x, int y, int z) {
-    bool good = true;
-   
-    return good;
+  // If move is true, then checks if a move can be made to the supplied point
+  // If move is false, check if a build can be made at the supplied point
+  public boolean canMoveOrBuild(boolean move, int x, int y, int z) {
+    Point p = new Point(x, y, z);
+    for (Terrain t: terrains) {
+      Point temp = new Point(t.getX(), t.getY(), t.getZ());
+      if (move && temp == p && t.getBlockMove())
+        return false;
+      else if (!move && temp == p && t.getBlockBuild())
+        return false;
+    }
+
+    Building b = getBuilding(p.x, p.y, p.z);
+    if (b != null && b.getOwnerID() != playerID())
+      return false;
+
+    for (Unit u: units) {
+      Point temp = new Point(u.getX(), u.getY(), u.getZ());
+      if (temp == p && u.getOwnerID() != playerID())
+        return false;
+    }
+
+    if (!move) {
+      for (Portal por : portals) {
+        Point temp = new Point(por.getX(), por.getY(), por.getZ());
+        if (p == temp)
+          return false;
+      }
+    }
+
+    return true;
   }
 
   // Returns true if a building can be built at the supplied point
   public boolean canBuild(int x, int y, int z) {
+    return canMoveOrBuild(false, x, y, z);
+  }
 
+  // Returns true if a unit can move to the supplied point
+  public boolean canMove(int x, int y, int z) {
+    return canMoveOrBuild(true, x, y, z);
   }
 
   // Returns the building that contains the provided point
