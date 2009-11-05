@@ -84,7 +84,7 @@ class Building(HittableObject):
             if (self.progress >= self.training.trainTime):
                 newUnit = unit.Unit(self.game, self.x + self.type.spawnX,
                                self.y + self.type.spawnY, self.z, \
-                               self.owner, self.training, 0)
+                               self.owner, self.training, self.level)
                 self.game.addObject(newUnit)
                 self.training = None
                 self.progress = 0

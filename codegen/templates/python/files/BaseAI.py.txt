@@ -9,6 +9,7 @@ class BaseAI:
     AIs should extend this class to get a lot of builer-plate code out of the way
     The provided AI class does just that.
     """
+    initialized = False
     iteration = 0
 % for model in models:
     ${lowercase(model.name)}s = []
@@ -23,7 +24,8 @@ class BaseAI:
         BaseAI.${lowercase(model.name)}s = [${model.name}(library.get${model.name}(i)) for i in xrange(library.get${model.name}Count())]
 % endfor
 
-        if self.turnNumber() == 1:
+        if not self.initialized:
+            self.initialized = True
             self.init()
         BaseAI.iteration += 1;
         return self.run()

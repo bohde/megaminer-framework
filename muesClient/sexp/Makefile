@@ -14,19 +14,23 @@ clean:
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-libclient_%.o: override CFLAGS += -fPIC
+libclient_%.o: CFLAGS += -fPIC
 libclient_%.o: %.c %.d
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) -c $(CPPFLAGS) $(CFLAGS)   $< -o $@
 
-.PHONY: clean all
 
-libclient_sexp.a: ${libclient_objects}
-	ar cr $@ $^
-	ranlib $@
+.PHONY: sexp.a(PHONY) clean all
 
-sexp.a: ${objects}
-	ar cr $@ $^
-	ranlib $@
+sexp.a(${objects}) sexp.a(PHONY): ${objects}
+	ar cr sexp.a $^
+	ranlib sexp.a
+
+libclient_sexp.a(${libclient_objects}) libclient_sexp.a(PHONY): ${libclient_objects}
+	ar cr libclient_sexp.a $^
+	ranlib libclient_sexp.a
+
+sexp.a: sexp.a(PHONY)
+libclient_sexp.a: libclient_sexp.a(PHONY)
 
 -include $(deps)
 

@@ -1,11 +1,9 @@
 sources = $(wildcard *.cpp)
 objects = $(sources:%.cpp=%.o)
 deps = $(sources:%.cpp=%.d)
-CFLAGS += -g
-CXXFLAGS += -g
+CPPFLAGS = -g
 
-CPPFLAGS = -DSHOW_NETWORK
-override CPPFLAGS += -Isexp
+CPPFLAGS += -I. -Isexp
 
 all: client libclient.so
 
@@ -15,11 +13,11 @@ all: client libclient.so
 	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-.PHONY: clean all subdirs
+.PHONY: clean all
 
-libclient_%.o: override CXXFLAGS += -fPIC
+libclient_%.o: CXXFLAGS += -fPIC
 libclient_%.o: %.cpp %.d
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 clean:
 	rm -f $(objects) $(deps) client libclient.so
@@ -32,6 +30,6 @@ libclient.so: libclient_network.o libclient_game.o libclient_getters.o libclient
 	$(CXX) -shared -Wl,-soname,libclient.so $(LDFLAGS) $(LOADLIBES) $(LDLIBS) $^ -o libclient.so
 
 sexp/sexp.a sexp/libclient_sexp.a:
-	$(MAKE) -C $(dir $@) $(notdir $@)
+	$(MAKE) -C sexp
 
 -include $(deps)
