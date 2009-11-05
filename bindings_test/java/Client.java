@@ -98,8 +98,8 @@ public interface Client extends Library {
     int terrainGetX(Pointer ptr);
     int terrainGetY(Pointer ptr);
     int terrainGetZ(Pointer ptr);
-    int terrainGetBlockmove(Pointer ptr);
-    int terrainGetBlockbuild(Pointer ptr);
+    int terrainGetBlocksMove(Pointer ptr);
+    int terrainGetBlocksBuild(Pointer ptr);
 
     int unitGetObjectID(Pointer ptr);
     int unitGetX(Pointer ptr);
@@ -116,17 +116,17 @@ public interface Client extends Library {
     String unitTypeGetName(Pointer ptr);
     int unitTypeGetPrice(Pointer ptr);
     int unitTypeGetHunger(Pointer ptr);
-    int unitTypeGetTraintime(Pointer ptr);
+    int unitTypeGetTrainTime(Pointer ptr);
     int unitTypeGetHp(Pointer ptr);
     int unitTypeGetArmor(Pointer ptr);
     int unitTypeGetMoves(Pointer ptr);
     int unitTypeGetActions(Pointer ptr);
-    int unitTypeGetAttackcost(Pointer ptr);
+    int unitTypeGetAttackCost(Pointer ptr);
     int unitTypeGetDamage(Pointer ptr);
-    int unitTypeGetMinrange(Pointer ptr);
-    int unitTypeGetMaxrange(Pointer ptr);
+    int unitTypeGetMinRange(Pointer ptr);
+    int unitTypeGetMaxRange(Pointer ptr);
     int unitTypeGetTrainerID(Pointer ptr);
-    int unitTypeGetCanpaint(Pointer ptr);
+    int unitTypeGetCanPaint(Pointer ptr);
     float unitTypeGetArmorExp(Pointer ptr);
     float unitTypeGetHpExp(Pointer ptr);
     float unitTypeGetPriceExp(Pointer ptr);

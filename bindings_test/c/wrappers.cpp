@@ -308,14 +308,14 @@ int Terrain::z()
   return ptr->z;
 }
 
-int Terrain::blockmove()
+int Terrain::blocksMove()
 {
-  return ptr->blockmove;
+  return ptr->blocksMove;
 }
 
-int Terrain::blockbuild()
+int Terrain::blocksBuild()
 {
-  return ptr->blockbuild;
+  return ptr->blocksBuild;
 }
 
 
@@ -326,8 +326,8 @@ std::ostream& operator<<(std::ostream& stream,Terrain ob)
   stream << "x: " << ob.ptr->x  <<'\n';
   stream << "y: " << ob.ptr->y  <<'\n';
   stream << "z: " << ob.ptr->z  <<'\n';
-  stream << "blockmove: " << ob.ptr->blockmove  <<'\n';
-  stream << "blockbuild: " << ob.ptr->blockbuild  <<'\n';
+  stream << "blocksMove: " << ob.ptr->blocksMove  <<'\n';
+  stream << "blocksBuild: " << ob.ptr->blocksBuild  <<'\n';
   return stream;
 }
 
@@ -453,9 +453,9 @@ int UnitType::hunger()
   return ptr->hunger;
 }
 
-int UnitType::traintime()
+int UnitType::trainTime()
 {
-  return ptr->traintime;
+  return ptr->trainTime;
 }
 
 int UnitType::hp()
@@ -478,9 +478,9 @@ int UnitType::actions()
   return ptr->actions;
 }
 
-int UnitType::attackcost()
+int UnitType::attackCost()
 {
-  return ptr->attackcost;
+  return ptr->attackCost;
 }
 
 int UnitType::damage()
@@ -488,14 +488,14 @@ int UnitType::damage()
   return ptr->damage;
 }
 
-int UnitType::minrange()
+int UnitType::minRange()
 {
-  return ptr->minrange;
+  return ptr->minRange;
 }
 
-int UnitType::maxrange()
+int UnitType::maxRange()
 {
-  return ptr->maxrange;
+  return ptr->maxRange;
 }
 
 int UnitType::trainerID()
@@ -503,9 +503,9 @@ int UnitType::trainerID()
   return ptr->trainerID;
 }
 
-int UnitType::canpaint()
+int UnitType::canPaint()
 {
-  return ptr->canpaint;
+  return ptr->canPaint;
 }
 
 float UnitType::armorExp()
@@ -546,17 +546,17 @@ std::ostream& operator<<(std::ostream& stream,UnitType ob)
   stream << "name: " << ob.ptr->name  <<'\n';
   stream << "price: " << ob.ptr->price  <<'\n';
   stream << "hunger: " << ob.ptr->hunger  <<'\n';
-  stream << "traintime: " << ob.ptr->traintime  <<'\n';
+  stream << "trainTime: " << ob.ptr->trainTime  <<'\n';
   stream << "hp: " << ob.ptr->hp  <<'\n';
   stream << "armor: " << ob.ptr->armor  <<'\n';
   stream << "moves: " << ob.ptr->moves  <<'\n';
   stream << "actions: " << ob.ptr->actions  <<'\n';
-  stream << "attackcost: " << ob.ptr->attackcost  <<'\n';
+  stream << "attackCost: " << ob.ptr->attackCost  <<'\n';
   stream << "damage: " << ob.ptr->damage  <<'\n';
-  stream << "minrange: " << ob.ptr->minrange  <<'\n';
-  stream << "maxrange: " << ob.ptr->maxrange  <<'\n';
+  stream << "minRange: " << ob.ptr->minRange  <<'\n';
+  stream << "maxRange: " << ob.ptr->maxRange  <<'\n';
   stream << "trainerID: " << ob.ptr->trainerID  <<'\n';
-  stream << "canpaint: " << ob.ptr->canpaint  <<'\n';
+  stream << "canPaint: " << ob.ptr->canPaint  <<'\n';
   stream << "armorExp: " << ob.ptr->armorExp  <<'\n';
   stream << "hpExp: " << ob.ptr->hpExp  <<'\n';
   stream << "priceExp: " << ob.ptr->priceExp  <<'\n';

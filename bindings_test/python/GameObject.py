@@ -285,13 +285,13 @@ class Terrain(GameObject):
     self.validify()
     return library.terrainGetZ(self.ptr)
 
-  def getBlockmove(self):
+  def getBlocksMove(self):
     self.validify()
-    return library.terrainGetBlockmove(self.ptr)
+    return library.terrainGetBlocksMove(self.ptr)
 
-  def getBlockbuild(self):
+  def getBlocksBuild(self):
     self.validify()
-    return library.terrainGetBlockbuild(self.ptr)
+    return library.terrainGetBlocksBuild(self.ptr)
 
 
 class Unit(GameObject):
@@ -418,9 +418,9 @@ class UnitType(GameObject):
     self.validify()
     return library.unitTypeGetHunger(self.ptr)
 
-  def getTraintime(self):
+  def getTrainTime(self):
     self.validify()
-    return library.unitTypeGetTraintime(self.ptr)
+    return library.unitTypeGetTrainTime(self.ptr)
 
   def getHp(self):
     self.validify()
@@ -438,29 +438,29 @@ class UnitType(GameObject):
     self.validify()
     return library.unitTypeGetActions(self.ptr)
 
-  def getAttackcost(self):
+  def getAttackCost(self):
     self.validify()
-    return library.unitTypeGetAttackcost(self.ptr)
+    return library.unitTypeGetAttackCost(self.ptr)
 
   def getDamage(self):
     self.validify()
     return library.unitTypeGetDamage(self.ptr)
 
-  def getMinrange(self):
+  def getMinRange(self):
     self.validify()
-    return library.unitTypeGetMinrange(self.ptr)
+    return library.unitTypeGetMinRange(self.ptr)
 
-  def getMaxrange(self):
+  def getMaxRange(self):
     self.validify()
-    return library.unitTypeGetMaxrange(self.ptr)
+    return library.unitTypeGetMaxRange(self.ptr)
 
   def getTrainerID(self):
     self.validify()
     return library.unitTypeGetTrainerID(self.ptr)
 
-  def getCanpaint(self):
+  def getCanPaint(self):
     self.validify()
-    return library.unitTypeGetCanpaint(self.ptr)
+    return library.unitTypeGetCanPaint(self.ptr)
 
   def getArmorExp(self):
     self.validify()

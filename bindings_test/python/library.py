@@ -254,11 +254,11 @@ library.terrainGetY.argtypes = [c_void_p]
 library.terrainGetZ.restype = c_int
 library.terrainGetZ.argtypes = [c_void_p]
 
-library.terrainGetBlockmove.restype = c_int
-library.terrainGetBlockmove.argtypes = [c_void_p]
+library.terrainGetBlocksMove.restype = c_int
+library.terrainGetBlocksMove.argtypes = [c_void_p]
 
-library.terrainGetBlockbuild.restype = c_int
-library.terrainGetBlockbuild.argtypes = [c_void_p]
+library.terrainGetBlocksBuild.restype = c_int
+library.terrainGetBlocksBuild.argtypes = [c_void_p]
 
 library.unitGetObjectID.restype = c_int
 library.unitGetObjectID.argtypes = [c_void_p]
@@ -302,8 +302,8 @@ library.unitTypeGetPrice.argtypes = [c_void_p]
 library.unitTypeGetHunger.restype = c_int
 library.unitTypeGetHunger.argtypes = [c_void_p]
 
-library.unitTypeGetTraintime.restype = c_int
-library.unitTypeGetTraintime.argtypes = [c_void_p]
+library.unitTypeGetTrainTime.restype = c_int
+library.unitTypeGetTrainTime.argtypes = [c_void_p]
 
 library.unitTypeGetHp.restype = c_int
 library.unitTypeGetHp.argtypes = [c_void_p]
@@ -317,23 +317,23 @@ library.unitTypeGetMoves.argtypes = [c_void_p]
 library.unitTypeGetActions.restype = c_int
 library.unitTypeGetActions.argtypes = [c_void_p]
 
-library.unitTypeGetAttackcost.restype = c_int
-library.unitTypeGetAttackcost.argtypes = [c_void_p]
+library.unitTypeGetAttackCost.restype = c_int
+library.unitTypeGetAttackCost.argtypes = [c_void_p]
 
 library.unitTypeGetDamage.restype = c_int
 library.unitTypeGetDamage.argtypes = [c_void_p]
 
-library.unitTypeGetMinrange.restype = c_int
-library.unitTypeGetMinrange.argtypes = [c_void_p]
+library.unitTypeGetMinRange.restype = c_int
+library.unitTypeGetMinRange.argtypes = [c_void_p]
 
-library.unitTypeGetMaxrange.restype = c_int
-library.unitTypeGetMaxrange.argtypes = [c_void_p]
+library.unitTypeGetMaxRange.restype = c_int
+library.unitTypeGetMaxRange.argtypes = [c_void_p]
 
 library.unitTypeGetTrainerID.restype = c_int
 library.unitTypeGetTrainerID.argtypes = [c_void_p]
 
-library.unitTypeGetCanpaint.restype = c_int
-library.unitTypeGetCanpaint.argtypes = [c_void_p]
+library.unitTypeGetCanPaint.restype = c_int
+library.unitTypeGetCanPaint.argtypes = [c_void_p]
 
 library.unitTypeGetArmorExp.restype = c_float
 library.unitTypeGetArmorExp.argtypes = [c_void_p]

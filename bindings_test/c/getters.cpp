@@ -172,13 +172,13 @@ int terrainGetZ(_Terrain* ptr)
 {
   return ptr->z;
 }
-int terrainGetBlockmove(_Terrain* ptr)
+int terrainGetBlocksMove(_Terrain* ptr)
 {
-  return ptr->blockmove;
+  return ptr->blocksMove;
 }
-int terrainGetBlockbuild(_Terrain* ptr)
+int terrainGetBlocksBuild(_Terrain* ptr)
 {
-  return ptr->blockbuild;
+  return ptr->blocksBuild;
 }
 int unitGetObjectID(_Unit* ptr)
 {
@@ -236,9 +236,9 @@ int unitTypeGetHunger(_UnitType* ptr)
 {
   return ptr->hunger;
 }
-int unitTypeGetTraintime(_UnitType* ptr)
+int unitTypeGetTrainTime(_UnitType* ptr)
 {
-  return ptr->traintime;
+  return ptr->trainTime;
 }
 int unitTypeGetHp(_UnitType* ptr)
 {
@@ -256,29 +256,29 @@ int unitTypeGetActions(_UnitType* ptr)
 {
   return ptr->actions;
 }
-int unitTypeGetAttackcost(_UnitType* ptr)
+int unitTypeGetAttackCost(_UnitType* ptr)
 {
-  return ptr->attackcost;
+  return ptr->attackCost;
 }
 int unitTypeGetDamage(_UnitType* ptr)
 {
   return ptr->damage;
 }
-int unitTypeGetMinrange(_UnitType* ptr)
+int unitTypeGetMinRange(_UnitType* ptr)
 {
-  return ptr->minrange;
+  return ptr->minRange;
 }
-int unitTypeGetMaxrange(_UnitType* ptr)
+int unitTypeGetMaxRange(_UnitType* ptr)
 {
-  return ptr->maxrange;
+  return ptr->maxRange;
 }
 int unitTypeGetTrainerID(_UnitType* ptr)
 {
   return ptr->trainerID;
 }
-int unitTypeGetCanpaint(_UnitType* ptr)
+int unitTypeGetCanPaint(_UnitType* ptr)
 {
-  return ptr->canpaint;
+  return ptr->canPaint;
 }
 float unitTypeGetArmorExp(_UnitType* ptr)
 {

@@ -13,6 +13,7 @@ public abstract class BaseAI
     static Unit[] units;
     static UnitType[] unitTypes;
     static int iteration;
+    boolean initialized;
     
     ///
     ///Make this your username, which should be provided.
@@ -71,8 +72,9 @@ public abstract class BaseAI
 
         iteration++;
 
-        if(turnNumber() == 1)
+        if(!initialized)
         {
+          initialized = true;
           init();
         }
         return run();

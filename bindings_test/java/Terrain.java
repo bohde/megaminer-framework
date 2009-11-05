@@ -53,14 +53,14 @@ class Terrain
         validify();
         return Client.INSTANCE.terrainGetZ(ptr);
     }
-    public int getBlockmove()
+    public int getBlocksMove()
     {
         validify();
-        return Client.INSTANCE.terrainGetBlockmove(ptr);
+        return Client.INSTANCE.terrainGetBlocksMove(ptr);
     }
-    public int getBlockbuild()
+    public int getBlocksBuild()
     {
         validify();
-        return Client.INSTANCE.terrainGetBlockbuild(ptr);
+        return Client.INSTANCE.terrainGetBlocksBuild(ptr);
     }
 }

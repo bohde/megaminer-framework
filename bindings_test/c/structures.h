@@ -58,8 +58,8 @@ struct _Terrain
   int x;
   int y;
   int z;
-  int blockmove;
-  int blockbuild;
+  int blocksMove;
+  int blocksBuild;
 };
 struct _Unit
 {
@@ -80,17 +80,17 @@ struct _UnitType
   char* name;
   int price;
   int hunger;
-  int traintime;
+  int trainTime;
   int hp;
   int armor;
   int moves;
   int actions;
-  int attackcost;
+  int attackCost;
   int damage;
-  int minrange;
-  int maxrange;
+  int minRange;
+  int maxRange;
   int trainerID;
-  int canpaint;
+  int canPaint;
   float armorExp;
   float hpExp;
   float priceExp;

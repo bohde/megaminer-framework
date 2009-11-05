@@ -9,6 +9,7 @@ class BaseAI:
     AIs should extend this class to get a lot of builer-plate code out of the way
     The provided AI class does just that.
     """
+    initialized = False
     iteration = 0
     buildings = []
     buildingTypes = []
@@ -32,7 +33,8 @@ class BaseAI:
         BaseAI.units = [Unit(library.getUnit(i)) for i in xrange(library.getUnitCount())]
         BaseAI.unitTypes = [UnitType(library.getUnitType(i)) for i in xrange(library.getUnitTypeCount())]
 
-        if self.turnNumber() == 1:
+        if not self.initialized:
+            self.initialized = True
             self.init()
         BaseAI.iteration += 1;
         return self.run()

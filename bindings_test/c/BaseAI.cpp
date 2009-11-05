@@ -48,6 +48,7 @@ int BaseAI::turnNumber()
 
 bool BaseAI::startTurn()
 {
+  static bool initialized = false;
   int count = 0;
   count = getBuildingCount();
   buildings.clear();
@@ -90,6 +91,11 @@ bool BaseAI::startTurn()
   for(int i = 0; i < count; i++)
   {
     unitTypes[i] = UnitType(getUnitType(i));
+  }
+  if(!initialized)
+  {
+    initialized = true;
+    init();
   }
   run();
 }

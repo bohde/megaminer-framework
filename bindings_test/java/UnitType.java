@@ -53,10 +53,10 @@ class UnitType
         validify();
         return Client.INSTANCE.unitTypeGetHunger(ptr);
     }
-    public int getTraintime()
+    public int getTrainTime()
     {
         validify();
-        return Client.INSTANCE.unitTypeGetTraintime(ptr);
+        return Client.INSTANCE.unitTypeGetTrainTime(ptr);
     }
     public int getHp()
     {
@@ -78,35 +78,35 @@ class UnitType
         validify();
         return Client.INSTANCE.unitTypeGetActions(ptr);
     }
-    public int getAttackcost()
+    public int getAttackCost()
     {
         validify();
-        return Client.INSTANCE.unitTypeGetAttackcost(ptr);
+        return Client.INSTANCE.unitTypeGetAttackCost(ptr);
     }
     public int getDamage()
     {
         validify();
         return Client.INSTANCE.unitTypeGetDamage(ptr);
     }
-    public int getMinrange()
+    public int getMinRange()
     {
         validify();
-        return Client.INSTANCE.unitTypeGetMinrange(ptr);
+        return Client.INSTANCE.unitTypeGetMinRange(ptr);
     }
-    public int getMaxrange()
+    public int getMaxRange()
     {
         validify();
-        return Client.INSTANCE.unitTypeGetMaxrange(ptr);
+        return Client.INSTANCE.unitTypeGetMaxRange(ptr);
     }
     public int getTrainerID()
     {
         validify();
         return Client.INSTANCE.unitTypeGetTrainerID(ptr);
     }
-    public int getCanpaint()
+    public int getCanPaint()
     {
         validify();
-        return Client.INSTANCE.unitTypeGetCanpaint(ptr);
+        return Client.INSTANCE.unitTypeGetCanPaint(ptr);
     }
     public float getArmorExp()
     {

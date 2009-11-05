@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <cmath>
+
 
 #ifdef WIN32
 //Doh, namespace collision.
@@ -360,9 +362,9 @@ void parseTerrain(_Terrain* object, sexp_t* expression)
   sub = sub->next;
   object->z = atoi(sub->val);
   sub = sub->next;
-  object->blockmove = atoi(sub->val);
+  object->blocksMove = atoi(sub->val);
   sub = sub->next;
-  object->blockbuild = atoi(sub->val);
+  object->blocksBuild = atoi(sub->val);
   sub = sub->next;
   
 }
@@ -408,7 +410,7 @@ void parseUnitType(_UnitType* object, sexp_t* expression)
   sub = sub->next;
   object->hunger = atoi(sub->val);
   sub = sub->next;
-  object->traintime = atoi(sub->val);
+  object->trainTime = atoi(sub->val);
   sub = sub->next;
   object->hp = atoi(sub->val);
   sub = sub->next;
@@ -418,17 +420,17 @@ void parseUnitType(_UnitType* object, sexp_t* expression)
   sub = sub->next;
   object->actions = atoi(sub->val);
   sub = sub->next;
-  object->attackcost = atoi(sub->val);
+  object->attackCost = atoi(sub->val);
   sub = sub->next;
   object->damage = atoi(sub->val);
   sub = sub->next;
-  object->minrange = atoi(sub->val);
+  object->minRange = atoi(sub->val);
   sub = sub->next;
-  object->maxrange = atoi(sub->val);
+  object->maxRange = atoi(sub->val);
   sub = sub->next;
   object->trainerID = atoi(sub->val);
   sub = sub->next;
-  object->canpaint = atoi(sub->val);
+  object->canPaint = atoi(sub->val);
   sub = sub->next;
   object->armorExp = atof(sub->val);
   sub = sub->next;
@@ -723,3 +725,210 @@ DLLEXPORT int getTurnNumber()
 {
   return turnNumber;
 }
+
+
+
+
+
+
+
+//Convenience Functions
+DLLEXPORT _UnitType* getTypeFromUnit(_Unit* u)
+{
+  for (int i = 0; i < UnitTypeCount; i++)
+  {
+    if (getUnitType(i)->objectID == u->unitTypeID)
+    {
+      return getUnitType(i);
+    }
+  }
+}
+
+DLLEXPORT _BuildingType* getTypeFromBuilding(_Building* b)
+{
+  for (int i = 0; i < BuildingTypeCount; i++)
+  {
+    if (getBuildingType(i)->objectID == b->buildingTypeID)
+    {
+      return getBuildingType(i);
+    }
+  }
+}
+
+DLLEXPORT bool canMove(int x, int y, int z)
+{
+  for (int i = 0; i < TerrainCount; i++)
+  {
+    if (getTerrain(i)->x == x && getTerrain(i)->y == y
+        && getTerrain(i)->z == z
+        && getTerrain(i)->blocksMove == 1)
+      return false;
+  }
+  for (int i = 0; i < UnitCount; i++)
+  {
+    if (getUnit(i)->x == x && getUnit(i)->y == y &&
+       getUnit(i)->z == z && getUnit(i)->ownerID != playerID)
+      return false;
+  }
+  for (int i = 0; i < BuildingCount; i++)
+  {
+    _BuildingType* bt = getTypeFromBuilding(getBuilding(i));
+    if (z == getBuilding(i)->z &&
+        x >= getBuilding(i)->x && x < getBuilding(i)->x + bt->width &&
+        y >= getBuilding(i)->y && y < getBuilding(i)->y + bt->height
+        && getBuilding(i)->ownerID != playerID)
+      return false;
+  }
+  return true;
+
+}
+
+DLLEXPORT bool canBuild(int x, int y, int z)
+{
+  if (abs(x) > 10 || abs(y) > 10)
+    return false;
+  for (int i = 0; i < PortalCount; i++)
+  {
+    if (getPortal(i)->x == x && getPortal(i)->y == y &&
+        getPortal(i)->z == z)
+      return false;
+  }
+  for (int i = 0; i < TerrainCount; i++)
+  {
+    if (getTerrain(i)->x == x && getTerrain(i)->y == y
+       && getTerrain(i)->z == z
+       && getTerrain(i)->blocksBuild == 1)
+      return false;
+  }
+  for (int i = 0; i < UnitCount; i++)
+  {
+    if (getUnit(i)->x == x && getUnit(i)->y == y &&
+       getUnit(i)->z == z && getUnit(i)->ownerID != playerID)
+      return false;
+  }
+  for (int i = 0; i < BuildingCount; i++)
+  {
+    _BuildingType* bt = getTypeFromBuilding(getBuilding(i));
+    if (z == getBuilding(i)->z &&
+        x >= getBuilding(i)->x && x < getBuilding(i)->x + bt->width &&
+        y >= getBuilding(i)->y && y < getBuilding(i)->y + bt->height)
+      return false;
+  }
+  return true;
+
+}
+
+DLLEXPORT int effDamage(_UnitType* ut, int level)
+{
+  return static_cast<int>(ut->damage * pow(ut->damageExp, level));
+}
+
+DLLEXPORT int effFood(_BuildingType* bt, int level)
+{
+  return static_cast<int>(bt->food * pow(bt->foodExp, level));
+}
+
+//Returns the gold for the given player in the given time period
+DLLEXPORT int getGold(int playerNum, int z)
+{
+  int gold = 0;
+  switch (3*playerNum+z)
+  {
+    case 0:
+      gold = player0Gold0;
+      break;
+    case 1:
+      gold = player0Gold1;
+      break;
+    case 2:
+      gold = player0Gold2;
+      break;
+    case 3:
+      gold = player1Gold0;
+      break;
+    case 4:
+      gold = player1Gold1;
+      break;
+    case 5:
+      gold = player1Gold2;
+      break;
+  }
+  return gold;
+}
+
+//Returns the amount of gold a player will receive if an artist of
+// the given level paints at a gallery of the given level
+DLLEXPORT int artWorth(int artistLevel, int galleryLevel)
+{
+  _UnitType* artist;
+  for (int i = 0; i < UnitTypeCount; i++)
+  {
+    if (strcmp(getUnitType(i)->name, "Artist") == 0)
+    {
+      artist = getUnitType(i);
+    }
+  }
+  int lvlDiff = abs(artistLevel - galleryLevel);
+  return artist->paintBase + artist->paintLinear * lvlDiff;
+}
+
+//Returns the sum of all the hunger values of all units owned 
+//by the given player in the given time period.
+DLLEXPORT int hunger(int playerID, int z)
+{
+  int hunger = 0;
+  for (int i = 0; i < UnitCount; i++)
+  {
+    if (getUnit(i)->z == z && getUnit(i)->ownerID == playerID)
+    {
+      _UnitType* ut = getTypeFromUnit(getUnit(i));
+      hunger += ut->hunger;
+    }
+  }
+  return hunger;
+}
+
+//Returns the sum of all the food produced by all the buildings
+//owned by the given player in the given time period.
+DLLEXPORT int foodProduced(int playerID, int z)
+{
+  int food = 0;
+  for (int i = 0; i < BuildingCount; i++)
+  {
+    if (getBuilding(i)->z == z && getBuilding(i)->ownerID == playerID
+        && getBuilding(i)->complete == 1)
+    {
+      food += effFood(getTypeFromBuilding(getBuilding(i)), getBuilding(i)->level);
+    }
+  }
+  return food;
+}
+
+DLLEXPORT int effBuildingPrice(_BuildingType* bt, int level)
+{
+  return static_cast<int>(bt->price * pow(bt->priceExp, level));
+}
+
+DLLEXPORT int effUnitPrice(_BuildingType* ut, int level)
+{
+  return static_cast<int>(ut->price * pow(ut->priceExp, level));
+}
+
+DLLEXPORT int effMaxHP(_UnitType* ut, int level)
+{
+  return static_cast<int>(ut->hp * pow(ut->hpExp, level));
+}
+
+//Returns the armor rating of a unitType or buldingType at a given level
+DLLEXPORT int effArmor(_BuildingType* bt, int level)
+{
+  return static_cast<int>(bt->armor * pow(bt->armorExp, level));
+}
+
+
+
+
+
+
+
+
