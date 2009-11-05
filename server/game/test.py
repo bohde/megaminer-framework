@@ -59,10 +59,18 @@ class MockPlayer(object):
     def last(self):
         return self.messages[len(self.messages) - 1]
 
+class MockGameServer(object):
+    """
+    An object with a sendToRedirect function so that the match thinks it can
+    report the winner to the redirect server.
+    """
+    def sendToRedirect(self, msg):
+        pass
+
 
 class TestMatchStart(unittest.TestCase):
     def setUp(self):
-        self.game = Match(7000)
+        self.game = Match(7000, MockGameServer())
         self.players = [MockPlayer(), MockPlayer()]
         self.game.declareWinner = lambda self: None
 
@@ -87,7 +95,7 @@ class TestMatchStart(unittest.TestCase):
 
 class TestObjectCreation(unittest.TestCase):
     def setUp(self):
-        self.game =  Match(7001)
+        self.game =  Match(7001, MockGameServer())
         self.game.declareWinner = lambda self: None
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
@@ -143,7 +151,7 @@ class TestObjectCreation(unittest.TestCase):
 
 class TestActions(unittest.TestCase):
     def setUp(self):
-        self.game = Match(7002)
+        self.game = Match(7002, MockGameServer())
         self.players = [MockPlayer(), MockPlayer()]
         self.game.addPlayer(self.players[0])
         self.game.addPlayer(self.players[1])

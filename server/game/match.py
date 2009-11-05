@@ -22,7 +22,8 @@ def loadClassDefaults(cfgFile = "config/defaults.cfg"):
             setattr(eval(className), attr, cfg[className][attr])
 
 class Match(DefaultGameWorld):
-    def __init__(self, id):
+    def __init__(self, id, gameServer):
+        self.gameServer = gameServer
         self.id = int(id)
         DefaultGameWorld.__init__(self, 10, 10)
         self.unitcfg = "config/unitSet.cfg"
@@ -154,6 +155,7 @@ class Match(DefaultGameWorld):
         if winner == self.players[0]:
             winnerIndex = 0
         msg = ["game-over", self.id, self.winner.user, winnerIndex]
+        self.gameServer.sendToRedirect(msg)
         log = open(self.logPath(), "a")
         log.write(sexpr2str(msg))
         log.write('\n')
