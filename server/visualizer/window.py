@@ -17,6 +17,8 @@ class Window(object):
                     "s1":{"dimensions":(608, 342), "upperLeftCorner":(0, 682 )},
                     "s2":{"dimensions":(608, 342), "upperLeftCorner":(672, 682)}}
     
+    timePeriodConversion = {0:"farPast", 1:"past", 2:"present"}
+
     #Period names as well as default background colors
     periodNames = {'farPast':[100,0,0], 'past':[0,100,0], 'present':[0,0,100]} # red, blue, green
 
@@ -24,7 +26,7 @@ class Window(object):
     periodDimensions = (21,21)
 
     #Delay time between frams. In milliseconds
-    delaytime = 0
+    delaytime = 100
 
     ## sets up Window object
     def __init__(self, config={}):
@@ -53,7 +55,6 @@ class Window(object):
                                      "upperLeftCorner":(int(windim[0] * .52),int(windim[1] * .65))}}
         
         self.display = pygame.display.set_mode(windim)
-        self.addPlayers("HOTDOG", "DANCEPARTY!")
         self.setUpTimePeriods()
         self.animations = False
         pygame.display.update()
@@ -61,20 +62,25 @@ class Window(object):
 
     def handleEvents(self):
         def inner():
-            presentFocus = False
             while True:
                 event = pygame.event.wait()
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         pygame.quit()
                         sys.exit(0)
-                    if event.key == K_SPACE:
-                        if not presentFocus:
-                            self.focusOn('present')
-                            presentFocus = True
-                        else:
-                            self.focusOn('past')
-                            presentFocus = False
+                    if event.key == K_1:
+                        self.focusOn('farPast')
+                    elif event.key == K_2:
+                        self.focusOn('past')
+                    elif event.key == K_3:
+                        self.focusOn('present')
+                    elif event.key == K_MINUS:
+                        Window.delaytime +=10
+                        print "Increasing Speed..."
+                    elif event.key == K_PLUS:
+                        if Window.delaytime >=10:
+                            Window.delaytime -=10
+                            print "Decreasing Speed..."
         threading.Thread(target=inner).start()
 
         
@@ -82,15 +88,15 @@ class Window(object):
         font = pygame.font.Font(os.path.join('visualizer/fonts', 'game_over.ttf') , 100)
         displayRect = self.display.get_rect()
         displayWidth = displayRect.width
-        print "**************HOLY SHIT DISPLAY WIDTH IS ", displayWidth
         self.playerNames.append({'image':font.render(username1, 1, [250,0,0]), 'rect': None})
         self.playerNames[0]['rect'] = self.playerNames[0]['image'].get_rect(topleft = (10, 10))
         self.playerNames.append({'image':font.render(username2, 1, [0,0,250]), 'rect': None})
         self.playerNames[1]['rect'] = self.playerNames[1]['image'].get_rect(topright = (displayWidth-10,10))
         
     def drawNames(self):
-        self.nameLayer.blit(self.playerNames[0]['image'], self.playerNames[0]['rect'])
-        self.nameLayer.blit(self.playerNames[1]['image'], self.playerNames[1]['rect'])
+        if self.playerNames:
+            self.nameLayer.blit(self.playerNames[0]['image'], self.playerNames[0]['rect'])
+            self.nameLayer.blit(self.playerNames[1]['image'], self.playerNames[1]['rect'])
     
     ## initializes 3 TimePeriod objects and gives them their initial subview name
     def setUpTimePeriods(self):
@@ -121,10 +127,10 @@ class Window(object):
     def focusOn(self, focusPeriod):
         print "changing focus..."
         oldView = self.timePeriods[focusPeriod].presentView
-        print "*%(1)s" %{'1':oldView}
+       # print "*%(1)s" %{'1':oldView}
         for name, period in self.timePeriods.iteritems():
             if period.presentView == 'l':
-                print "*found large view"
+               # print "*found large view"
                 period.presentView = oldView
                 self.timePeriods[focusPeriod].presentView = 'l'
         if self.animations:
@@ -145,12 +151,12 @@ class Window(object):
     #  appropriate sprite group and TimePeriod
     # @param id- an objectID (int)
     def add(self, id):  
-        print "looking for ", id
+        #print "looking for ", id
         for period, dictionary in self.status.iteritems():
             for type, list in dictionary.iteritems():
                 for item in list:
                     if item['objectID'] == id:
-                        print "  adding ", id
+                        #print "  adding ", id
                         if type == 'Unit':
                             self.timePeriods[period].addUnit(item)
                         if type == 'Building':
@@ -179,11 +185,13 @@ class Window(object):
          if targetX >= periodDimensions[0] or targetY >= periodDimensions[1]:
          raise Exception("**********Tried moving outside of range")
          """
+         found = False
          for name, period in self.timePeriods.iteritems():
             period.takeStep(id)
             if self.animations:
                 self.updateScreen()
-            period.move(id, targetX, targetY)
+            if period.move(id, targetX, targetY):
+                found = True
             if self.animations:
                 self.updateScreen()
     
@@ -192,7 +200,7 @@ class Window(object):
     #  does NOT cause it to move to (targetX,targetY)
     #  @param attackerID- objectID; targetX/Y- target coords (all ints)
     def attack(self, attackerID, targetX, targetY):
-        print "attacking...."
+        #print "attacking...."
         for name, period in self.timePeriods.iteritems():
             period.attack(attackerID, targetX, targetY)
             if self.animations:
@@ -206,8 +214,7 @@ class Window(object):
             period.hurt(id, changeHP)
     
     def hungerDamage(self, player, period, damage):
-        print "************************HUNGER DAMAGE TO PERIOD", period
-        self.timePeriods[period].hungerDamage(player, damage)
+        self.timePeriods[Window.timePeriodConversion[period]].hungerDamage(player, damage)
     
     ## causes a civil engineer "id" to swing its pickaxe in the direction
     #  of target.
@@ -225,6 +232,21 @@ class Window(object):
     def train(self, id, newUnitTypeID):
         for name, period in self.timePeriods.iteritems():
             period.train(id)
+
+    def cancel(self, id):
+        for name, period in self.timePeriods.iteritems():
+            period.cancel(id)
+
+    def warp(self, id, targetZ):
+        temp = None
+        for name, period in self.timePeriods.iteritems():
+            temp = period.warpOut(id)
+            if temp != None:
+                break
+        if temp!=None:
+            self.timePeriods[Window.timePeriodConversion[targetZ]].units.add(temp)
+        else:
+            print "Unit ", id, " not found."
     
     ## replaces old status dictionary with newStatus
     # @param newStatus- a status dictionary.

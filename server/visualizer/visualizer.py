@@ -70,6 +70,11 @@ def animation_defs():
     @require_length(4)
     def build(self, expr):
         self.window.build(*[saveConvert(x) for x in expr[1:]])
+
+    @anim_mapper("cancel")
+    @require_length(2)
+    def build(self, expr):
+        self.window.cancel(*[saveConvert(x) for x in expr[1:]])
     
     @anim_mapper("paint")
     @require_length(4)
@@ -80,6 +85,16 @@ def animation_defs():
     @require_length(3)
     def train(self, expr):
         self.window.train(*[saveConvert(x) for x in expr[1:]])
+        
+    @anim_mapper("stopTrain")
+    @require_length(2)
+    def stopTrain(self, expr):
+        pass
+        
+    @anim_mapper("warp")
+    @require_length(3)
+    def warp(self,expr):
+        self.window.warp(*[saveConvert(x) for x in expr[1:]])
 
     return anims
 
@@ -141,7 +156,7 @@ def status_defs():
         return base_dict(convert)(self, expr)
 
     @status_mapper("game")
-    @require_length(4)
+    #@require_length(4)
     def game(self, expr):
         #return expr[1:]
         return dict()
@@ -165,6 +180,10 @@ def protocol():
     mapper = dict_wrapper(statements)
     anim_defs = animation_defs()
     status_d = status_defs()
+    
+    @mapper("ident")
+    def players(self,expr):
+        self.window.addPlayers(*expr[1])
 
     @mapper("changed")
     def status(self, expr):
