@@ -16,6 +16,9 @@ class AI(BaseAI):
         pass
 
     def run(self):
+        for u in self.units:
+            type = self.getTypeFromUnit(u)
+            print "UNIT NAME IS" + type.getName()
         return 1
 
 

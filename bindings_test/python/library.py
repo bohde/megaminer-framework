@@ -14,6 +14,52 @@ try:
 except OSError:
   raise Exception("It looks like you didn't build libclient. Run 'make' and try again.")
 
+# convenience functions
+library.getTypeFromUnit.restype = c_void_p
+library.getTypeFromUnit.argtypes = [c_void_p]
+
+library.getTypeFromBuilding.restype = c_void_p
+library.getTypeFromBuilding.argtypes = [c_void_p]
+
+library.canMove.restype = c_bool
+library.canMove.argtypes = [c_int, c_int, c_int]
+
+library.canBuild.restype = c_bool
+library.canBuild.argtypes = [c_int, c_int, c_int]
+
+library.effDamage.restype = c_int
+library.effDamage.argtypes = [c_void_p, c_int]
+
+library.effFood.restype = c_int
+library.effFood.argtypes = [c_void_p, c_int]
+
+library.getGold.restype = c_int
+library.getGold.argtypes = [c_int, c_int]
+
+library.artWorth.restype = c_int
+library.artWorth.argtypes = [c_int, c_int]
+
+library.hunger.restype = c_int
+library.hunger.argtypes = [c_int, c_int]
+
+library.foodProduced.restype = c_int
+library.foodProduced.argtypes = [c_int, c_int]
+
+library.effBuildingPrice.restype = c_int
+library.effBuildingPrice.argtypes = [c_void_p, c_int]
+
+library.effUnitPrice.restype = c_int
+library.effUnitPrice.argtypes = [c_void_p, c_int]
+
+library.effMaxHP.restype = c_int
+library.effMaxHP.argtypes = [c_void_p, c_int]
+
+library.effBuildingArmor.restype = c_int
+library.effBuildingArmor.argtypes = [c_void_p, c_int]
+
+library.effUnitArmor.restype = c_int
+library.effUnitArmor.argtypes = [c_void_p, c_int]
+
 # commands
 
 library.serverLogin.restype = c_bool
