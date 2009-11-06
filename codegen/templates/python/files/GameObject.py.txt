@@ -50,7 +50,16 @@ class ${model.name}(GameObject):
     ${arg[0]}.validify()
 %      endif
 %    endfor
-    return library.${lowercase(model.name)}${capitalize(func)}(self.ptr)
+    return library.${lowercase(model.name)}${capitalize(func)}(self.ptr\
+%    for arg in model.functions[func]:
+, \
+%      if isinstance(arg[1], Model):
+${arg[0]}.ptr\
+%      else:
+${arg[0]}\
+%      endif
+%    endfor
+)
 
 %  endfor
 %  for key in model.data.keys():
