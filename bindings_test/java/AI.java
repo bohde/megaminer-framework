@@ -13,8 +13,11 @@ class AI extends BaseAI
   {
     for (Unit u : units) {
       UnitType ut = getTypeFromUnit(u);
-      if (ut.getName() == "Artist")
-          System.out.println(artWorth(u.getLevel(), 0));
+      System.out.println("HERE'S THE UNIT TYPE: " + ut.getName());
+    }
+    for (Building b : buildings) {
+      BuildingType bt = getTypeFromBuilding(b);
+      System.out.println("HERE'S THE BUILDING TYPE: " + bt.getName());
     }
 
     return true;

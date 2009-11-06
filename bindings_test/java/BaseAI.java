@@ -133,11 +133,11 @@ public abstract class BaseAI
     // Convenience Functions
     ///////////////////////////////////////////
     UnitType getTypeFromUnit(Unit u) {
-        return Client.INSTANCE.getTypeFromUnit(u);
+        return new UnitType(Client.INSTANCE.getTypeFromUnit(u.ptr));
     }
 
     BuildingType getTypeFromBuilding(Building b) {
-        return Client.INSTANCE.getTypeFromBuilding(b);
+        return new BuildingType(Client.INSTANCE.getTypeFromBuilding(b.ptr));
     }
 
     boolean canMove(int x, int y, int z) {
@@ -149,11 +149,11 @@ public abstract class BaseAI
     }
 
     int effDamage(UnitType ut, int level) {
-        return Client.INSTANCE.effDamage(ut, level);
+        return Client.INSTANCE.effDamage(ut.ptr, level);
     }
 
     int effFood(BuildingType bt, int level) {
-        return Client.INSTANCE.effFood(bt, level);
+        return Client.INSTANCE.effFood(bt.ptr, level);
     }
 
     int getGold(int playerNum, int z) {
@@ -173,18 +173,18 @@ public abstract class BaseAI
     }
 
     int effBuildingPrice(BuildingType bt, int level) {
-        return Client.INSTANCE.effBuildingPrice(bt, level);
+        return Client.INSTANCE.effBuildingPrice(bt.ptr, level);
     }
 
     int effUnitPrice(BuildingType bt, int level) {
-        return Client.INSTANCE.effUnitPrice(bt, level);
+        return Client.INSTANCE.effUnitPrice(bt.ptr, level);
     }
 
     int effMaxHP(UnitType ut, int level) {
-        return Client.INSTANCE.effMaxHP(ut, level);
+        return Client.INSTANCE.effMaxHP(ut.ptr, level);
     }
 
     int effArmor(BuildingType bt, int level) {
-        return Client.INSTANCE.effArmor(bt, level);
+        return Client.INSTANCE.effArmor(bt.ptr, level);
     }
 }
