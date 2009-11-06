@@ -11,6 +11,12 @@ class AI extends BaseAI
   }
   public boolean run()
   {
+    for (Unit u : units) {
+      UnitType ut = getTypeFromUnit(u);
+      if (ut.getName() == "Artist")
+          System.out.println(artWorth(u.getLevel(), 0));
+    }
+
     return true;
   }
 

@@ -50,6 +50,21 @@ public interface Client extends Library {
     Pointer getUnitType(int num);
     int getUnitTypeCount();
 
+    // Convenience functions
+    UnitType getTypeFromUnit(Unit u);
+    BuildingType getTypeFromBuilding(Building b);
+    boolean canMove(int x, int y, int z);
+    boolean canBuild(int x, int y, int z);
+    int effDamage(UnitType ut, int level);
+    int effFood(BuildingType bt, int level);
+    int getGold(int playerNum, int z);
+    int artWorth(int artistLevel, int galleryLevel);
+    int hunger(int playerID, int z);
+    int foodProduced(int playerID, int z);
+    int effBuildingPrice(BuildingType bt, int level);
+    int effUnitPrice(BuildingType bt, int level);
+    int effMaxHP(UnitType ut, int level);
+    int effArmor(BuildingType bt, int level);
 
     //getters
     int buildingGetObjectID(Pointer ptr);

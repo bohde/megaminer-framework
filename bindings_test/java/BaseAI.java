@@ -128,4 +128,63 @@ public abstract class BaseAI
     {
         return Client.INSTANCE.getTurnNumber();
     }
+
+    ////////////////////////////////////////////
+    // Convenience Functions
+    ///////////////////////////////////////////
+    UnitType getTypeFromUnit(Unit u) {
+        return Client.INSTANCE.getTypeFromUnit(u);
+    }
+
+    BuildingType getTypeFromBuilding(Building b) {
+        return Client.INSTANCE.getTypeFromBuilding(b);
+    }
+
+    boolean canMove(int x, int y, int z) {
+        return Client.INSTANCE.canMove(x, y, z);
+    }
+
+    boolean canBuild(int x, int y, int z) {
+        return Client.INSTANCE.canBuild(x, y, z);
+    }
+
+    int effDamage(UnitType ut, int level) {
+        return Client.INSTANCE.effDamage(ut, level);
+    }
+
+    int effFood(BuildingType bt, int level) {
+        return Client.INSTANCE.effFood(bt, level);
+    }
+
+    int getGold(int playerNum, int z) {
+        return Client.INSTANCE.getGold(playerNum, z);
+    }
+
+    int artWorth(int artistLevel, int galleryLevel) {
+        return Client.INSTANCE.artWorth(artistLevel, galleryLevel);
+    }
+
+    int hunger(int playerID, int z) {
+        return Client.INSTANCE.hunger(playerID, z);
+    }
+
+    int foodProduced(int playerID, int z) {
+        return Client.INSTANCE.foodProduced(playerID, z);
+    }
+
+    int effBuildingPrice(BuildingType bt, int level) {
+        return Client.INSTANCE.effBuildingPrice(bt, level);
+    }
+
+    int effUnitPrice(BuildingType bt, int level) {
+        return Client.INSTANCE.effUnitPrice(bt, level);
+    }
+
+    int effMaxHP(UnitType ut, int level) {
+        return Client.INSTANCE.effMaxHP(ut, level);
+    }
+
+    int effArmor(BuildingType bt, int level) {
+        return Client.INSTANCE.effArmor(bt, level);
+    }
 }
