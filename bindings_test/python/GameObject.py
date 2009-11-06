@@ -38,7 +38,7 @@ class Building(GameObject):
     if unit.__class__ not in [UnitType]:
       raise TypeError('unit should be of [UnitType]')
     unit.validify()
-    return library.buildingTrain(self.ptr)
+    return library.buildingTrain(self.ptr, unit.ptr)
 
   def cancel(self):
     self.validify()
@@ -318,22 +318,22 @@ class Unit(GameObject):
     raise ExistentialError()
   def attack(self, x, y):
     self.validify()
-    return library.unitAttack(self.ptr)
+    return library.unitAttack(self.ptr, x, y)
 
   def build(self, x, y, type):
     self.validify()
     if type.__class__ not in [BuildingType]:
       raise TypeError('type should be of [BuildingType]')
     type.validify()
-    return library.unitBuild(self.ptr)
+    return library.unitBuild(self.ptr, x, y, type.ptr)
 
   def paint(self, x, y):
     self.validify()
-    return library.unitPaint(self.ptr)
+    return library.unitPaint(self.ptr, x, y)
 
   def move(self, x, y):
     self.validify()
-    return library.unitMove(self.ptr)
+    return library.unitMove(self.ptr, x, y)
 
   def warp(self):
     self.validify()
