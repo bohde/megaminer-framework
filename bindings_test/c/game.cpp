@@ -920,12 +920,15 @@ DLLEXPORT int effMaxHP(_UnitType* ut, int level)
 }
 
 //Returns the armor rating of a unitType or buldingType at a given level
-DLLEXPORT int effArmor(_BuildingType* bt, int level)
+DLLEXPORT int effBuildingArmor(_BuildingType* bt, int level)
 {
   return static_cast<int>(bt->armor * pow(bt->armorExp, level));
 }
 
-
+DLLEXPORT int effUnitArmor(_UnitType* ut, int level)
+{
+  return static_cast<int>(ut->armor * pow(ut->armorExp, level));
+}
 
 
 

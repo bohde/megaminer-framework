@@ -55,6 +55,27 @@ public:
   virtual bool run() = 0;
 
   bool startTurn();
+
+
+  //Conveniencee Functions
+  //The following functions are unnecessary, but handy.
+  UnitType getTypeFromUnit(Unit u);
+  BuildingType getTypeFromBuilding(Building b);
+  bool canMove(int x, int y, int z);
+  bool canBuild(int x, int y, int z);
+  int effDamage(UnitType ut, int level);
+  int effFood(BuildingType bt, int level);
+  int getGold(int playerNum, int z);
+  int artWorth(int artistLevel, int galleryLevel);
+  int hunger(int playerID, int z);
+  int foodProduced(int playerID, int z);
+  int effBuildingPrice(BuildingType bt, int level);
+  int effUnitPrice(BuildingType ut, int level);
+  int effMaxHP(UnitType ut, int level);
+  int effBuildingArmor(BuildingType bt, int level);
+  int effUnitArmor(UnitType bt, int level);
+
+
 };
 
 #endif

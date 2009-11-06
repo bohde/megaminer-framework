@@ -80,7 +80,8 @@ DLLEXPORT int foodProduced(int playerID, int z);
 DLLEXPORT int effBuildingPrice(_BuildingType* bt, int level);
 DLLEXPORT int effUnitPrice(_BuildingType* ut, int level);
 DLLEXPORT int effMaxHP(_UnitType* ut, int level);
-DLLEXPORT int effArmor(_BuildingType* bt, int level);
+DLLEXPORT int effBuildingArmor(_BuildingType* bt, int level);
+DLLEXPORT int effUnitArmor(_UnitType* ut, int level);
 
 
   DLLEXPORT int networkLoop(int socket);
