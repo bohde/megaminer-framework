@@ -78,7 +78,7 @@ DLLEXPORT int artWorth(int artistLevel, int galleryLevel);
 DLLEXPORT int hunger(int playerID, int z);
 DLLEXPORT int foodProduced(int playerID, int z);
 DLLEXPORT int effBuildingPrice(_BuildingType* bt, int level);
-DLLEXPORT int effUnitPrice(_BuildingType* ut, int level);
+DLLEXPORT int effUnitPrice(_UnitType* ut, int level);
 DLLEXPORT int effMaxHP(_UnitType* ut, int level);
 DLLEXPORT int effBuildingArmor(_BuildingType* bt, int level);
 DLLEXPORT int effUnitArmor(_UnitType* ut, int level);

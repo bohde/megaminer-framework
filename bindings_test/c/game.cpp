@@ -909,7 +909,7 @@ DLLEXPORT int effBuildingPrice(_BuildingType* bt, int level)
   return static_cast<int>(bt->price * pow(bt->priceExp, level));
 }
 
-DLLEXPORT int effUnitPrice(_BuildingType* ut, int level)
+DLLEXPORT int effUnitPrice(_UnitType* ut, int level)
 {
   return static_cast<int>(ut->price * pow(ut->priceExp, level));
 }
