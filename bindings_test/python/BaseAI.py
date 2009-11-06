@@ -95,15 +95,17 @@ class BaseAI:
 
     @staticmethod
     def getTypeFromUnit(unit):
+        from GameObject import UnitType
         """Returns type of supplied unit
         """
-        return library.getTypeFromUnit(unit)
+        return UnitType(library.getTypeFromUnit(unit.ptr))
 
     @staticmethod
     def getTypeFromBuilding(building):
+        from GameObject import BuildingType
         """Returns type of supplied building
         """
-        return library.getTypeFromBuilding(building)
+        return BuildingType(library.getTypeFromBuilding(building.ptr))
 
     @staticmethod
     def canMove(x, y, z):
@@ -121,13 +123,13 @@ class BaseAI:
     def effDamage(unitType, level):
         """Attack damage of unitType at level
         """
-        return library.effDamage(unitType, level)
+        return library.effDamage(unitType.ptr, level)
 
     @staticmethod
     def effFood(buildingType, level):
         """Food produced by building at specified level
         """
-        return library.effFood(buildingType, level)
+        return library.effFood(buildingType.ptr, level)
 
     @staticmethod
     def getGold(playerNum, z):
@@ -158,29 +160,29 @@ class BaseAI:
     def effBuildingPrice(buildingType, level):
         """Effective price of building at specified level
         """
-        library.effBuildingPrice(buildingType, level)
+        library.effBuildingPrice(buildingType.ptr, level)
 
     @staticmethod
     def effUnitPrice(unitType, level):
         """Effective price of unit at specified level
         """
-        library.effUnitPrice(unitType, level)
+        library.effUnitPrice(unitType.ptr, level)
 
     @staticmethod
     def effMaxHP(unitType, level):
         """Effective max HP of unit at specified level
         """
-        return library.effMaxHP(unitType, level)
+        return library.effMaxHP(unitType.ptr, level)
 
     @staticmethod
     def effBuildingArmor(buildingType, level):
         """Armor value of building at specified level
         """
-        return library.effBuildingArmor(buildingType, level)
+        return library.effBuildingArmor(buildingType.ptr, level)
 
     @staticmethod
     def effUnitArmor(unitType, level):
        """Armor value of unit at specified level
        """
-       return library.effUnitArmor(unitType, level)
+       return library.effUnitArmor(unitType.ptr, level)
 
