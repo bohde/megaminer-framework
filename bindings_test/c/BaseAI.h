@@ -70,7 +70,7 @@ public:
   int hunger(int playerID, int z);
   int foodProduced(int playerID, int z);
   int effBuildingPrice(BuildingType bt, int level);
-  int effUnitPrice(BuildingType ut, int level);
+  int effUnitPrice(UnitType ut, int level);
   int effMaxHP(UnitType ut, int level);
   int effBuildingArmor(BuildingType bt, int level);
   int effUnitArmor(UnitType bt, int level);

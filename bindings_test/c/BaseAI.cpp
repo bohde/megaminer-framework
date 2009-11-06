@@ -145,7 +145,7 @@ bool BaseAI::startTurn()
   {
     return effBuildingPrice(bt.ptr, level);
   }
-  int BaseAI::effUnitPrice(BuildingType ut, int level)
+  int BaseAI::effUnitPrice(UnitType ut, int level)
   {
     return effUnitPrice(ut.ptr, level);
   }
