@@ -64,7 +64,8 @@ public interface Client extends Library {
     int effBuildingPrice(Pointer buildingType, int level);
     int effUnitPrice(Pointer buildingType, int level);
     int effMaxHP(Pointer unitType, int level);
-    int effArmor(Pointer buildingType, int level);
+    int effBuildingArmor(Pointer buildingType, int level);
+    int effUnitArmor(Pointer unitType, int level);
 
     //getters
     int buildingGetObjectID(Pointer ptr);

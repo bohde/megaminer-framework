@@ -184,7 +184,11 @@ public abstract class BaseAI
         return Client.INSTANCE.effMaxHP(ut.ptr, level);
     }
 
-    int effArmor(BuildingType bt, int level) {
-        return Client.INSTANCE.effArmor(bt.ptr, level);
+    int effBuildingArmor(BuildingType bt, int level) {
+        return Client.INSTANCE.effBuildingArmor(bt.ptr, level);
+    }
+
+    int effUnitArmor(UnitType ut, int level) {
+        return Client.INSTANCE.effUnitArmor(ut.ptr, level);
     }
 }
