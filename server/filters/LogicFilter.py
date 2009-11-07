@@ -42,6 +42,9 @@ class SexprHandlerMixin(object):
             print e
             self.writeSExpr(['malformed-statement', expression])
 
+    def readRawSExpr(self, raw):
+        self.readSExpr(sexpr.str2sexpr(raw))
+        
 class LogicFilter(Filter, SexprHandlerMixin):
     ID = 0
     def _init(self, *args):
@@ -58,7 +61,7 @@ class LogicFilter(Filter, SexprHandlerMixin):
 
     def _readOut(self, data):
         try:
-            self.readSExpr(sexpr.str2sexpr(data))
+            self.readRawSExpr(data)
         except ValueError:
             self.writeSExpr(['malformed-message', data])
 
