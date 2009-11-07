@@ -284,7 +284,7 @@ public abstract class BaseAI
 /// Returns the maxHP of a building of the given type and level.
 ///////////////////////////////////////////////////////////////
     int effUnitMaxHP(UnitType ut, int level) {
-        return Client.INSTANCE.effMaxHP(ut.ptr, level);
+        return Client.INSTANCE.effUnitMaxHP(ut.ptr, level);
     }
 
 ///////////////////////////////////////////////////////////////
