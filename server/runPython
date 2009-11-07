@@ -1,0 +1,11 @@
+#!/bin/sh
+cd arena
+rm -rf $1
+mkdir -p $1/python
+cd $1/python
+tar xzf ../../$1.tar.gz
+mv libclient.so ..
+cp -r ../../ctypes .
+python main.py $2 $3
+cd ../..
+rm -rf $1

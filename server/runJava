@@ -1,0 +1,10 @@
+#!/bin/sh
+cd arena
+rm -rf $1
+mkdir -p $1/java
+cd $1/java
+tar xzf ../../$1.tar.gz
+mv libclient.so ..
+LD_LIBRARY_PATH=.. java -cp ../../jna.jar:. Main $2 $3
+cd ../..
+rm -rf $1
