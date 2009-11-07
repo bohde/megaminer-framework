@@ -44,7 +44,7 @@ class SexprHandlerMixin(object):
 
     def readRawSExpr(self, raw):
         self.readSExpr(sexpr.str2sexpr(raw))
-        
+
 class LogicFilter(Filter, SexprHandlerMixin):
     ID = 0
     def _init(self, *args):

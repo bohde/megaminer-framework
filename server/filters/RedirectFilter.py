@@ -20,18 +20,30 @@ from __future__ import with_statement
 from LogicFilter import LogicFilter
 import statements.RedirectStatements as RedirectStatements
 import threading
+import subprocess
+
+def lookupLocalHost():
+    p = subprocess.Popen(["/sbin/ifconfig"],stdout=subprocess.PIPE)
+    for line in p.stdout:
+        for l in line.split():
+            c = l.split(":")
+            if c[0] == "addr":
+                return c[1]
+    print "NO LOCAL HOST FOUND"
+    return "127.0.0.1"
 
 class RedirectFilter(LogicFilter):
     Servers = {}
     GameNumber = 0
     Games = dict()
     GameLock = threading.Lock()
+    LOCAL = lookupLocalHost()
 
     def _init(self):
         LogicFilter._init(self)
         self.statements = RedirectStatements.statements
         self.count = 0
-
+        
     def disconnect(self):
         if self.ID:
             try:
@@ -42,6 +54,8 @@ class RedirectFilter(LogicFilter):
         LogicFilter.disconnect(self)
 
     def registerAsServer(self):
+        if(self.address == "127.0.0.1"):
+            self.address = RedirectFilter.LOCAL
         RedirectFilter.Servers[self.ID] = self
 
     def getServers(self):
