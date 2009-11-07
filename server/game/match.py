@@ -146,6 +146,8 @@ class Match(DefaultGameWorld):
             if (hasattr(obj, "owner")):
                 if (obj.owner == player):
                     value += obj.type.effPrice(obj.level)
+        for z in xrange(3):
+            value += player.gold[z]
         return value
     
     def declareWinner(self, winner):
