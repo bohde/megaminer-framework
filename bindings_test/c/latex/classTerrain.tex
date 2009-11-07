@@ -1,0 +1,83 @@
+\hypertarget{classTerrain}{
+\section{Terrain Class Reference}
+\label{classTerrain}\index{Terrain@{Terrain}}
+}
+The attributes of a specific tile of the world.  
+
+
+{\tt \#include $<$wrappers.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+\hypertarget{classTerrain_d69f12c1a91d0c3b96d3e5d3006dcef9}{
+\textbf{Terrain} (\_\-Terrain $\ast$ptr=NULL)}
+\label{classTerrain_d69f12c1a91d0c3b96d3e5d3006dcef9}
+
+\item 
+\hypertarget{classTerrain_34577a3c0632bb51515aab9b363a65f1}{
+int \textbf{objectID} ()}
+\label{classTerrain_34577a3c0632bb51515aab9b363a65f1}
+
+\item 
+\hypertarget{classTerrain_ed3254c223a45d3e0f319fcc54add79a}{
+int \textbf{x} ()}
+\label{classTerrain_ed3254c223a45d3e0f319fcc54add79a}
+
+\item 
+\hypertarget{classTerrain_9a4db29382d784d64f6817eb738d9d4c}{
+int \textbf{y} ()}
+\label{classTerrain_9a4db29382d784d64f6817eb738d9d4c}
+
+\item 
+\hypertarget{classTerrain_06173b6758d8adbc82181db2a6306a75}{
+int \textbf{z} ()}
+\label{classTerrain_06173b6758d8adbc82181db2a6306a75}
+
+\item 
+int \hyperlink{classTerrain_80105933c1d08553db9d7c9abca47251}{blocksMove} ()
+\item 
+int \hyperlink{classTerrain_f2ae042e3aecc89c7746c04e2498e45b}{blocksBuild} ()
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+\hypertarget{classTerrain_8f795aee94e17dc84f3cb22ca877cda9}{
+\_\-Terrain $\ast$ \textbf{ptr}}
+\label{classTerrain_8f795aee94e17dc84f3cb22ca877cda9}
+
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+\hypertarget{classTerrain_276298433a740eda4ee02befa9155ff4}{
+std::ostream \& \textbf{operator$<$$<$} (std::ostream \&stream, \hyperlink{classTerrain}{Terrain} ob)}
+\label{classTerrain_276298433a740eda4ee02befa9155ff4}
+
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+The attributes of a specific tile of the world. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classTerrain_f2ae042e3aecc89c7746c04e2498e45b}{
+\index{Terrain@{Terrain}!blocksBuild@{blocksBuild}}
+\index{blocksBuild@{blocksBuild}!Terrain@{Terrain}}
+\subsubsection[{blocksBuild}]{\setlength{\rightskip}{0pt plus 5cm}int Terrain::blocksBuild ()}}
+\label{classTerrain_f2ae042e3aecc89c7746c04e2498e45b}
+
+
+Returns 1 if this object pervents buildings from being placed on this square, 0 otherwise. \hypertarget{classTerrain_80105933c1d08553db9d7c9abca47251}{
+\index{Terrain@{Terrain}!blocksMove@{blocksMove}}
+\index{blocksMove@{blocksMove}!Terrain@{Terrain}}
+\subsubsection[{blocksMove}]{\setlength{\rightskip}{0pt plus 5cm}int Terrain::blocksMove ()}}
+\label{classTerrain_80105933c1d08553db9d7c9abca47251}
+
+
+Returns 1 if this object prevents units from moving onto this square, 0 otherwise. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+wrappers.h\item 
+wrappers.cpp\end{CompactItemize}

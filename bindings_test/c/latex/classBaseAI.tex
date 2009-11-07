@@ -1,0 +1,372 @@
+\hypertarget{classBaseAI}{
+\section{BaseAI Class Reference}
+\label{classBaseAI}\index{BaseAI@{BaseAI}}
+}
+A basic \hyperlink{classAI}{AI} interface.  
+
+
+{\tt \#include $<$BaseAI.h$>$}
+
+Inheritance diagram for BaseAI::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classBaseAI}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+int \hyperlink{classBaseAI_e7574c0a95bc4431f83078c0074b1eec}{maxX} ()
+\item 
+int \hyperlink{classBaseAI_68f5dfd6450be2649c8c26481ba7c0a5}{maxY} ()
+\item 
+int \hyperlink{classBaseAI_e350c70cf7c368175a418a8fd8c29eba}{player0Gold0} ()
+\begin{CompactList}\small\item\em Player 0's past gold. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_55de649fba1edb2c8a316070a4041f16}{player0Gold1} ()
+\begin{CompactList}\small\item\em Player 0's present gold. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_5ea60d2c86f1e4457bef7963a3d0afce}{player0Gold2} ()
+\begin{CompactList}\small\item\em Player 0's future gold. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_f82cc7bd092d0636eb8a8df82a0c5b49}{player1Gold0} ()
+\begin{CompactList}\small\item\em Player 1's past gold. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_cc09926bd744fdf9ec4448366d8b8de7}{player1Gold1} ()
+\begin{CompactList}\small\item\em Player 1's present gold. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_35bad13d289478aa2bb628d6e3c56c52}{player1Gold2} ()
+\begin{CompactList}\small\item\em Player 1's future gold. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_16aab1036653c8f8fb5370cf2f6a3e10}{playerID} ()
+\begin{CompactList}\small\item\em Player Number; either 0 or 2. \item\end{CompactList}\item 
+int \hyperlink{classBaseAI_19ade7391bfe101884a35f48fb840199}{turnNumber} ()
+\item 
+virtual const char $\ast$ \hyperlink{classBaseAI_ef082fbf306fec04515ed5ed3b1ba582}{username} ()=0
+\item 
+virtual const char $\ast$ \hyperlink{classBaseAI_9251e20447917cda64ad1487b903456f}{password} ()=0
+\item 
+virtual void \hyperlink{classBaseAI_90ce8becd6f2e32c2cc32d41145e88df}{init} ()=0
+\item 
+\hypertarget{classBaseAI_d60148e7e9e450ce47432b07b4db1ed6}{
+virtual bool \textbf{run} ()=0}
+\label{classBaseAI_d60148e7e9e450ce47432b07b4db1ed6}
+
+\item 
+bool \hyperlink{classBaseAI_c6303df0fece47e29b77dd0aa0aa4fe8}{startTurn} ()
+\item 
+\hyperlink{classUnitType}{UnitType} \hyperlink{classBaseAI_9bd3c6a1259db084fa6780d50bea95eb}{getTypeFromUnit} (\hyperlink{classUnit}{Unit} u)
+\item 
+\hyperlink{classBuildingType}{BuildingType} \hyperlink{classBaseAI_ca41bf18cdb670b9bcc5fe92eae198ad}{getTypeFromBuilding} (\hyperlink{classBuilding}{Building} b)
+\item 
+bool \hyperlink{classBaseAI_45d4571f72aa781ba2db4cd46311ced3}{canMove} (int x, int y, int z)
+\item 
+bool \hyperlink{classBaseAI_05c91f733ed1598a95d4e7c357e0a0c4}{canBuild} (int x, int y, int z)
+\item 
+int \hyperlink{classBaseAI_0643622ad827a6ad035bf84dfdfacd55}{effDamage} (\hyperlink{classUnitType}{UnitType} ut, int level)
+\item 
+int \hyperlink{classBaseAI_ec102e33572b1f58df437260bf73141e}{effFood} (\hyperlink{classBuildingType}{BuildingType} bt, int level)
+\item 
+int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{getGold} (int playerNum, int z)
+\item 
+int \hyperlink{classBaseAI_9a6e10da16c3b209915251ca183815e7}{artWorth} (int artistLevel, int galleryLevel)
+\item 
+int \hyperlink{classBaseAI_e1677c15b8b022dd7335eeb84b57b30f}{hunger} (int playerID, int z)
+\item 
+int \hyperlink{classBaseAI_43314f174d849c294ec84a09af6b55e2}{foodProduced} (int playerID, int z)
+\item 
+int \hyperlink{classBaseAI_d49ab218e79412c1ce975159688e6cfd}{effBuildingPrice} (\hyperlink{classBuildingType}{BuildingType} bt, int level)
+\item 
+int \hyperlink{classBaseAI_680e404005de9fdc4165652ea5dcc95e}{effUnitPrice} (\hyperlink{classUnitType}{UnitType} ut, int level)
+\item 
+int \hyperlink{classBaseAI_80e0275443af5146969878b3802acbe7}{effBuildingMaxHP} (\hyperlink{classBuildingType}{BuildingType} ut, int level)
+\item 
+int \hyperlink{classBaseAI_0977f4ba22e8b97f89d7b0c03941c788}{effUnitMaxHP} (\hyperlink{classUnitType}{UnitType} ut, int level)
+\item 
+int \hyperlink{classBaseAI_1de8bdc9274ca62632b9fb7caf55800e}{effBuildingArmor} (\hyperlink{classBuildingType}{BuildingType} bt, int level)
+\item 
+int \hyperlink{classBaseAI_8606081fe230982963a8cdf820822a19}{effUnitArmor} (\hyperlink{classUnitType}{UnitType} bt, int level)
+\end{CompactItemize}
+\subsection*{Protected Attributes}
+\begin{CompactItemize}
+\item 
+\hypertarget{classBaseAI_2011b88e94ad95891cc22e54e07d775f}{
+std::vector$<$ \hyperlink{classBuilding}{Building} $>$ \textbf{buildings}}
+\label{classBaseAI_2011b88e94ad95891cc22e54e07d775f}
+
+\item 
+\hypertarget{classBaseAI_e839247231149b52f58a529d036971f5}{
+std::vector$<$ \hyperlink{classBuildingType}{BuildingType} $>$ \textbf{buildingTypes}}
+\label{classBaseAI_e839247231149b52f58a529d036971f5}
+
+\item 
+\hypertarget{classBaseAI_52920c16eee7a0c9711af944b7326f68}{
+std::vector$<$ \hyperlink{classPortal}{Portal} $>$ \textbf{portals}}
+\label{classBaseAI_52920c16eee7a0c9711af944b7326f68}
+
+\item 
+\hypertarget{classBaseAI_325d3a3424817f1a523809076264cd1c}{
+std::vector$<$ \hyperlink{classTerrain}{Terrain} $>$ \textbf{terrains}}
+\label{classBaseAI_325d3a3424817f1a523809076264cd1c}
+
+\item 
+\hypertarget{classBaseAI_9e5ccdbf76c15c90ea60473b21cf20b5}{
+std::vector$<$ \hyperlink{classUnit}{Unit} $>$ \textbf{units}}
+\label{classBaseAI_9e5ccdbf76c15c90ea60473b21cf20b5}
+
+\item 
+\hypertarget{classBaseAI_5166578fd49bee3afa04552947058c34}{
+std::vector$<$ \hyperlink{classUnitType}{UnitType} $>$ \textbf{unitTypes}}
+\label{classBaseAI_5166578fd49bee3afa04552947058c34}
+
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+A basic \hyperlink{classAI}{AI} interface. 
+
+This class implements most the code an \hyperlink{classAI}{AI} would need to interface with the lower-level game code. AIs should extend this class to get a lot of builer-plate code out of the way The provided \hyperlink{classAI}{AI} class does just that. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classBaseAI_9a6e10da16c3b209915251ca183815e7}{
+\index{BaseAI@{BaseAI}!artWorth@{artWorth}}
+\index{artWorth@{artWorth}!BaseAI@{BaseAI}}
+\subsubsection[{artWorth}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::artWorth (int {\em artistLevel}, \/  int {\em galleryLevel})}}
+\label{classBaseAI_9a6e10da16c3b209915251ca183815e7}
+
+
+Returns the amount of gold that would be gained if an artist at the given level paints at a gallery of the given level. \hypertarget{classBaseAI_05c91f733ed1598a95d4e7c357e0a0c4}{
+\index{BaseAI@{BaseAI}!canBuild@{canBuild}}
+\index{canBuild@{canBuild}!BaseAI@{BaseAI}}
+\subsubsection[{canBuild}]{\setlength{\rightskip}{0pt plus 5cm}bool BaseAI::canBuild (int {\em x}, \/  int {\em y}, \/  int {\em z})}}
+\label{classBaseAI_05c91f733ed1598a95d4e7c357e0a0c4}
+
+
+Returns true if this square is clear for you to build on.
+
+This function checks to see if this square contains any enemy units, buildings, or blocking terrain. This is not an efficient implementation. Feel free to write your own. \hypertarget{classBaseAI_45d4571f72aa781ba2db4cd46311ced3}{
+\index{BaseAI@{BaseAI}!canMove@{canMove}}
+\index{canMove@{canMove}!BaseAI@{BaseAI}}
+\subsubsection[{canMove}]{\setlength{\rightskip}{0pt plus 5cm}bool BaseAI::canMove (int {\em x}, \/  int {\em y}, \/  int {\em z})}}
+\label{classBaseAI_45d4571f72aa781ba2db4cd46311ced3}
+
+
+Returns true if one of your units could move to the given coordinate
+
+This function checks to see if this square contains any enemy units, enemy buildings, or blocking terrain. This is not an efficient implementation. Feel free to write your own. \hypertarget{classBaseAI_1de8bdc9274ca62632b9fb7caf55800e}{
+\index{BaseAI@{BaseAI}!effBuildingArmor@{effBuildingArmor}}
+\index{effBuildingArmor@{effBuildingArmor}!BaseAI@{BaseAI}}
+\subsubsection[{effBuildingArmor}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effBuildingArmor ({\bf BuildingType} {\em bt}, \/  int {\em level})}}
+\label{classBaseAI_1de8bdc9274ca62632b9fb7caf55800e}
+
+
+Returns the armor of a building of the given type and level. \hypertarget{classBaseAI_80e0275443af5146969878b3802acbe7}{
+\index{BaseAI@{BaseAI}!effBuildingMaxHP@{effBuildingMaxHP}}
+\index{effBuildingMaxHP@{effBuildingMaxHP}!BaseAI@{BaseAI}}
+\subsubsection[{effBuildingMaxHP}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effBuildingMaxHP ({\bf BuildingType} {\em bt}, \/  int {\em level})}}
+\label{classBaseAI_80e0275443af5146969878b3802acbe7}
+
+
+Returns the maxHP of a building of the given type and level. \hypertarget{classBaseAI_d49ab218e79412c1ce975159688e6cfd}{
+\index{BaseAI@{BaseAI}!effBuildingPrice@{effBuildingPrice}}
+\index{effBuildingPrice@{effBuildingPrice}!BaseAI@{BaseAI}}
+\subsubsection[{effBuildingPrice}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effBuildingPrice ({\bf BuildingType} {\em bt}, \/  int {\em level})}}
+\label{classBaseAI_d49ab218e79412c1ce975159688e6cfd}
+
+
+Returns the price of a building of the given type and level. \hypertarget{classBaseAI_0643622ad827a6ad035bf84dfdfacd55}{
+\index{BaseAI@{BaseAI}!effDamage@{effDamage}}
+\index{effDamage@{effDamage}!BaseAI@{BaseAI}}
+\subsubsection[{effDamage}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effDamage ({\bf UnitType} {\em ut}, \/  int {\em level})}}
+\label{classBaseAI_0643622ad827a6ad035bf84dfdfacd55}
+
+
+Returns the amount of raw damage a given type of unit would cause at the given level. \hypertarget{classBaseAI_ec102e33572b1f58df437260bf73141e}{
+\index{BaseAI@{BaseAI}!effFood@{effFood}}
+\index{effFood@{effFood}!BaseAI@{BaseAI}}
+\subsubsection[{effFood}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effFood ({\bf BuildingType} {\em bt}, \/  int {\em level})}}
+\label{classBaseAI_ec102e33572b1f58df437260bf73141e}
+
+
+Returns the amount of food produced by a given type of building at the given level. \hypertarget{classBaseAI_8606081fe230982963a8cdf820822a19}{
+\index{BaseAI@{BaseAI}!effUnitArmor@{effUnitArmor}}
+\index{effUnitArmor@{effUnitArmor}!BaseAI@{BaseAI}}
+\subsubsection[{effUnitArmor}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effUnitArmor ({\bf UnitType} {\em ut}, \/  int {\em level})}}
+\label{classBaseAI_8606081fe230982963a8cdf820822a19}
+
+
+Returns the armor of a unit of the given type and level. \hypertarget{classBaseAI_0977f4ba22e8b97f89d7b0c03941c788}{
+\index{BaseAI@{BaseAI}!effUnitMaxHP@{effUnitMaxHP}}
+\index{effUnitMaxHP@{effUnitMaxHP}!BaseAI@{BaseAI}}
+\subsubsection[{effUnitMaxHP}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effUnitMaxHP ({\bf UnitType} {\em ut}, \/  int {\em level})}}
+\label{classBaseAI_0977f4ba22e8b97f89d7b0c03941c788}
+
+
+Returns the maxHP of a building of the given type and level. \hypertarget{classBaseAI_680e404005de9fdc4165652ea5dcc95e}{
+\index{BaseAI@{BaseAI}!effUnitPrice@{effUnitPrice}}
+\index{effUnitPrice@{effUnitPrice}!BaseAI@{BaseAI}}
+\subsubsection[{effUnitPrice}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::effUnitPrice ({\bf UnitType} {\em ut}, \/  int {\em level})}}
+\label{classBaseAI_680e404005de9fdc4165652ea5dcc95e}
+
+
+Returns the price of a unit of the given type and level. \hypertarget{classBaseAI_43314f174d849c294ec84a09af6b55e2}{
+\index{BaseAI@{BaseAI}!foodProduced@{foodProduced}}
+\index{foodProduced@{foodProduced}!BaseAI@{BaseAI}}
+\subsubsection[{foodProduced}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::foodProduced (int {\em playerID}, \/  int {\em z})}}
+\label{classBaseAI_43314f174d849c294ec84a09af6b55e2}
+
+
+Returns the sum of all food produced by all buildings owned by the given player in the given time period. \hypertarget{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{
+\index{BaseAI@{BaseAI}!getGold@{getGold}}
+\index{getGold@{getGold}!BaseAI@{BaseAI}}
+\subsubsection[{getGold}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::getGold (int {\em playerNum}, \/  int {\em z})}}
+\label{classBaseAI_c079405ee4fd5cec789af0f627d3d175}
+
+
+Returns the amount of gold the given player has in the given time period \hypertarget{classBaseAI_ca41bf18cdb670b9bcc5fe92eae198ad}{
+\index{BaseAI@{BaseAI}!getTypeFromBuilding@{getTypeFromBuilding}}
+\index{getTypeFromBuilding@{getTypeFromBuilding}!BaseAI@{BaseAI}}
+\subsubsection[{getTypeFromBuilding}]{\setlength{\rightskip}{0pt plus 5cm}{\bf BuildingType} BaseAI::getTypeFromBuilding ({\bf Building} {\em b})}}
+\label{classBaseAI_ca41bf18cdb670b9bcc5fe92eae198ad}
+
+
+Returns the type of the given building. \hypertarget{classBaseAI_9bd3c6a1259db084fa6780d50bea95eb}{
+\index{BaseAI@{BaseAI}!getTypeFromUnit@{getTypeFromUnit}}
+\index{getTypeFromUnit@{getTypeFromUnit}!BaseAI@{BaseAI}}
+\subsubsection[{getTypeFromUnit}]{\setlength{\rightskip}{0pt plus 5cm}{\bf UnitType} BaseAI::getTypeFromUnit ({\bf Unit} {\em u})}}
+\label{classBaseAI_9bd3c6a1259db084fa6780d50bea95eb}
+
+
+Returns the type of the given unit. \hypertarget{classBaseAI_e1677c15b8b022dd7335eeb84b57b30f}{
+\index{BaseAI@{BaseAI}!hunger@{hunger}}
+\index{hunger@{hunger}!BaseAI@{BaseAI}}
+\subsubsection[{hunger}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::hunger (int {\em playerID}, \/  int {\em z})}}
+\label{classBaseAI_e1677c15b8b022dd7335eeb84b57b30f}
+
+
+Returns the sum of all hunger values for all units owned by the given player in the given time period. \hypertarget{classBaseAI_90ce8becd6f2e32c2cc32d41145e88df}{
+\index{BaseAI@{BaseAI}!init@{init}}
+\index{init@{init}!BaseAI@{BaseAI}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}virtual void BaseAI::init ()\hspace{0.3cm}{\tt  \mbox{[}pure virtual\mbox{]}}}}
+\label{classBaseAI_90ce8becd6f2e32c2cc32d41145e88df}
+
+
+This is run on turn 1 before run 
+
+Implemented in \hyperlink{classAI_8c8e3a635791abaa61585357e6a25f63}{AI}.\hypertarget{classBaseAI_e7574c0a95bc4431f83078c0074b1eec}{
+\index{BaseAI@{BaseAI}!maxX@{maxX}}
+\index{maxX@{maxX}!BaseAI@{BaseAI}}
+\subsubsection[{maxX}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::maxX ()}}
+\label{classBaseAI_e7574c0a95bc4431f83078c0074b1eec}
+
+
+Gets the X boundary for the map in all time periods.
+
+For each time period, the map is a rectangle from (-max\_\-x,-max\_\-y) to (max\_\-x,max\_\-y) \hypertarget{classBaseAI_68f5dfd6450be2649c8c26481ba7c0a5}{
+\index{BaseAI@{BaseAI}!maxY@{maxY}}
+\index{maxY@{maxY}!BaseAI@{BaseAI}}
+\subsubsection[{maxY}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::maxY ()}}
+\label{classBaseAI_68f5dfd6450be2649c8c26481ba7c0a5}
+
+
+Gets the Y boundary for the map in all time periods.
+
+For each time period, the map is a rectangle from (-max\_\-x,-max\_\-y) to (max\_\-x,max\_\-y) \hypertarget{classBaseAI_9251e20447917cda64ad1487b903456f}{
+\index{BaseAI@{BaseAI}!password@{password}}
+\index{password@{password}!BaseAI@{BaseAI}}
+\subsubsection[{password}]{\setlength{\rightskip}{0pt plus 5cm}virtual const char$\ast$ BaseAI::password ()\hspace{0.3cm}{\tt  \mbox{[}pure virtual\mbox{]}}}}
+\label{classBaseAI_9251e20447917cda64ad1487b903456f}
+
+
+Make this your password, which should be provided. 
+
+Implemented in \hyperlink{classAI_a4e58e11bbbdb040e6b12f8706763a00}{AI}.\hypertarget{classBaseAI_e350c70cf7c368175a418a8fd8c29eba}{
+\index{BaseAI@{BaseAI}!player0Gold0@{player0Gold0}}
+\index{player0Gold0@{player0Gold0}!BaseAI@{BaseAI}}
+\subsubsection[{player0Gold0}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::player0Gold0 ()}}
+\label{classBaseAI_e350c70cf7c368175a418a8fd8c29eba}
+
+
+Player 0's past gold. 
+
+Returns the amount of gold player 0 has in the far past Also see int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{BaseAI::getGold(int playerNum, int z)} \hypertarget{classBaseAI_55de649fba1edb2c8a316070a4041f16}{
+\index{BaseAI@{BaseAI}!player0Gold1@{player0Gold1}}
+\index{player0Gold1@{player0Gold1}!BaseAI@{BaseAI}}
+\subsubsection[{player0Gold1}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::player0Gold1 ()}}
+\label{classBaseAI_55de649fba1edb2c8a316070a4041f16}
+
+
+Player 0's present gold. 
+
+Returns the amount of gold player 0 has in the past Also see int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{BaseAI::getGold(int playerNum, int z)} \hypertarget{classBaseAI_5ea60d2c86f1e4457bef7963a3d0afce}{
+\index{BaseAI@{BaseAI}!player0Gold2@{player0Gold2}}
+\index{player0Gold2@{player0Gold2}!BaseAI@{BaseAI}}
+\subsubsection[{player0Gold2}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::player0Gold2 ()}}
+\label{classBaseAI_5ea60d2c86f1e4457bef7963a3d0afce}
+
+
+Player 0's future gold. 
+
+Returns the amount of gold player 0 has in the present Also see int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{BaseAI::getGold(int playerNum, int z)} \hypertarget{classBaseAI_f82cc7bd092d0636eb8a8df82a0c5b49}{
+\index{BaseAI@{BaseAI}!player1Gold0@{player1Gold0}}
+\index{player1Gold0@{player1Gold0}!BaseAI@{BaseAI}}
+\subsubsection[{player1Gold0}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::player1Gold0 ()}}
+\label{classBaseAI_f82cc7bd092d0636eb8a8df82a0c5b49}
+
+
+Player 1's past gold. 
+
+Returns the amount of gold player 1 has in the far past Also see int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{BaseAI::getGold(int playerNum, int z)} \hypertarget{classBaseAI_cc09926bd744fdf9ec4448366d8b8de7}{
+\index{BaseAI@{BaseAI}!player1Gold1@{player1Gold1}}
+\index{player1Gold1@{player1Gold1}!BaseAI@{BaseAI}}
+\subsubsection[{player1Gold1}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::player1Gold1 ()}}
+\label{classBaseAI_cc09926bd744fdf9ec4448366d8b8de7}
+
+
+Player 1's present gold. 
+
+Returns the amount of gold player 1 has in the past Also see int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{BaseAI::getGold(int playerNum, int z)} \hypertarget{classBaseAI_35bad13d289478aa2bb628d6e3c56c52}{
+\index{BaseAI@{BaseAI}!player1Gold2@{player1Gold2}}
+\index{player1Gold2@{player1Gold2}!BaseAI@{BaseAI}}
+\subsubsection[{player1Gold2}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::player1Gold2 ()}}
+\label{classBaseAI_35bad13d289478aa2bb628d6e3c56c52}
+
+
+Player 1's future gold. 
+
+Returns the amount of gold player 1 has in the present Also see int \hyperlink{classBaseAI_c079405ee4fd5cec789af0f627d3d175}{BaseAI::getGold(int playerNum, int z)} \hypertarget{classBaseAI_16aab1036653c8f8fb5370cf2f6a3e10}{
+\index{BaseAI@{BaseAI}!playerID@{playerID}}
+\index{playerID@{playerID}!BaseAI@{BaseAI}}
+\subsubsection[{playerID}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::playerID ()}}
+\label{classBaseAI_16aab1036653c8f8fb5370cf2f6a3e10}
+
+
+Player Number; either 0 or 2. 
+
+Returns the your player ID, either 0 or 1.
+
+This value will match the ownerID of all your units. \hypertarget{classBaseAI_c6303df0fece47e29b77dd0aa0aa4fe8}{
+\index{BaseAI@{BaseAI}!startTurn@{startTurn}}
+\index{startTurn@{startTurn}!BaseAI@{BaseAI}}
+\subsubsection[{startTurn}]{\setlength{\rightskip}{0pt plus 5cm}bool BaseAI::startTurn ()}}
+\label{classBaseAI_c6303df0fece47e29b77dd0aa0aa4fe8}
+
+
+Starts your turn. You do not call this function. \hypertarget{classBaseAI_19ade7391bfe101884a35f48fb840199}{
+\index{BaseAI@{BaseAI}!turnNumber@{turnNumber}}
+\index{turnNumber@{turnNumber}!BaseAI@{BaseAI}}
+\subsubsection[{turnNumber}]{\setlength{\rightskip}{0pt plus 5cm}int BaseAI::turnNumber ()}}
+\label{classBaseAI_19ade7391bfe101884a35f48fb840199}
+
+
+Returns the current turn number
+
+The first turn is turn 0. Player 0 gets the first turn. The second turn is turn 1. Player 1 gets the first turn. The game is ends at the end of turn 499 or earlier. \hypertarget{classBaseAI_ef082fbf306fec04515ed5ed3b1ba582}{
+\index{BaseAI@{BaseAI}!username@{username}}
+\index{username@{username}!BaseAI@{BaseAI}}
+\subsubsection[{username}]{\setlength{\rightskip}{0pt plus 5cm}virtual const char$\ast$ BaseAI::username ()\hspace{0.3cm}{\tt  \mbox{[}pure virtual\mbox{]}}}}
+\label{classBaseAI_ef082fbf306fec04515ed5ed3b1ba582}
+
+
+Make this your username, which should be provided. 
+
+Implemented in \hyperlink{classAI_529ac74a6f88a82abb1edd87847203e1}{AI}.
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+BaseAI.h\item 
+BaseAI.cpp\end{CompactItemize}

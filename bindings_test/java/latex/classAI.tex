@@ -1,0 +1,71 @@
+\hypertarget{classAI}{
+\section{AI Class Reference}
+\label{classAI}\index{AI@{AI}}
+}
+The class implementing gameplay logic.  
+
+
+Inheritance diagram for AI::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classAI}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+String \hyperlink{classAI_d7e6db6b414a192ad2af8656d012cfdc}{username} ()
+\item 
+String \hyperlink{classAI_405047fd39e03de993183392a06d655b}{password} ()
+\item 
+boolean \hyperlink{classAI_f25b3a076daef2aaf9f74ecf458bdfbc}{run} ()
+\item 
+void \hyperlink{classAI_8c8e3a635791abaa61585357e6a25f63}{init} ()
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+The class implementing gameplay logic. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classAI_8c8e3a635791abaa61585357e6a25f63}{
+\index{AI@{AI}!init@{init}}
+\index{init@{init}!AI@{AI}}
+\subsubsection[{init}]{\setlength{\rightskip}{0pt plus 5cm}void AI::init ()\hspace{0.3cm}{\tt  \mbox{[}inline, virtual\mbox{]}}}}
+\label{classAI_8c8e3a635791abaa61585357e6a25f63}
+
+
+This is run on turn 1 before run 
+
+Implements \hyperlink{classBaseAI_71b49f4ca248bfd32a9f9557cb6d494a}{BaseAI}.\hypertarget{classAI_405047fd39e03de993183392a06d655b}{
+\index{AI@{AI}!password@{password}}
+\index{password@{password}!AI@{AI}}
+\subsubsection[{password}]{\setlength{\rightskip}{0pt plus 5cm}String AI::password ()\hspace{0.3cm}{\tt  \mbox{[}inline, virtual\mbox{]}}}}
+\label{classAI_405047fd39e03de993183392a06d655b}
+
+
+Make this your password, which should be provided. 
+
+Implements \hyperlink{classBaseAI_8607533e2b5bd9920ded593ae6509f48}{BaseAI}.\hypertarget{classAI_f25b3a076daef2aaf9f74ecf458bdfbc}{
+\index{AI@{AI}!run@{run}}
+\index{run@{run}!AI@{AI}}
+\subsubsection[{run}]{\setlength{\rightskip}{0pt plus 5cm}boolean AI::run ()\hspace{0.3cm}{\tt  \mbox{[}inline, virtual\mbox{]}}}}
+\label{classAI_f25b3a076daef2aaf9f74ecf458bdfbc}
+
+
+This is run every turn . Return true to end the turn, return false to request a status update from the server and then immediately rerun this function with the latest game status. 
+
+Implements \hyperlink{classBaseAI_56c96a58c1f1e93d17f9817711a45594}{BaseAI}.\hypertarget{classAI_d7e6db6b414a192ad2af8656d012cfdc}{
+\index{AI@{AI}!username@{username}}
+\index{username@{username}!AI@{AI}}
+\subsubsection[{username}]{\setlength{\rightskip}{0pt plus 5cm}String AI::username ()\hspace{0.3cm}{\tt  \mbox{[}inline, virtual\mbox{]}}}}
+\label{classAI_d7e6db6b414a192ad2af8656d012cfdc}
+
+
+Make this your username, which should be provided. 
+
+Implements \hyperlink{classBaseAI_a26770dd7db8dd0c4466dd770d4e05ba}{BaseAI}.
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+AI.java\end{CompactItemize}

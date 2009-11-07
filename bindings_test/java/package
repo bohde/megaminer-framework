@@ -1,0 +1,5 @@
+#!/bin/sh
+make clean;make
+cp ../c/libclient.so .
+tar czf $1.tar.gz ./*
+rm -f libclient.so

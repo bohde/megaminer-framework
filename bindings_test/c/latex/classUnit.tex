@@ -1,0 +1,130 @@
+\hypertarget{classUnit}{
+\section{Unit Class Reference}
+\label{classUnit}\index{Unit@{Unit}}
+}
+An entitiy that can move around the game and act.  
+
+
+{\tt \#include $<$wrappers.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+\hypertarget{classUnit_137b06047ff3c863b7b8b11d6166b23b}{
+\textbf{Unit} (\_\-Unit $\ast$ptr=NULL)}
+\label{classUnit_137b06047ff3c863b7b8b11d6166b23b}
+
+\item 
+\hypertarget{classUnit_621a32dd222ff61ae2b449929f4ca8ec}{
+int \textbf{objectID} ()}
+\label{classUnit_621a32dd222ff61ae2b449929f4ca8ec}
+
+\item 
+\hypertarget{classUnit_eaaab5b23cb47ac5a73b765e23d822eb}{
+int \textbf{x} ()}
+\label{classUnit_eaaab5b23cb47ac5a73b765e23d822eb}
+
+\item 
+\hypertarget{classUnit_ed8851f757a1d06dc12a36714436cf5d}{
+int \textbf{y} ()}
+\label{classUnit_ed8851f757a1d06dc12a36714436cf5d}
+
+\item 
+\hypertarget{classUnit_c0c37e2f02206836aee89d79f26c7444}{
+int \textbf{z} ()}
+\label{classUnit_c0c37e2f02206836aee89d79f26c7444}
+
+\item 
+\hypertarget{classUnit_b64b87b4b5111ccbc2891515148fa5b8}{
+int \textbf{hp} ()}
+\label{classUnit_b64b87b4b5111ccbc2891515148fa5b8}
+
+\item 
+\hypertarget{classUnit_72c9eaba718ba5f4116bd273d38d8522}{
+int \textbf{level} ()}
+\label{classUnit_72c9eaba718ba5f4116bd273d38d8522}
+
+\item 
+\hypertarget{classUnit_ca492d37ca3c44ce203e497d571f59d4}{
+int \textbf{unitTypeID} ()}
+\label{classUnit_ca492d37ca3c44ce203e497d571f59d4}
+
+\item 
+\hypertarget{classUnit_95a85f91e1969c5340765de82c203625}{
+int \textbf{ownerID} ()}
+\label{classUnit_95a85f91e1969c5340765de82c203625}
+
+\item 
+\hypertarget{classUnit_21d1e0167e8fd7d5ec8fceebe817df98}{
+int \textbf{actions} ()}
+\label{classUnit_21d1e0167e8fd7d5ec8fceebe817df98}
+
+\item 
+\hypertarget{classUnit_803f4023d9d00c501d9a0b55ac5d5126}{
+int \textbf{moves} ()}
+\label{classUnit_803f4023d9d00c501d9a0b55ac5d5126}
+
+\item 
+\hypertarget{classUnit_b86073c935bec5d959159d837cd9b9c3}{
+bool \textbf{attack} (int x, int y)}
+\label{classUnit_b86073c935bec5d959159d837cd9b9c3}
+
+\item 
+\hypertarget{classUnit_aad323acdd0a291f7d309ac24e01ab9f}{
+bool \textbf{build} (int x, int y, \hyperlink{classBuildingType}{BuildingType} \&type)}
+\label{classUnit_aad323acdd0a291f7d309ac24e01ab9f}
+
+\item 
+bool \hyperlink{classUnit_766eec7dc93515b6d6590fd2c12923a6}{paint} (int x, int y)
+\item 
+\hypertarget{classUnit_01181b403f885cc2ea06389074626e83}{
+bool \textbf{move} (int x, int y)}
+\label{classUnit_01181b403f885cc2ea06389074626e83}
+
+\item 
+bool \hyperlink{classUnit_46e83270573c33637b588b87132c8905}{warp} ()
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+\hypertarget{classUnit_f5240a8811a31044b1170278d66412f2}{
+\_\-Unit $\ast$ \textbf{ptr}}
+\label{classUnit_f5240a8811a31044b1170278d66412f2}
+
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+\hypertarget{classUnit_bba2ea3d62724066fa08ec7d9de7833a}{
+std::ostream \& \textbf{operator$<$$<$} (std::ostream \&stream, \hyperlink{classUnit}{Unit} ob)}
+\label{classUnit_bba2ea3d62724066fa08ec7d9de7833a}
+
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+An entitiy that can move around the game and act. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classUnit_766eec7dc93515b6d6590fd2c12923a6}{
+\index{Unit@{Unit}!paint@{paint}}
+\index{paint@{paint}!Unit@{Unit}}
+\subsubsection[{paint}]{\setlength{\rightskip}{0pt plus 5cm}bool Unit::paint (int {\em x}, \/  int {\em y})}}
+\label{classUnit_766eec7dc93515b6d6590fd2c12923a6}
+
+
+The unit attempts to generate gold by painting. The x,y coordinate must contain a Gallery amd must be adjacent or under this unit. \hypertarget{classUnit_46e83270573c33637b588b87132c8905}{
+\index{Unit@{Unit}!warp@{warp}}
+\index{warp@{warp}!Unit@{Unit}}
+\subsubsection[{warp}]{\setlength{\rightskip}{0pt plus 5cm}bool Unit::warp ()}}
+\label{classUnit_46e83270573c33637b588b87132c8905}
+
+
+Makes this unit attempt to use a portal.
+
+The portal under this unit adds its direction member variable to this unit's z coordinate. The portal's fee is paid and then increased. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+wrappers.h\item 
+wrappers.cpp\end{CompactItemize}
