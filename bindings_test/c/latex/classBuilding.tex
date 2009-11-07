@@ -1,0 +1,171 @@
+\hypertarget{classBuilding}{
+\section{Building Class Reference}
+\label{classBuilding}\index{Building@{Building}}
+}
+A building to shelter, feed, and/or create units.  
+
+
+{\tt \#include $<$wrappers.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+\hypertarget{classBuilding_d6fde303aacb38890b476fc587e61020}{
+\textbf{Building} (\_\-Building $\ast$ptr=NULL)}
+\label{classBuilding_d6fde303aacb38890b476fc587e61020}
+
+\item 
+int \hyperlink{classBuilding_715ec055ad32b0e8efab7028ef621269}{objectID} ()
+\item 
+int \hyperlink{classBuilding_2709a75a9687a437d2c18b0118cc1e84}{x} ()
+\item 
+int \hyperlink{classBuilding_751e37f8a295f08e39b79b5e1632cd38}{y} ()
+\item 
+int \hyperlink{classBuilding_68341589a1fe809b38c54dc3415da183}{z} ()
+\item 
+int \hyperlink{classBuilding_48f667674e858a00faf79d46e43335bd}{hp} ()
+\item 
+int \hyperlink{classBuilding_e16eed2b0497af6c2629cf3cb1823c5d}{level} ()
+\item 
+int \hyperlink{classBuilding_702e3a297487ed7672fdf3a141fa8944}{buildingTypeID} ()
+\item 
+int \hyperlink{classBuilding_bc8274e573fc95b0ba1c868ad4d61936}{ownerID} ()
+\item 
+int \hyperlink{classBuilding_a30937bcf69dd4b8f7ce30c4536f1886}{inTraining} ()
+\item 
+int \hyperlink{classBuilding_f02667e8eb45206cec80b2018be37932}{progress} ()
+\item 
+int \hyperlink{classBuilding_1270e1fa9a9acdca4daf08d39c9a72ac}{linked} ()
+\item 
+int \hyperlink{classBuilding_857556a454fae63573429c3de4fcaf31}{complete} ()
+\item 
+bool \hyperlink{classBuilding_95df4b71278ab7de3b4d6d631ef4d01c}{train} (\hyperlink{classUnitType}{UnitType} \&unit)
+\item 
+bool \hyperlink{classBuilding_18da3fd55e1b9fe2ef198b0268eb439f}{cancel} ()
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+\hypertarget{classBuilding_fa95e2212d89420e3b545aec2c45e8ae}{
+\_\-Building $\ast$ \textbf{ptr}}
+\label{classBuilding_fa95e2212d89420e3b545aec2c45e8ae}
+
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+\hypertarget{classBuilding_cdf7bf2ad24fb215d84b8fda0741c0ea}{
+std::ostream \& \textbf{operator$<$$<$} (std::ostream \&stream, \hyperlink{classBuilding}{Building} ob)}
+\label{classBuilding_cdf7bf2ad24fb215d84b8fda0741c0ea}
+
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+A building to shelter, feed, and/or create units. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classBuilding_702e3a297487ed7672fdf3a141fa8944}{
+\index{Building@{Building}!buildingTypeID@{buildingTypeID}}
+\index{buildingTypeID@{buildingTypeID}!Building@{Building}}
+\subsubsection[{buildingTypeID}]{\setlength{\rightskip}{0pt plus 5cm}int Building::buildingTypeID ()}}
+\label{classBuilding_702e3a297487ed7672fdf3a141fa8944}
+
+
+Returns the object ID of this building's associated type. \hypertarget{classBuilding_18da3fd55e1b9fe2ef198b0268eb439f}{
+\index{Building@{Building}!cancel@{cancel}}
+\index{cancel@{cancel}!Building@{Building}}
+\subsubsection[{cancel}]{\setlength{\rightskip}{0pt plus 5cm}bool Building::cancel ()}}
+\label{classBuilding_18da3fd55e1b9fe2ef198b0268eb439f}
+
+
+If this building has not been completed, cancels construction of this building. The building is destroyed for a full refund. If this building is completed and is training a unit, cancels the training for a full refund. \hypertarget{classBuilding_857556a454fae63573429c3de4fcaf31}{
+\index{Building@{Building}!complete@{complete}}
+\index{complete@{complete}!Building@{Building}}
+\subsubsection[{complete}]{\setlength{\rightskip}{0pt plus 5cm}int Building::complete ()}}
+\label{classBuilding_857556a454fae63573429c3de4fcaf31}
+
+
+Returns 1 if this building has been completed, 0 otherwise. \hypertarget{classBuilding_48f667674e858a00faf79d46e43335bd}{
+\index{Building@{Building}!hp@{hp}}
+\index{hp@{hp}!Building@{Building}}
+\subsubsection[{hp}]{\setlength{\rightskip}{0pt plus 5cm}int Building::hp ()}}
+\label{classBuilding_48f667674e858a00faf79d46e43335bd}
+
+
+Returns the current hp of this building. \hypertarget{classBuilding_a30937bcf69dd4b8f7ce30c4536f1886}{
+\index{Building@{Building}!inTraining@{inTraining}}
+\index{inTraining@{inTraining}!Building@{Building}}
+\subsubsection[{inTraining}]{\setlength{\rightskip}{0pt plus 5cm}int Building::inTraining ()}}
+\label{classBuilding_a30937bcf69dd4b8f7ce30c4536f1886}
+
+
+The objectID of the unit type that is being trained, or -1 if no unit is being trained. \hypertarget{classBuilding_e16eed2b0497af6c2629cf3cb1823c5d}{
+\index{Building@{Building}!level@{level}}
+\index{level@{level}!Building@{Building}}
+\subsubsection[{level}]{\setlength{\rightskip}{0pt plus 5cm}int Building::level ()}}
+\label{classBuilding_e16eed2b0497af6c2629cf3cb1823c5d}
+
+
+Returns the level of this building. \hypertarget{classBuilding_1270e1fa9a9acdca4daf08d39c9a72ac}{
+\index{Building@{Building}!linked@{linked}}
+\index{linked@{linked}!Building@{Building}}
+\subsubsection[{linked}]{\setlength{\rightskip}{0pt plus 5cm}int Building::linked ()}}
+\label{classBuilding_1270e1fa9a9acdca4daf08d39c9a72ac}
+
+
+Returns 1 if this building has a cascaded version of itself in the next time period, 0 otherwise. \hypertarget{classBuilding_715ec055ad32b0e8efab7028ef621269}{
+\index{Building@{Building}!objectID@{objectID}}
+\index{objectID@{objectID}!Building@{Building}}
+\subsubsection[{objectID}]{\setlength{\rightskip}{0pt plus 5cm}int Building::objectID ()}}
+\label{classBuilding_715ec055ad32b0e8efab7028ef621269}
+
+
+Returns a unique identifier for this object. This ID will only be assigned to this object, and will never change. \hypertarget{classBuilding_bc8274e573fc95b0ba1c868ad4d61936}{
+\index{Building@{Building}!ownerID@{ownerID}}
+\index{ownerID@{ownerID}!Building@{Building}}
+\subsubsection[{ownerID}]{\setlength{\rightskip}{0pt plus 5cm}int Building::ownerID ()}}
+\label{classBuilding_bc8274e573fc95b0ba1c868ad4d61936}
+
+
+Returns the id of the player controlling this building. Either 0 or 1. \hypertarget{classBuilding_f02667e8eb45206cec80b2018be37932}{
+\index{Building@{Building}!progress@{progress}}
+\index{progress@{progress}!Building@{Building}}
+\subsubsection[{progress}]{\setlength{\rightskip}{0pt plus 5cm}int Building::progress ()}}
+\label{classBuilding_f02667e8eb45206cec80b2018be37932}
+
+
+Returns the number of turns this building has been training a unit. \hypertarget{classBuilding_95df4b71278ab7de3b4d6d631ef4d01c}{
+\index{Building@{Building}!train@{train}}
+\index{train@{train}!Building@{Building}}
+\subsubsection[{train}]{\setlength{\rightskip}{0pt plus 5cm}bool Building::train ({\bf UnitType} \& {\em unit})}}
+\label{classBuilding_95df4b71278ab7de3b4d6d631ef4d01c}
+
+
+Begins training the given unit type. \hypertarget{classBuilding_2709a75a9687a437d2c18b0118cc1e84}{
+\index{Building@{Building}!x@{x}}
+\index{x@{x}!Building@{Building}}
+\subsubsection[{x}]{\setlength{\rightskip}{0pt plus 5cm}int Building::x ()}}
+\label{classBuilding_2709a75a9687a437d2c18b0118cc1e84}
+
+
+Returns the x coordinate of this object. For buildings, this is the position of the corner closest to (-inf, -inf). \hypertarget{classBuilding_751e37f8a295f08e39b79b5e1632cd38}{
+\index{Building@{Building}!y@{y}}
+\index{y@{y}!Building@{Building}}
+\subsubsection[{y}]{\setlength{\rightskip}{0pt plus 5cm}int Building::y ()}}
+\label{classBuilding_751e37f8a295f08e39b79b5e1632cd38}
+
+
+Returns the y coordinate of this object. For buildings, this is the position of the corner closest to (-inf, -inf). \hypertarget{classBuilding_68341589a1fe809b38c54dc3415da183}{
+\index{Building@{Building}!z@{z}}
+\index{z@{z}!Building@{Building}}
+\subsubsection[{z}]{\setlength{\rightskip}{0pt plus 5cm}int Building::z ()}}
+\label{classBuilding_68341589a1fe809b38c54dc3415da183}
+
+
+Returns the z coordinate of this object. 0 is the far past, 1 is the past, 0 is the present. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+wrappers.h\item 
+wrappers.cpp\end{CompactItemize}

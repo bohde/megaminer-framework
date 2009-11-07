@@ -1,0 +1,103 @@
+\hypertarget{classPortal}{
+\section{Portal Class Reference}
+\label{classPortal}\index{Portal@{Portal}}
+}
+A connection between two adjacent times.  
+
+
+{\tt \#include $<$wrappers.h$>$}
+
+\subsection*{Public Member Functions}
+\begin{CompactItemize}
+\item 
+\hypertarget{classPortal_8f5c96f6f21a615d927226f2f28d9f8c}{
+\textbf{Portal} (\_\-Portal $\ast$ptr=NULL)}
+\label{classPortal_8f5c96f6f21a615d927226f2f28d9f8c}
+
+\item 
+\hypertarget{classPortal_869c273a06786f357952d40ce1969621}{
+int \textbf{objectID} ()}
+\label{classPortal_869c273a06786f357952d40ce1969621}
+
+\item 
+\hypertarget{classPortal_3b938a6423a8364de73152f17039f4b5}{
+int \textbf{x} ()}
+\label{classPortal_3b938a6423a8364de73152f17039f4b5}
+
+\item 
+\hypertarget{classPortal_6c466715c6a351d1f1d82272bf1ae6bf}{
+int \textbf{y} ()}
+\label{classPortal_6c466715c6a351d1f1d82272bf1ae6bf}
+
+\item 
+\hypertarget{classPortal_532fa14323151a5a1b4527d37e6a3ae1}{
+int \textbf{z} ()}
+\label{classPortal_532fa14323151a5a1b4527d37e6a3ae1}
+
+\item 
+int \hyperlink{classPortal_07b79572705192e018631324017cfad7}{direction} ()
+\item 
+int \hyperlink{classPortal_9b8b1eef151f135157295e00b09fe9c5}{fee} ()
+\item 
+int \hyperlink{classPortal_3ef4c98143afeb453f17d6aba763ad1d}{feeIncr} ()
+\item 
+float \hyperlink{classPortal_64b431284d20f1d04a3f9a4192482f5d}{feeMultiplier} ()
+\end{CompactItemize}
+\subsection*{Public Attributes}
+\begin{CompactItemize}
+\item 
+\hypertarget{classPortal_1259664a539998b39f9c5028474e5a7a}{
+\_\-Portal $\ast$ \textbf{ptr}}
+\label{classPortal_1259664a539998b39f9c5028474e5a7a}
+
+\end{CompactItemize}
+\subsection*{Friends}
+\begin{CompactItemize}
+\item 
+\hypertarget{classPortal_07fc70fa1bb4b5f274467b9c5c2bd099}{
+std::ostream \& \textbf{operator$<$$<$} (std::ostream \&stream, \hyperlink{classPortal}{Portal} ob)}
+\label{classPortal_07fc70fa1bb4b5f274467b9c5c2bd099}
+
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+A connection between two adjacent times. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classPortal_07b79572705192e018631324017cfad7}{
+\index{Portal@{Portal}!direction@{direction}}
+\index{direction@{direction}!Portal@{Portal}}
+\subsubsection[{direction}]{\setlength{\rightskip}{0pt plus 5cm}int Portal::direction ()}}
+\label{classPortal_07b79572705192e018631324017cfad7}
+
+
+Returns 1 if this portal leads forward in time, -1 otherwise
+
+When a unit performs a warp action, this value is added to the unit's z coordinate. \hypertarget{classPortal_9b8b1eef151f135157295e00b09fe9c5}{
+\index{Portal@{Portal}!fee@{fee}}
+\index{fee@{fee}!Portal@{Portal}}
+\subsubsection[{fee}]{\setlength{\rightskip}{0pt plus 5cm}int Portal::fee ()}}
+\label{classPortal_9b8b1eef151f135157295e00b09fe9c5}
+
+
+Returns the price in gold that you will pay if a unit warps through this portal. \hypertarget{classPortal_3ef4c98143afeb453f17d6aba763ad1d}{
+\index{Portal@{Portal}!feeIncr@{feeIncr}}
+\index{feeIncr@{feeIncr}!Portal@{Portal}}
+\subsubsection[{feeIncr}]{\setlength{\rightskip}{0pt plus 5cm}int Portal::feeIncr ()}}
+\label{classPortal_3ef4c98143afeb453f17d6aba763ad1d}
+
+
+Returns the amount the fee will increase every time a unit uses this portal. \hypertarget{classPortal_64b431284d20f1d04a3f9a4192482f5d}{
+\index{Portal@{Portal}!feeMultiplier@{feeMultiplier}}
+\index{feeMultiplier@{feeMultiplier}!Portal@{Portal}}
+\subsubsection[{feeMultiplier}]{\setlength{\rightskip}{0pt plus 5cm}float Portal::feeMultiplier ()}}
+\label{classPortal_64b431284d20f1d04a3f9a4192482f5d}
+
+
+Returns the value multiplied to the portal fee at the end of each turn. 
+
+The documentation for this class was generated from the following files:\begin{CompactItemize}
+\item 
+wrappers.h\item 
+wrappers.cpp\end{CompactItemize}
