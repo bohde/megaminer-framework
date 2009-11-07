@@ -3,12 +3,12 @@
 
 #Your team name (Please keep this the same, and make sure it is a legal filename... no spaces/symbols/etc)
 #NO, SERIOUSLY, NO SPACES.  I, Stephen Mues, should never write shell scripts.
-TEAM='SMdefault'
+TEAM='default'
 
 #Uncomment the line that describes the language you want to use.
 #LANGUAGE='java'
-#LANGUAGE='cpp'
-LANGUAGE='python'
+LANGUAGE='cpp'
+#LANGUAGE='python'
 
 
 #Do not modify anything below this line ===================================
