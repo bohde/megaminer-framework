@@ -10,9 +10,10 @@ import random
 import copy
 import subprocess
 import threading
+import platform
 
 def run(program, *args):
-    if (os.environ.get('OSTYPE') == 'linux'):
+    if (platform.system() == 'Linux'):
         ext = ""
     else:
         ext = ".exe"
