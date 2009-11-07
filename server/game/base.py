@@ -105,8 +105,8 @@ def basicMapGeneration(game):
 
     initialSetup(game)
 
-    n = 10 # To config file?
-    t = 10 # To config file?
+    n = 6 # To config file?
+    t = 20 # To config file?
     numPortals = 0
     numTerrain = 0
     farPastPortals = []
