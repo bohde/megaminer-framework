@@ -16,10 +16,18 @@ def live():
 def master():
     """Set hosts to the first campus linux box"""
     _gen_hosts()
-    env.hosts = env.hosts[:1]
+    env.hosts = env.hosts[0:1]
 
 def echo():
     run('uname -a')
     
 def deploy():
-    rsync_project('~')
+    rsync_project('/tmp/')
+
+def run_redirect():
+    cd('megaminer/server/')
+    run('screen python2.6 main.py --redirect', pty=True)  
+
+def run_server():
+    cd('megaminer/server/')
+    run('screen python2.6 main.py --address %s' % env.hosts[0], pty=True)
