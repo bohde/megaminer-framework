@@ -5,8 +5,7 @@ from math import hypot
 
 unitImages = {"civE":{'0':[], '1':[]}, "art":{'0':[], '1':[]},"spear":{'0':[], '1':[]}, "artil":{'0':[], '1':[]}, "blank":{'0':[], '1':[]},"pig":{'0':[], '1':[]}, "cav":{'0':[], '1':[]}}
 
-buildingImages = {"school":{'0':[], '1':[]}, "gallery":{'0':[], '1':[]}, "farm":{'0':[], '1':[]},
-    "warFac":{'0':[], '1':[]}, "bunker":{'0':[], '1':[]}}
+buildingImages = {"school":{'0':[], '1':[]}, "gallery":{'0':[], '1':[]}, "farm":{'0':[], '1':[]}, "warFac":{'0':[], '1':[]}, "bunker":{'0':[], '1':[]}}
 
 terrainImages = {"rock":[], "sand":[], "tree":[], "grass":[]}
 
@@ -92,9 +91,13 @@ class Building(pygame.sprite.Sprite):
         if self.training:
             if self.image == self.done:
                 tempImage = self.train
-                self.training = False;
+                self.training = False
+            else:
+                tempImage = self.done
         elif self.complete:
             tempImage = self.done
+        else:
+            tempImage = self.construction
         
         pygame.draw.rect(tempImage, [0,0,0], pygame.Rect(0,0,5,self.rect.height))
         
@@ -104,15 +107,11 @@ class Building(pygame.sprite.Sprite):
             pygame.draw.rect(tempImage, [229,97,5], pygame.Rect(0,0,5,self.rect.height/2))
         else:
             pygame.draw.rect(tempImage, [250,0,0], pygame.Rect(0,0,5,self.rect.height/4))
-                 
         if self.rect.midbottom[0] > 1280/2:
             tempImage = pygame.transform.flip(tempImage, True, False)
             
         self.image = tempImage
         
-
-
-
 
 class Terrain(pygame.sprite.Sprite):
     def __init__(self, objectID, location, blockMove, blockBuild):
