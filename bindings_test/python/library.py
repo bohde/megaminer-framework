@@ -51,8 +51,11 @@ library.effBuildingPrice.argtypes = [c_void_p, c_int]
 library.effUnitPrice.restype = c_int
 library.effUnitPrice.argtypes = [c_void_p, c_int]
 
-library.effMaxHP.restype = c_int
-library.effMaxHP.argtypes = [c_void_p, c_int]
+library.effUnitMaxHP.restype = c_int
+library.effUnitMaxHP.argtypes = [c_void_p, c_int]
+
+library.effBuildingMaxHP.restype = c_int
+library.effBuildingMaxHP.argtypes = [c_void_p, c_int]
 
 library.effBuildingArmor.restype = c_int
 library.effBuildingArmor.argtypes = [c_void_p, c_int]

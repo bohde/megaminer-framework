@@ -63,7 +63,8 @@ public interface Client extends Library {
     int foodProduced(int playerID, int z);
     int effBuildingPrice(Pointer buildingType, int level);
     int effUnitPrice(Pointer buildingType, int level);
-    int effMaxHP(Pointer unitType, int level);
+    int effUnitMaxHP(Pointer unitType, int level);
+    int effBuildingMaxHP(Pointer buildingType, int level);
     int effBuildingArmor(Pointer buildingType, int level);
     int effUnitArmor(Pointer unitType, int level);
 

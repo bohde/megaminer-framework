@@ -180,8 +180,12 @@ public abstract class BaseAI
         return Client.INSTANCE.effUnitPrice(bt.ptr, level);
     }
 
-    int effMaxHP(UnitType ut, int level) {
+    int effUnitMaxHP(UnitType ut, int level) {
         return Client.INSTANCE.effMaxHP(ut.ptr, level);
+    }
+
+    int effBuildingMaxHP(BuildingType bt, int level) {
+        return Client.INSTANCE.effBuildingMaxHP(bt.ptr, level);
     }
 
     int effBuildingArmor(BuildingType bt, int level) {

@@ -79,7 +79,8 @@ DLLEXPORT int hunger(int playerID, int z);
 DLLEXPORT int foodProduced(int playerID, int z);
 DLLEXPORT int effBuildingPrice(_BuildingType* bt, int level);
 DLLEXPORT int effUnitPrice(_UnitType* ut, int level);
-DLLEXPORT int effMaxHP(_UnitType* ut, int level);
+DLLEXPORT int effBuildingMaxHP(_BuildingType* bt, int level);
+DLLEXPORT int effUnitMaxHP(_UnitType* ut, int level);
 DLLEXPORT int effBuildingArmor(_BuildingType* bt, int level);
 DLLEXPORT int effUnitArmor(_UnitType* ut, int level);
 

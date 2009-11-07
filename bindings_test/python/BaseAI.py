@@ -169,10 +169,16 @@ class BaseAI:
         library.effUnitPrice(unitType.ptr, level)
 
     @staticmethod
-    def effMaxHP(unitType, level):
+    def effUnitMaxHP(unitType, level):
         """Effective max HP of unit at specified level
         """
-        return library.effMaxHP(unitType.ptr, level)
+        return library.effUnitMaxHP(unitType.ptr, level)
+
+    @staticmethod
+    def effBuildingMaxHP(buildingType, level):
+        """Effective max HP of unit at specified level
+        """
+        return library.effBuildingMaxHP(buildingType.ptr, level)
 
     @staticmethod
     def effBuildingArmor(buildingType, level):
