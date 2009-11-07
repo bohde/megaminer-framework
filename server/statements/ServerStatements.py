@@ -11,6 +11,7 @@ def login(self, expression):
         if self.login(expression[1], expression[2]):
             self.writeSExpr(['login-accepted', 1.0])#client_version])
         else:
+            print expression
             self.writeSExpr(['login-denied', 'invalid username or password'])
 
 @mapper("logout")
