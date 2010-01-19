@@ -11,7 +11,7 @@ import time
 
 class BaseApp(object):
     def run(self, commands):
-        print self.__class__
+        pass
 
     def state(self):
         return []
@@ -22,7 +22,7 @@ class Ping(BaseApp):
 
 class FatPing(BaseApp):
     def state(self):
-        return [["pong"] for x in xrange(1337)]
+        return [["pong"] for x in xrange(10000)]
 
 class DispatchProtocol(LineReceiver):
     apps = {
@@ -30,6 +30,12 @@ class DispatchProtocol(LineReceiver):
         "fat-ping":FatPing,
         }
 
+    sessions = 0
+
+    def connectionMade(self):
+        self.session_num = DispatchProtocol.sessions
+        DispatchProtocol.sessions += 1
+        
     def lineReceived(self, line):
         sxpr = str2sexpr(line)
         for x in str2sexpr(line):
@@ -39,18 +45,12 @@ class DispatchProtocol(LineReceiver):
             self.transport.write(sexpr2str(running_app.state()))
         
 class TestLatencyServer(DispatchProtocol):
-    i = 0
     t = time.time()
-
-    def connectionMade(self):
-        self.n = TestLatencyServer.i
-        print "Created session", self.n
-        TestLatencyServer.i += 1
 
     def lineReceived(self, line):
         DispatchProtocol.lineReceived(self, line)
         t = time.time()
-        print "Received", line, "on session", self.n,  t - TestLatencyServer.t
+        print t - TestLatencyServer.t
         TestLatencyServer.t = t
 
 if __name__ == "__main__":
