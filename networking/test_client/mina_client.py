@@ -9,13 +9,9 @@ import random
 import time
 from numpy import array
 
-#import psyco
-#psyco.full()
-
-clients = []
-latencies = []
 class TestClient(protocol.Protocol):
-    
+    clients = []
+    latencies = []
     i = 0
     def connectionMade(self):
         self.n = TestClient.i
@@ -36,20 +32,20 @@ class TestClient(protocol.Protocol):
     def dataReceived(self, line):
         t = time.time()
         print t-self.t
-        latencies.append(t-self.t)
+        TestClient.latencies.append(t-self.t)
         if self.queue:
             self.queue -= 1
             self.send_message()
         
 def protocol_created(p):
-    clients.append(p)
+    TestClient.clients.append(p)
 
 def pick_and_send():
-    if clients: random.choice(clients).send_message()
+    if TestClient.clients: random.choice(TestClient.clients).send_message()
     reactor.callLater(0.02, pick_and_send)
 
 def start_sessions():
-    for i in range(100):
+    for i in range(1000):
         cc = protocol.ClientCreator(reactor, TestClient)
         d = cc.connectTCP("127.0.0.1", 3001)
         d.addCallback(protocol_created)

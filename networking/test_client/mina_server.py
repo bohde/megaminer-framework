@@ -7,6 +7,8 @@ from sexpr.sexpr import sexpr2str, str2sexpr
 
 from twisted.internet import protocol, reactor
 from twisted.protocols.basic import LineReceiver
+from itertools import repeat
+
 import time
 
 class BaseApp(object):
@@ -22,7 +24,7 @@ class Ping(BaseApp):
 
 class FatPing(BaseApp):
     def state(self):
-        return [["pong"] for x in xrange(10000)]
+        return list(repeat(["pong"], 10000))
 
 class DispatchProtocol(LineReceiver):
     apps = {
