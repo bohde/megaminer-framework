@@ -1,7 +1,9 @@
 #!/usr/bin/env python
-
-from twisted.internet import epollreactor
-epollreactor.install()
+try:
+    from twisted.internet import epollreactor
+    epollreactor.install()
+except:
+    pass
 
 from twisted.internet import protocol, reactor, defer
 from twisted.protocols.basic import LineReceiver
@@ -21,7 +23,7 @@ class TestClient(protocol.Protocol):
 
     def send_message(self):
         self.t = time.time()
-        self.transport.write('("fat-ping" %d)\r\n'%(self.n))
+        self.transport.write('("ping" ("whoami") ("burn") ("null"))\r\n')
 
     def queue_message(self):
         if not(self.queue):
@@ -32,6 +34,7 @@ class TestClient(protocol.Protocol):
     def dataReceived(self, line):
         t = time.time()
         print t-self.t
+        print line
         TestClient.latencies.append(t-self.t)
         if self.queue:
             self.queue -= 1
