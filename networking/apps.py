@@ -5,7 +5,6 @@ from functools import wraps
 def namedmethod(name):
     def inner(f):
         f._name = name
-        print name
         f.is_protocol = True
         return f
     return inner
@@ -34,7 +33,7 @@ class BaseApp(object):
         def apply(coms):
             try:
                 command = self.__class__._mapper[coms[0]] 
-                return command(self, coms[1:])
+                return command(self, *coms[1:])
             except KeyError as e:
                 return "invalid-command: %s" % coms[0]
             except Exception as e:

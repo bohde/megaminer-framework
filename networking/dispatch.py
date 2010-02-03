@@ -43,3 +43,27 @@ class DispatchProtocol(LineReceiver):
         def write(output):
             self.transport.write(sexpr2str(*output))
         d.addCallback(write)
+
+    @classmethod
+    def main(cls, port=3001):
+        f = protocol.ServerFactory()
+        f.protocol = cls
+        reactor.listenTCP(port, f)
+        reactor.run()
+
+    @classmethod
+    def print_protocol(cls):
+        import inspect
+        for app_name, app in cls.apps.iteritems():
+            print 'App %s\n___________________________' % app_name
+            for meth_name, meth in app._mapper.iteritems():
+                print 'method:', meth_name
+                args = inspect.getargspec(meth).args
+                print 'args:', ', '.join(args) if args else None
+                if args:
+                    defs = inspect.getargspec(meth).defaults
+                    if defs:
+                        print 'defaults:', ', '.join(defs)
+                print 'docs:\n%s\n\n' % (meth.__doc__ if meth.__doc__ else
+                                         " Some asshole didn't write documentation.")
+
